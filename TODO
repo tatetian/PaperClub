@@ -1,0 +1,50 @@
+Homepage
+Signup/Signin
+Clubs
+Papers | People
+Reading
+
+
+Models
+  User
+    fullname
+    password
+    email
+    avatar_url
+?   remember_token
+    clubs     --> membership
+  Club
+    name
+    description
+    users     --> membership
+  Membership
+    uploaded_tag
+    fav_tag
+    mine_tag
+    role  [:admin, :normal, :invited]
+
+    my_papers       *=
+    uploaded_papers *=
+    fav_papers      *=
+  Paper
+    title
+    year
+    hash
+    uploader  --> user
+    tags  -->
+    notes -->
+
+    news *= notes[notes.size-1] || 'XXX uploaded'
+  Tag
+    name
+    count  *= papers.size
+    papers -->
+  Note
+    content
+    position
+    user  --> 
+    paper -->
+
+Controllers
+
+Views
