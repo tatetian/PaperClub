@@ -4,7 +4,6 @@ FactoryGirl.define do
   factory :user do
     fullname "Tate Tian"
     sequence(:email) { |n| "tatetian#{n}@gmail.com" }
-    password_digest "very very long random byte sequence"
     avatar_url ""
   end
 end

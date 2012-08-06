@@ -1,17 +1,59 @@
 require 'spec_helper'
 
 describe User do
-  it "has a valid factory" do
-    create(:user).should be_valid
+  before do
+    password = "123456"
+    @user = create(:user, password: password, password_confirmation: password)
   end
-  
+
+  subject { @user }
+
+  it { should respond_to(:fullname) }
+  it { should respond_to(:email) }
+  it { should respond_to(:password_digest) }
+  it { should respond_to(:password) }
+  it { should respond_to(:password_confirmation) }
+  it { should respond_to(:authenticate) }
+
+  it { should be_valid }
+
   it "is invalid without a name" do
-    build(:user, fullname: nil).should_not be_valid
+    @user.fullname = nil
+    @user.should_not be_valid
+  end 
+
+  describe "validates password" do
+    before do
+      password = "123456"
+      @user = create(:user, password: password, password_confirmation: password)
+    end
+
+    context "when password is empty" do
+      it "should be invalid" do
+        @user.password = ""
+        @user.should_not be_valid
+      end
+    end
+
+    context "when length is less than 6 characters" do
+      it "should be invalid" do
+        @user.password = "123"
+        @user.should_not be_valid
+      end
+    end
+
+    context "when passwords mismatch" do
+      it "should be invalid" do
+        @user.password_confirmation = "mismatch"
+        @user.should_not be_valid
+      end
+    end  
   end
-   
+
   describe "validates email address" do
     before do
-      @user = build(:user)
+      password = "123456"
+      @user = create(:user, password: password, password_confirmation: password)
     end
   
     context "when email is empty" do
@@ -39,6 +81,12 @@ describe User do
           @user.email = valid_address
           @user.should be_valid
         end      
+      end
+    end
+
+    context "when email is duplicated" do
+      it "should not be valid" do
+        build(:user, email: @user.email.upcase).should_not be_valid
       end
     end
   end
