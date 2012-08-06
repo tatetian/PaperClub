@@ -1,4 +1,5 @@
-source 'http://ruby.taobao.org'
+#source 'http://ruby.taobao.org'
+source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
 
@@ -41,6 +42,7 @@ group :development, :test do
   gem "rspec-rails", "~> 2.10.1"
   gem "factory_girl_rails", "~> 3.2.0"
   gem "guard-rspec", "~> 0.7.0"
+  gem "annotate", "2.5.0"
 end
 
 group :test do
@@ -48,4 +50,8 @@ group :test do
   gem "capybara", "~> 1.1.2"
   gem "database_cleaner", "~> 0.7.2"
   gem "launchy", "~> 2.1.0"
+  gem 'rb-inotify', '0.8.8'
+  gem 'libnotify', '0.5.9'
+  gem 'guard-spork', '0.3.2'
+  gem 'spork', '0.9.0'
 end

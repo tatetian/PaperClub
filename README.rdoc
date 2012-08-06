@@ -6,5 +6,6 @@ discuss papers in group.
 == Getting Started
 
 == Authors
-  Hongliang TIAN, tatetian@gmail.com
-  Lu WANG, coolwanglu@gmail.com
+Hongliang TIAN, tatetian@gmail.com
+
+Lu WANG, coolwanglu@gmail.com
