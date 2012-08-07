@@ -1,4 +1,14 @@
 PaperClub::Application.routes.draw do
+  # User: show, create & update
+  resources :user, only: [:create, :update] 
+
+  resources :club do
+    # User: index, destroy
+    resources :user, only: [:index, :show, :destroy]
+    # Invitation
+    resources :invitation, only: [:create]
+  end
+
   # The priority is based upon order of creation:
   # first created -> highest priority.
 

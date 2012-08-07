@@ -2,8 +2,7 @@ require 'spec_helper'
 
 describe User do
   before do
-    password = "123456"
-    @user = create(:user, password: password, password_confirmation: password)
+    @user = create(:user)
   end
 
   subject { @user }
@@ -24,8 +23,7 @@ describe User do
 
   describe "validates password" do
     before do
-      password = "123456"
-      @user = create(:user, password: password, password_confirmation: password)
+      @user = create(:user)
     end
 
     context "when password is empty" do
@@ -52,8 +50,7 @@ describe User do
 
   describe "validates email address" do
     before do
-      password = "123456"
-      @user = create(:user, password: password, password_confirmation: password)
+      @user = create(:user)
     end
   
     context "when email is empty" do

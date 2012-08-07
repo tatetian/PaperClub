@@ -4,6 +4,19 @@ Clubs
 Papers | People
 Reading
 
+Actions
+  index
+  show
+  create
+  update
+  destroy
+
+Controller
+  User
+    show        friends
+    create      all
+    update      self
+     
 
 Models
   User
@@ -44,7 +57,9 @@ Models
     position
     user  --> 
     paper -->
-
+  Invitation
+    club
+    email
 Controllers
 
 Views

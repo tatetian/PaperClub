@@ -12,4 +12,10 @@ class User < ActiveRecord::Base
                         presence: true, length: { minimum: 6 }
 
   before_save { |user| user.email = email.downcase }
+
+  def to_hash
+    { :fullname => self.fullname, 
+      :email    => self.email,
+      :avatar_url => self.avatar_url }
+  end
 end
