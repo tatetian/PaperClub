@@ -1,4 +1,10 @@
 PaperClub::Application.routes.draw do
+  # Sessions
+  resources :sessions, only: [:create, :destroy]
+  # Signin & signout
+  match '/signin', to: 'sessions#create', via: :post
+  match '/signout', to: 'sessions#destroy', via: :delete
+
   # User: show, create & update
   resources :user, only: [:create, :update] 
 

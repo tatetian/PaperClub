@@ -1,4 +1,6 @@
 class UserController < ApplicationController
+#  before_filter :find_user, :only => [:update, :show, :destroy]
+  
   # Create a new user(Signup)
   #
   # URL     POST http://www.paperclub.com/users/
@@ -10,7 +12,7 @@ class UserController < ApplicationController
   def create
     @user = User.new(params[:user])
     if @user.save
-      #sign_in @user
+      sign_in @user
       render :json => @user.to_hash 
     else
       error 'Failed to save new User record'
@@ -25,16 +27,20 @@ class UserController < ApplicationController
   # ROLE    self
   def update
     @user = User.find(params[:id])
-    if @user
-      if @user.update_attributes(params[:user])
-        # OK
-        render :json => @user.to_hash
-      else
-        error 'Failed to update User record'
-      end
-    else
-      error "Can't find this user"
+#    unless signed_in?
+#      error "Must sign in first"
+#      return
+#    end
+#    unless @user.id == current_user.id
+#      error "Can't change other user's info"
+#      return
+#    end
+    unless @user.update_attributes(params[:user])
+      error 'Failed to update'
+      return
     end
+    # OK
+    render :json => @user.to_hash
   end
 
   # Show info of a user in a club
@@ -57,6 +63,7 @@ class UserController < ApplicationController
   # Remove a user from a club
   #
   # DESTROY http://www.paperclub.com/club/<club_id>/user/<user_id>
+  # ROLE    admin
   def destroy
   end
 
@@ -64,5 +71,9 @@ private
   def error(message)
     flash[:error] = message
     render :json => {}
+  end
+
+  def fint_user
+    @user = User.find(params[:id])
   end
 end

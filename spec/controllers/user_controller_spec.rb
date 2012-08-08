@@ -1,6 +1,6 @@
 require 'spec_helper'
 require 'json'
-
+require File.dirname(__FILE__) + '/../../app/helpers/sessions_helper'
 
 describe UserController do
   describe "GET 'index'" do

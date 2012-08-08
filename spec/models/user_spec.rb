@@ -13,8 +13,11 @@ describe User do
   it { should respond_to(:password) }
   it { should respond_to(:password_confirmation) }
   it { should respond_to(:authenticate) }
+  it { should respond_to(:remember_token) }
 
   it { should be_valid }
+
+  its(:remember_token) { should_not be_blank }
 
   it "is invalid without a name" do
     @user.fullname = nil
