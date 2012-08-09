@@ -18,5 +18,10 @@ describe Paper do
     tag = create(:tag)
     collection = create(:collection, tag_id: tag.id, paper_id: @paper.id)
     @paper.tags.should == [tag]
+  end
+
+  it "has notes" do
+    note = create(:note, paper_id: @paper.id)
+    @paper.notes.should == [note]
   end 
 end

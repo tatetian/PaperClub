@@ -4,6 +4,8 @@ class Paper < ActiveRecord::Base
   has_many :collections, foreign_key: "paper_id"
   has_many :tags, through: :collections
 
+  has_many :notes
+
   validate :title, presence: true
 
   # Get who uploaded the paper

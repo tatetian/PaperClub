@@ -15,3 +15,5 @@
 /tmp
 
 .*
+
+db/schema.rb
