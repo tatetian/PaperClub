@@ -2,6 +2,11 @@ class User < ActiveRecord::Base
   attr_accessible :avatar_url, :email, :fullname, 
                   :password, :password_confirmation,
                   :remember_token
+
+  # user has many clubs through membership
+  has_many :clubs, :through => :memberships
+  has_many :memberships, :foreign_key => "user_id"
+
   has_secure_password 
 
   validates :fullname,  presence: true, length: { minimum: 1, maximum: 50 }  

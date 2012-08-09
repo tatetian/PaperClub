@@ -39,6 +39,9 @@ Models
     my_papers       *=
     uploaded_papers *=
     fav_papers      *=
+
+    club      -->
+    user      -->
   Paper
     title
     year
