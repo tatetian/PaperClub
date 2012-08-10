@@ -1,5 +1,5 @@
 class Paper < ActiveRecord::Base
-  attr_accessible :doc_hash, :pub_date, :title
+  attr_accessible :doc_hash, :pub_date, :title, :club_id
 
   has_many :collections, foreign_key: "paper_id"
   has_many :tags, through: :collections
@@ -7,6 +7,7 @@ class Paper < ActiveRecord::Base
   has_many :notes
 
   validate :title, presence: true
+  validate :club_id, presence: true
 
   # Get who uploaded the paper
   def uploader

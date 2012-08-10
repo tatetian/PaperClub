@@ -6,5 +6,6 @@ FactoryGirl.define do
     pub_date Date.new(2003)
     doc_hash "98734iooisadfsajfsai9"  # not determined yet
     uploader_id 1
+    club_id 1
   end
 end

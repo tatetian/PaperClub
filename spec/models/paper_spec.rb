@@ -11,6 +11,7 @@ describe Paper do
   it { should respond_to(:pub_date) }
   it { should respond_to(:doc_hash) }
   it { should respond_to(:uploader) }
+  it { should respond_to(:club_id) }
 
   it { should be_valid }
 
