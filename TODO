@@ -4,6 +4,8 @@ Clubs
 Papers | People
 Reading
 
+  # TODO: Controller names: singular --> plural, e.g. ClubController --> ClubsController
+
 Actions
   index
   show
