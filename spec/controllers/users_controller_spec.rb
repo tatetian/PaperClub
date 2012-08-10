@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'json'
 
-describe UserController do
+describe UsersController do
   describe "GET 'index'" do
     #it "returns http success" do
     #  get 'index'

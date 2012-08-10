@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PaperController do
+describe PapersController do
   before :each do
     # Init variables
     @me   = create(:me)

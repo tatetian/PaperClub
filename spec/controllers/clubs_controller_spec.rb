@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe ClubController do
+describe ClubsController do
   before :each do
     # Init variables
     @me   = create(:me)

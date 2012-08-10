@@ -1,2 +1,0 @@
-module PaperHelper
-end

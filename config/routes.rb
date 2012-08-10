@@ -6,14 +6,14 @@ PaperClub::Application.routes.draw do
   match '/signout', to: 'sessions#destroy', via: :delete
 
   # User: show, create & update
-  resources :users, only: [:create, :update] 
+  resources :userss, only: [:create, :update] 
 
   # Club: show, index, create, destroy, update
-  resources :club do
+  resources :clubs do
     # User: index, destroy
-    resources :user, only: [:index, :show, :destroy]
+    resources :users, only: [:index, :show, :destroy]
     # Paper
-    resources :paper
+    resources :papers
 
     # Invitation
     resources :invitation, only: [:create]

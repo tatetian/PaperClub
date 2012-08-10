@@ -1,4 +1,4 @@
-class ClubController < ApplicationController
+class ClubsController < ApplicationController
 
   # TODO: role!!!
   # TODO: destroy
