@@ -26,6 +26,12 @@ describe User do
     @user.should_not be_valid
   end 
 
+  it "has many clubs" do
+    club = create(:club)
+    membership = create(:membership, user_id: @user.id, club_id: club.id)
+    @user.clubs.should == [club]
+  end
+
   describe "validates password" do
     before do
       @user = create(:user)

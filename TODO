@@ -13,10 +13,39 @@ Actions
 
 Controller
   User
-    show        friends
-    create      all
-    update      self
-     
+    show        member    GET   /club/<club_id>/users
+    create      all       POST  /users
+    update      self      PUT   /user/<user_id>
+  Club
+    index       member    GET   /clubs
+    show        member    GET   /club/<club_id>
+    create      signin    POST  /clubs
+    update      admin     PUT   /club/<club_id>
+    destroy     admin     DEL   /club/<club_id>
+
+    Paper 
+      index       member    GET   /club/<club_id>/papers?tag_id=..&keywords[]=..
+      show        member    GET   /club/<club_id>/paper/<paper_id>
+      create      member    POST  /club/<club_id>/papers
+      update      member    PUT   /club/<club_id>/paper/<paper_id>
+      destroy     member    DEL   /club/<club_id>/paper/<paper_id>
+      
+      Tag
+        index     member    GET   /club/<club_id>/paper/<paper_id>/tags
+        create    member    POST  /club/<club_id>/paper/<paper_id>/tags  
+        destroy   member    DEL   /club/<club_id>/paper/<paper_id>/tag/<tag_id>
+
+      Note
+        index     member    GET   /club/<club_id>/paper/<paper_id>/notes
+        create    member    POST  /club/<club_id>/paper/<paper_id>/notes
+        destroy   member    DEL   /club/<club_id>/paper/<paper_id>/note/<note_id> 
+
+    Tag  
+      index     member    GET     /club/<club_id>/tags
+      create    member    POST    /club/<club_id>/tags
+      update    member    PUT     /club/<club_id>/tag/<tag_id>
+      destroy   member    DEL     /club/<club_id>/tag/<tag_id>
+      
 
 Models
   User
@@ -25,10 +54,12 @@ Models
     email
     avatar_url
 ?   remember_token
+    
     clubs     --> membership
   Club
     name
     description
+    
     users     --> membership
   Membership
     uploaded_tag
@@ -54,7 +85,11 @@ Models
   Tag
     name
     count  *= papers.size
+    club_id
     papers -->
+  Collection
+    paper_id
+    tag_id
   Note
     content
     position
@@ -64,5 +99,10 @@ Models
     club
     email
 Controllers
-
+    
 Views
+
+内嵌字体
+  encoding
+
+

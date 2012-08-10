@@ -20,8 +20,9 @@ class User < ActiveRecord::Base
   before_save { |user| user.email = email.downcase }
   before_save :init_remember_token
 
-  def to_hash
-    { :fullname => self.fullname, 
+  def as_json(options)
+    { :id       => self.id,
+      :fullname => self.fullname, 
       :email    => self.email,
       :avatar_url => self.avatar_url }
   end

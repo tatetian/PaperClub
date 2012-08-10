@@ -14,4 +14,10 @@ describe Club do
     tag = create(:tag, club_id: @club.id)
     @club.tags.should == [tag]
   end
+
+  it "has many users" do
+    user = create(:user)
+    membership = create(:membership, user_id: user.id, club_id: @club.id)
+    @club.users.should == [user]
+  end
 end

@@ -1,6 +1,8 @@
 class Paper < ActiveRecord::Base
   attr_accessible :doc_hash, :pub_date, :title, :club_id
 
+  belongs_to :club
+
   has_many :collections, foreign_key: "paper_id"
   has_many :tags, through: :collections
 

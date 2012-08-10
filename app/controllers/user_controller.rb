@@ -1,5 +1,5 @@
 class UserController < ApplicationController
-#  before_filter :find_user, :only => [:update, :show, :destroy]
+  skip_before_filter :authorize, :only => [:create] 
   
   # Create a new user(Signup)
   #
@@ -13,7 +13,7 @@ class UserController < ApplicationController
     @user = User.new(params[:user])
     if @user.save
       sign_in @user
-      render :json => @user.to_hash 
+      render :json => @user 
     else
       error 'Failed to save new User record'
     end
@@ -40,7 +40,7 @@ class UserController < ApplicationController
       return
     end
     # OK
-    render :json => @user.to_hash
+    render :json => @user
   end
 
   # Show info of a user in a club
@@ -68,11 +68,6 @@ class UserController < ApplicationController
   end
 
 private
-  def error(message)
-    flash[:error] = message
-    render :json => {}
-  end
-
   def fint_user
     @user = User.find(params[:id])
   end

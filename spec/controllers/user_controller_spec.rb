@@ -1,6 +1,5 @@
 require 'spec_helper'
 require 'json'
-require File.dirname(__FILE__) + '/../../app/helpers/sessions_helper'
 
 describe UserController do
   describe "GET 'index'" do
@@ -26,13 +25,15 @@ describe UserController do
       #   password & password_confirmation should not appear in response
       user.delete(:password)
       user.delete(:password_confirmation)
-      response.body.should == user.to_json
+      response.body.should == User.first.to_json
     end
   end
 
   describe "PUT 'update'" do
     before :each do
       @me = create(:me)
+      # Login
+      cookies[:remember_token] = @me.remember_token
     end
 
     it "updates fullname" do
@@ -42,7 +43,7 @@ describe UserController do
       @me.reload 
       @me.fullname.should eq("Wen Xin")
       # Check response
-      response.body.should == @me.to_hash.to_json
+      response.body.should == @me.to_json
     end
 
     it "updates email" do
@@ -52,7 +53,7 @@ describe UserController do
       @me.reload 
       @me.email.should eq("new@gmail.com")
       # Check response
-      response.body.should == @me.to_hash.to_json
+      response.body.should == @me.to_json
     end   
 
     it "fails to update" do
