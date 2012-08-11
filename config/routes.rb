@@ -5,22 +5,38 @@ PaperClub::Application.routes.draw do
   match '/signin', to: 'sessions#create', via: :post
   match '/signout', to: 'sessions#destroy', via: :delete
 
-  # User: show, create & update
-  resources :userss, only: [:create, :update] 
+  # Create a user and update user's profile
+  resources :users, only: [:create, :update] 
 
-  # Club: show, index, create, destroy, update
   resources :clubs do
-    # User: index, destroy
+    # List users of the club
+    # Show user info of the club
+    # Remove a user from the club
     resources :users, only: [:index, :show, :destroy]
-    # Papers
-    resources :papers do
-      resources :tags, only: [:index, :create, :destroy]
-    end
-    # Tags
-    resources :tags, only: [:index, :create, :update, :destroy] 
-    # Invitation
-    resources :invitation, only: [:create]
+
+    # List/Search papers of the club
+    # Upload a paper to the club
+    resources :papers, only: [:index, :create]
+
+    # List all tags of the club
+    # Create an empty tag for the club
+    resources :tags, only: [:index, :create]
   end
+
+  # Show info about a paper
+  # Remove a paper from its club
+  # Update a paper's info
+  resources :papers, only: [:show, :update, :destroy] do
+    # List tags of the paper
+    # Add a tag to the paper
+    # Remove a tag from the paper
+    resources :tags, only: [:index, :create, :destroy]
+  end
+
+  # Rename a tag of its club
+  # Delete a tag from its club
+  resources :tags, only: [:update, :destroy]
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

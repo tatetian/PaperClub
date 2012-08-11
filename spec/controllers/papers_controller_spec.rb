@@ -20,14 +20,14 @@ describe PapersController do
   
   describe "GET 'show'"  do
     it "renders a JSON" do
-      get 'show', club_id: @club.id, id: @paper
+      get 'show', id: @paper
       response.body.should == @paper.to_json
     end
   end
 
   describe "PUT 'update'" do
     it "renders a JSON" do
-      put  'update', club_id: @club.id, id: @paper, paper: { title: "New Title"}
+      put  'update', id: @paper, paper: { title: "New Title"}
       @paper.reload
       @paper.title.should == "New Title"
       response.body.should == @paper.to_json
@@ -36,12 +36,12 @@ describe PapersController do
 
   describe "DELETE 'destroy'" do
     it "renders a JSON" do
-      delete 'destroy', club_id: @club.id, id: @paper
+      delete 'destroy', id: @paper
       response.body.should == { id: @paper.id }.to_json
     end
 
     it "destroys a paper" do
-      delete 'destroy', club_id: @club.id, id: @paper
+      delete 'destroy', id: @paper
       lambda { Paper.find(@paper.id) }.should raise_error(ActiveRecord::RecordNotFound)
     end
   end

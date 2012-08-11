@@ -35,17 +35,17 @@ describe TagsController do
 
     context "DELETE 'destroy'" do
       it "destroys a tag" do
-        delete 'destroy', club_id: @club.id, id: @tag
+        delete 'destroy', id: @tag
         @club.tags.should == []
       end
 
       it "removes collections as well" do
-        delete 'destroy', club_id: @club.id, id: @tag
+        delete 'destroy', id: @tag
         lambda { @collection.reload }.should raise_error(ActiveRecord::RecordNotFound)
       end
   
       it "renders a JSON" do
-        delete 'destroy', club_id: @club.id, id: @tag
+        delete 'destroy', id: @tag
         response.body.should == @tag.to_json
       end
     end
@@ -54,31 +54,31 @@ describe TagsController do
   describe "with paper_id" do
     context "GET 'index'" do
       it "renders a JSON" do
-        get 'index', club_id: @club.id, paper_id: @paper.id
+        get 'index', paper_id: @paper.id
         response.body.should == @paper.tags.to_json
       end
     end
 
     context "POST 'create'" do
       it "creates a tag" do
-        post 'create', club_id: @club.id, paper_id: @paper.id, name: "New Tag"
+        post 'create', paper_id: @paper.id, name: "New Tag"
         @paper.tags.find_by_name("new tag").should_not == nil
       end
 
       it "renders a JSON" do
-        post 'create', club_id: @club.id, paper_id: @paper.id, name: "New Tag"
+        post 'create', paper_id: @paper.id, name: "New Tag"
         response.body.should == {name: "new tag", club_id:@club.id}.to_json
       end
     end
 
     context "DELETE 'destroy'" do
       it "removes a tag from a paper" do
-        delete 'destroy', club_id: @club.id, paper_id: @paper.id, id: @tag
+        delete 'destroy', paper_id: @paper.id, id: @tag
         @paper.tags.should == []
       end
 
       it "removes collection instead of tag" do
-        delete 'destroy', club_id: @club.id, paper_id: @paper.id, id: @tag
+        delete 'destroy', paper_id: @paper.id, id: @tag
         # Collection should be destroyed already
         lambda { @collection.reload }.should raise_error(ActiveRecord::RecordNotFound)
         # Check tag is not destroyed
@@ -86,7 +86,7 @@ describe TagsController do
       end
   
       it "renders a JSON" do
-        delete 'destroy', club_id: @club.id, paper_id: @paper.id, id: @tag
+        delete 'destroy', paper_id: @paper.id, id: @tag
         response.body.should == @tag.to_json
       end
     end

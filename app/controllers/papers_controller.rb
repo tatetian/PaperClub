@@ -5,7 +5,8 @@ class PapersController < ApplicationController
   # ROLE    member
   def index
     begin
-      club = current_user.clubs.find(params[:club_id])
+      # Authenticate
+      club = can_access_club?(params[:club_id])
       render :json => club.papers
     rescue ActiveRecord::RecordNotFound
       error "Can't access the club"
@@ -14,11 +15,14 @@ class PapersController < ApplicationController
 
   # Show the details of a paper in a club
   #
-  # URL     GET /club/<club_id>/paper/<paper_id>
+  # URL     GET /paper/<paper_id>
   # ROLE    member
   def show
     begin
-      paper = current_user.clubs.find(params[:club_id]).papers.find(params[:id])
+      # Find the paper
+      paper = Paper.find(params[:id])
+      # Authenticate
+      club = can_access_club?(paper.club_id)
       render :json => paper
     rescue ActiveRecord::RecordNotFound
         error "Can't access the club or the paper"
@@ -35,11 +39,14 @@ class PapersController < ApplicationController
 
   # Remove a paper from a club
   #
-  # URL     DEL   /club/<club_id>/paper/<paper_id>
+  # URL     DEL   /paper/<paper_id>
   # ROLE    member
   def destroy
     begin
-      paper = current_user.clubs.find(params[:club_id]).papers.find(params[:id])
+      # Find the paper
+      paper = Paper.find(params[:id])
+      # Authenticate
+      can_access_club?(paper.club_id)
       if paper.destroy
         render :json => {id: paper.id}
       else
@@ -61,7 +68,10 @@ class PapersController < ApplicationController
   # TagsController
   def update
     begin
-      paper = current_user.clubs.find(params[:club_id]).papers.find(params[:id])
+      # Find the paper
+      paper = Paper.find(params[:id])
+      # Authenticate
+      can_access_club?(paper.club_id)
       if paper.update_attributes(params[:paper])
         render :json => paper
       else
