@@ -42,6 +42,9 @@ Controller
         create    member    POST  /club/<club_id>/paper/<paper_id>/notes
         destroy   member    DEL   /club/<club_id>/paper/<paper_id>/note/<note_id> 
 
+        Comment
+          
+
     Tag  
       index     member    GET     /club/<club_id>/tags
       create    member    POST    /club/<club_id>/tags
@@ -97,6 +100,10 @@ Models
     position
     user  --> 
     paper -->
+  Comment
+    content
+    user  -->
+    note  -->
   Invitation
     club
     email
