@@ -44,7 +44,7 @@ PaperClub::Application.routes.draw do
   # Show a note
   # Update a note
   # Destroy a note
-  resources :notes, only: [:show, :update, :destroy] do
+  resources :notes, only: [:update, :destroy] do
     # List replies of the note
     # Create a reply for the note
     resources :replies, only: [:index, :create]
@@ -52,7 +52,7 @@ PaperClub::Application.routes.draw do
 
   # Show a reply
   # Destroy a reply
-  resources :replies, only: [:show, :destroy]
+  resources :replies, only: [:destroy]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.
