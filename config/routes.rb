@@ -31,12 +31,28 @@ PaperClub::Application.routes.draw do
     # Add a tag to the paper
     # Remove a tag from the paper
     resources :tags, only: [:index, :create, :destroy]
+
+    # List notes of the paper
+    # Create a note for the paper
+    resources :notes, only: [:index, :create]
   end
 
   # Rename a tag of its club
   # Delete a tag from its club
   resources :tags, only: [:update, :destroy]
 
+  # Show a note
+  # Update a note
+  # Destroy a note
+  resources :notes, only: [:show, :update, :destroy] do
+    # List replies of the note
+    # Create a reply for the note
+    resources :replies, only: [:index, :create]
+  end
+
+  # Show a reply
+  # Destroy a reply
+  resources :replies, only: [:show, :destroy]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

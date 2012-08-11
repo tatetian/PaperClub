@@ -8,4 +8,6 @@ class Note < ActiveRecord::Base
 
   belongs_to  :paper
   has_many    :replies
+
+  default_scope :order => 'notes.created_at DESC'
 end
