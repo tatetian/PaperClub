@@ -12,9 +12,12 @@ PaperClub::Application.routes.draw do
   resources :clubs do
     # User: index, destroy
     resources :users, only: [:index, :show, :destroy]
-    # Paper
-    resources :papers
-
+    # Papers
+    resources :papers do
+      resources :tags, only: [:index, :create, :destroy]
+    end
+    # Tags
+    resources :tags, only: [:index, :create, :update, :destroy] 
     # Invitation
     resources :invitation, only: [:create]
   end

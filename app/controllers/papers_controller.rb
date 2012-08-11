@@ -13,6 +13,7 @@ class PapersController < ApplicationController
   end
 
   # Show the details of a paper in a club
+  #
   # URL     GET /club/<club_id>/paper/<paper_id>
   # ROLE    member
   def show
