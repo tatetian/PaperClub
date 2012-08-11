@@ -1,16 +1,13 @@
 require 'spec_helper'
 
-describe Note do
+describe Reply do
   before do
-    @note = create(:note)
+    @reply  = create(:reply)
   end
 
-  subject { @note }
-
+  it { should respond_to(:note_id) }
   it { should respond_to(:content) }
-  it { should respond_to(:position) }
   it { should respond_to(:user_id) }
-  it { should respond_to(:paper_id) }
 
   it { should be_valid }
 end

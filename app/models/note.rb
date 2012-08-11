@@ -6,5 +6,6 @@ class Note < ActiveRecord::Base
   validate :position, presence: true
   validate :user_id, presence: true
 
-  belongs_to :paper
+  belongs_to  :paper
+  has_many    :replies
 end

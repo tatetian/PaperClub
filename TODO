@@ -39,11 +39,7 @@ Controller
 
       Note
         index     member    GET   /club/<club_id>/paper/<paper_id>/notes
-        create    member    POST  /club/<club_id>/paper/<paper_id>/notes
-        destroy   member    DEL   /club/<club_id>/paper/<paper_id>/note/<note_id> 
-
-        Comment
-          
+        create    member    POST  /club/<club_id>/paper/<paper_id>/notes          
 
     Tag  
       index     member    GET     /club/<club_id>/tags
@@ -51,6 +47,15 @@ Controller
       update    member    PUT     /club/<club_id>/tag/<tag_id>
       destroy   member    DEL     /club/<club_id>/tag/<tag_id>
       
+    Note
+      show      member    GET   /club/<club_id>/note/<note_id>
+      update    member    PUT   /club/<club_id>/note/<note_id>
+      destroy   member    DEL   /club/<club_id>/note/<note_id> 
+
+      Reply
+        index   member    GET   /club/<club_id>/note/<note_id>/replies/
+        create  member    POST  /club/<club_id>/note/<note_id>/replies/
+        destroy owner     DEL   /club/<club_id>/note/<note_id>/reply/<reply_id>
 
 Models
   User
@@ -100,7 +105,7 @@ Models
     position
     user  --> 
     paper -->
-  Comment
+  Reply
     content
     user  -->
     note  -->
