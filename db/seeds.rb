@@ -8,7 +8,16 @@
 demo_user = User.create!(fullname: "Demo Boy", email: "paperclub-demo@gmail.com",
                           avatar_url: "", 
                           password: "123456", password_confirmation: "123456")
-debug_club = Club.create!(name: "Demo Club", 
+demo_club = Club.create!(name: "Demo Club", 
                           description: "This club is for demo purpose only")
 membership = Membership.create!(role: "admin", 
-                               club_id: debug_club.id, user_id: demo_user)
+                               club_id: demo_club.id, user_id: demo_user.id)
+demo_paper = Paper.create!( title: "The Case for Determinism in Database Systems", 
+                            pub_date: 10.days.ago, 
+                            doc_hash: "19oj9asdf21a9sdjklasd901as",
+                            uploader_id: demo_user.id,
+                            club_id: demo_club.id )
+demo_tag1 = Tag.create!(name: "Database", club_id: demo_club.id)
+demo_tag2 = Tag.create!(name: "VLDB", club_id: demo_club.id)
+Collection.create!(paper_id: demo_paper.id, tag_id: demo_tag1.id)
+Collection.create!(paper_id: demo_paper.id, tag_id: demo_tag2.id)

@@ -40,12 +40,11 @@ $(function() {
       var that = this;
       this.collection.bind('add', that.addOne, that);
       this.collection.bind('reset', that.addAll, that);
+      this.collection.fetch();
     },
     addOne: function(model, that, options) {
       var clubView = new ClubView({model: model});
       this.$el.append(clubView.render().$el)
-      window.clubEl = clubView.$el;
-      console.debug(1);
     },
     addAll: function() {
       this.$el.empty();
@@ -54,6 +53,5 @@ $(function() {
   });
   var clubs = new Clubs();
   var clubsView = new ClubsView({collection: clubs});
-  clubs.fetch();
 });
 </script>

@@ -8,7 +8,18 @@
   </ul>
 </div>
 <script type="text/template" id="paper-view-template">
-  <h1><%%= name %></h1>
+  <p><strong>Title</strong>: 
+    <a href="/debug/papers/<%%= id %>">
+      <span><%%= title %></span></p>
+    </a>
+  <p><strong>Pub date</strong>: <span><%%= pub_date %></span></p>
+  <p><strong>Tags</strong>: 
+  <%% _.each(tags, function(tag, index) { %>
+      <span>
+        <%%= tag.name %>
+      </span>
+      <%% }); %>
+  </p>
 </script>
 <script type="text/template" id="club-view-template">
   <h1><%%= name %></h1>
@@ -16,6 +27,7 @@
 <script type="text/javascript">
 var CLUB_ID = <%= @club_id %>;
 $(function() {
+  /*==================== Club =====================*/
   var Club = Backbone.Model.extend({
     urlRoot: "/api/clubs" 
   });
@@ -36,5 +48,45 @@ $(function() {
   });
   var club = new Club({id: CLUB_ID});
   var clubView = new ClubView({model: club});
+  /*=================== Paper =======================*/
+  var Paper = Backbone.Model.extend({
+  });
+  var Papers = Backbone.Collection.extend({
+    model: Paper,
+    url: '/api/clubs/' + CLUB_ID + '/papers' 
+  });
+  var PaperView = Backbone.View.extend({
+    tagName: 'li',
+    initialize: function() {    
+    },
+    events: {
+    },
+    template: _.template($("#paper-view-template").html()),
+    render: function() {
+      this.$el.empty();
+      var json = this.model.toJSON();
+      this.$el.append(this.template(json));
+      return this;
+    }
+  });
+  var PapersView = Backbone.View.extend({
+    el: "#paper-list",
+    initialize: function() {
+      var that = this;
+      this.collection.bind('add', that.addOne, that);
+      this.collection.bind('reset', that.addAll, that);
+      this.collection.fetch();
+    },
+    addOne: function(model, that, options) {
+      var paperView = new PaperView({model: model});
+      this.$el.append(paperView.render().$el)
+    },
+    addAll: function() {
+      this.$el.empty();
+      this.collection.each(this.addOne, this);      
+    }
+  });
+  var papers = new Papers();
+  var papersView = new PapersView({collection: papers});
 });
 </script>
