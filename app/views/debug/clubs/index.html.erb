@@ -1,2 +1,15 @@
 <h1>Debug::Clubs#index</h1>
-<p>Find me in app/views/debug/clubs/index.html.erb</p>
+<!-- Show all clubs of current users -->
+<div>
+  <h1>Clubs of current user:</h1>
+  <ul id="club-list">
+  </ul>
+</div>
+<script type="text/template" id="club-view-template">
+  <strong>Name</strong>: <p><a href="/debug/club/<%%= id %>"><%%= name %></a></p>
+  <strong>Description</strong>: <p><%%= description %></p>
+  <strong>Users</strong>: 
+  <%% _.each(users, function(user) { %>
+      <p><%%= user.fullname %>, <%%= user.email %></p>
+  <%% }); %>
+</script>
