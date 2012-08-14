@@ -1,0 +1,40 @@
+<!-- Club info -->
+<div id="club-view">
+</div>
+<!-- Papers -->
+<div>
+  <h1>Papers:</h1>
+  <ul id="paper-list">
+  </ul>
+</div>
+<script type="text/template" id="paper-view-template">
+  <h1><%%= name %></h1>
+</script>
+<script type="text/template" id="club-view-template">
+  <h1><%%= name %></h1>
+</script>
+<script type="text/javascript">
+var CLUB_ID = <%= @club_id %>;
+$(function() {
+  var Club = Backbone.Model.extend({
+    urlRoot: "/api/clubs" 
+  });
+  var ClubView = Backbone.View.extend({
+    el: "#club-view", 
+    template: _.template($("#club-view-template").html()),
+    initialize: function() {
+      this.model.on('change', this.render, this);
+      this.model.fetch();
+    },
+    render: function() 
+    {
+      this.$el.empty();
+      var json = this.model.toJSON();
+      this.$el.append(this.template(json));
+      return this;
+    }
+  });
+  var club = new Club({id: CLUB_ID});
+  var clubView = new ClubView({model: club});
+});
+</script>
