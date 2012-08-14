@@ -4,14 +4,26 @@ PaperClub::Application.routes.draw do
   # Home of the app(after login)
   match "/home" => "home#index", :via => :get
 
-  # Sessions
-  resources :sessions, only: [:create, :destroy]
   # Signin & signout
   match '/signin', to: 'sessions#create', via: :post
   match '/signout', to: 'sessions#destroy', via: :delete
+  
+  # All debug purpose only pages are prefixed "debug"
+  # and the following line should be commented in deployment
+  namespace :debug do
+    match "/login" => "login#index", :via => :get
 
+    match "/clubs" => "clubs#index", :via => :get
+
+    match "/club/:club_id" => "clubs#show", :via => :get
+
+    match "/paper/:paper_id" => "papers#show", :via => :get
+
+    match "/reader/:paper_id" => "reader#show", :via => :get
+  end
+
+  # All the url of Web services are prefixed "api"
   namespace :api do
-
     # Create a user and update user's profile
     resources :users, only: [:create, :update] 
 

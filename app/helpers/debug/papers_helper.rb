@@ -1,0 +1,2 @@
+module Debug::PapersHelper
+end

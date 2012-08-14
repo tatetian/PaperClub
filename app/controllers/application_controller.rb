@@ -11,7 +11,10 @@ class ApplicationController < ActionController::Base
 protected
   def authorize
     unless signed_in?
-      error("You haven't logged in")
+      store_location
+      flash[:notice] = "Please login"
+      #redirect_to(:controller => "user", :action => "login")
+      redirect_to "/debug/login"
     end
   end
 
