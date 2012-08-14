@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe TagsController do
+describe Api::TagsController do
   before :each do
     # Init variables
     @me   = create(:me)

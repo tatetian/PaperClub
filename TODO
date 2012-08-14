@@ -15,47 +15,47 @@ Actions
 
 Controller
   User
-    show        member    GET   /club/<club_id>/users
-    create      all       POST  /users
-    update      self      PUT   /user/<user_id>
+    show        member    GET   /api/club/<club_id>/users
+    create      all       POST  /api/users
+    update      self      PUT   /api/user/<user_id>
   Club
-    index       member    GET   /clubs
-    show        member    GET   /club/<club_id>
-    create      signin    POST  /clubs
-    update      admin     PUT   /club/<club_id>
-    destroy     admin     DEL   /club/<club_id>
+    index       member    GET   /api/clubs
+    show        member    GET   /api/club/<club_id>
+    create      signin    POST  /api/clubs
+    update      admin     PUT   /api/club/<club_id>
+    destroy     admin     DEL   /api/club/<club_id>
 
     Paper 
-      index       member    GET   /club/<club_id>/papers?tag_id=..&keywords[]=..
-      show        member    GET   /club/<club_id>/paper/<paper_id>
-      create      member    POST  /club/<club_id>/papers
-      update      member    PUT   /club/<club_id>/paper/<paper_id>
-      destroy     member    DEL   /club/<club_id>/paper/<paper_id>
+      index       member    GET   /api/club/<club_id>/papers?tag_id=..&keywords[]=..
+      show        member    GET   /api/club/<club_id>/paper/<paper_id>
+      create      member    POST  /api/club/<club_id>/papers
+      update      member    PUT   /api/club/<club_id>/paper/<paper_id>
+      destroy     member    DEL   /api/club/<club_id>/paper/<paper_id>
       
       Tag
-        index     member    GET   /club/<club_id>/paper/<paper_id>/tags
-        create    member    POST  /club/<club_id>/paper/<paper_id>/tags  
-        destroy   member    DEL   /club/<club_id>/paper/<paper_id>/tag/<tag_id>
+        index     member    GET   /api/club/<club_id>/paper/<paper_id>/tags
+        create    member    POST  /api/club/<club_id>/paper/<paper_id>/tags  
+        destroy   member    DEL   /api/club/<club_id>/paper/<paper_id>/tag/<tag_id>
 
       Note
-        index     member    GET   /club/<club_id>/paper/<paper_id>/notes
-        create    member    POST  /club/<club_id>/paper/<paper_id>/notes          
+        index     member    GET   /api/club/<club_id>/paper/<paper_id>/notes
+        create    member    POST  /api/club/<club_id>/paper/<paper_id>/notes          
 
     Tag  
-      index     member    GET     /club/<club_id>/tags
-      create    member    POST    /club/<club_id>/tags
-      update    member    PUT     /club/<club_id>/tag/<tag_id>
-      destroy   member    DEL     /club/<club_id>/tag/<tag_id>
+      index     member    GET     /api/club/<club_id>/tags
+      create    member    POST    /api/club/<club_id>/tags
+      update    member    PUT     /api/club/<club_id>/tag/<tag_id>
+      destroy   member    DEL     /api/club/<club_id>/tag/<tag_id>
       
     Note
-      show      member    GET   /club/<club_id>/note/<note_id>
-      update    member    PUT   /club/<club_id>/note/<note_id>
-      destroy   member    DEL   /club/<club_id>/note/<note_id> 
+      show      member    GET   /api/club/<club_id>/note/<note_id>
+      update    member    PUT   /api/club/<club_id>/note/<note_id>
+      destroy   member    DEL   /api/club/<club_id>/note/<note_id> 
 
       Reply
-        index   member    GET   /club/<club_id>/note/<note_id>/replies/
-        create  member    POST  /club/<club_id>/note/<note_id>/replies/
-        destroy owner     DEL   /club/<club_id>/note/<note_id>/reply/<reply_id>
+        index   member    GET   /api/club/<club_id>/note/<note_id>/replies/
+        create  member    POST  /api/club/<club_id>/note/<note_id>/replies/
+        destroy owner     DEL   /api/club/<club_id>/note/<note_id>/reply/<reply_id>
 
 Models
   User

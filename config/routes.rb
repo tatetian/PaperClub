@@ -5,54 +5,58 @@ PaperClub::Application.routes.draw do
   match '/signin', to: 'sessions#create', via: :post
   match '/signout', to: 'sessions#destroy', via: :delete
 
-  # Create a user and update user's profile
-  resources :users, only: [:create, :update] 
+  namespace :api do
 
-  resources :clubs do
-    # List users of the club
-    # Show user info of the club
-    # Remove a user from the club
-    resources :users, only: [:index, :show, :destroy]
+    # Create a user and update user's profile
+    resources :users, only: [:create, :update] 
 
-    # List/Search papers of the club
-    # Upload a paper to the club
-    resources :papers, only: [:index, :create]
+    resources :clubs do
+      # List users of the club
+      # Show user info of the club
+      # Remove a user from the club
+      resources :users, only: [:index, :show, :destroy]
 
-    # List all tags of the club
-    # Create an empty tag for the club
-    resources :tags, only: [:index, :create]
+      # List/Search papers of the club
+      # Upload a paper to the club
+      resources :papers, only: [:index, :create]
+
+      # List all tags of the club
+      # Create an empty tag for the club
+      resources :tags, only: [:index, :create]
+    end
+
+    # Show info about a paper
+    # Remove a paper from its club
+    # Update a paper's info
+    resources :papers, only: [:show, :update, :destroy] do
+      # List tags of the paper
+      # Add a tag to the paper
+      # Remove a tag from the paper
+      resources :tags, only: [:index, :create, :destroy]
+
+      # List notes of the paper
+      # Create a note for the paper
+      resources :notes, only: [:index, :create]
+    end
+
+    # Rename a tag of its club
+    # Delete a tag from its club
+    resources :tags, only: [:update, :destroy]
+
+    # Show a note
+    # Update a note
+    # Destroy a note
+    resources :notes, only: [:update, :destroy] do
+      # List replies of the note
+      # Create a reply for the note
+      resources :replies, only: [:index, :create]
+    end
+
+    # Show a reply
+    # Destroy a reply
+    resources :replies, only: [:destroy]
+
   end
-
-  # Show info about a paper
-  # Remove a paper from its club
-  # Update a paper's info
-  resources :papers, only: [:show, :update, :destroy] do
-    # List tags of the paper
-    # Add a tag to the paper
-    # Remove a tag from the paper
-    resources :tags, only: [:index, :create, :destroy]
-
-    # List notes of the paper
-    # Create a note for the paper
-    resources :notes, only: [:index, :create]
-  end
-
-  # Rename a tag of its club
-  # Delete a tag from its club
-  resources :tags, only: [:update, :destroy]
-
-  # Show a note
-  # Update a note
-  # Destroy a note
-  resources :notes, only: [:update, :destroy] do
-    # List replies of the note
-    # Create a reply for the note
-    resources :replies, only: [:index, :create]
-  end
-
-  # Show a reply
-  # Destroy a reply
-  resources :replies, only: [:destroy]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe NotesController do
+describe Api::NotesController do
   before :each do
     # Init variables
     @me   = create(:me)

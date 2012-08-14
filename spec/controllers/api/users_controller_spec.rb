@@ -1,7 +1,7 @@
 require 'spec_helper'
 require 'json'
 
-describe UsersController do
+describe Api::UsersController do
   describe "GET 'index'" do
     #it "returns http success" do
     #  get 'index'

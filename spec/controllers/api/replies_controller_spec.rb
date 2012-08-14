@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe RepliesController do
+describe Api::RepliesController do
   before :each do
     # Init variables
     @me   = create(:me)

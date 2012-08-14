@@ -1,4 +1,4 @@
-class UsersController < ApplicationController
+class Api::UsersController < ApplicationController
   skip_before_filter :authorize, :only => [:create] 
   
   # Create a new user(Signup)

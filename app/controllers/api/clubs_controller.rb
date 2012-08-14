@@ -1,11 +1,11 @@
-class ClubsController < ApplicationController
+class Api::ClubsController < ApplicationController
 
   # TODO: role!!!
   # TODO: destroy
 
   # List all clubs of current user
   #
-  # URL     GET /clubs
+  # URL     GET /api/clubs
   # ROLE    member
   def index
     render :json => current_user.clubs
@@ -13,7 +13,7 @@ class ClubsController < ApplicationController
 
   # Show details of a club
   #
-  # URL     GET /club/<club_id>
+  # URL     GET /api/club/<club_id>
   # ROLE    member
   def show
     render :json => current_user.clubs.find(params[:id])

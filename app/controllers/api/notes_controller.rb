@@ -1,4 +1,4 @@
-class NotesController < ApplicationController
+class Api::NotesController < ApplicationController
   # List all notes of the paper
   #
   # URL     GET /paper/<paper_id>/notes

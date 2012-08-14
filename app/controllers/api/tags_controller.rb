@@ -1,4 +1,4 @@
-class TagsController < ApplicationController
+class Api::TagsController < ApplicationController
   # List tags of a paper or a club
   #
   # URL         GET   /paper/<paper_id>/tags

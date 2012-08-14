@@ -1,4 +1,4 @@
-class RepliesController < ApplicationController
+class Api::RepliesController < ApplicationController
   # List all replies of the note
   #
   # URL     GET /note/<note_id>/replies

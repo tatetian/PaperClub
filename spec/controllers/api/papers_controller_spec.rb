@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe PapersController do
+describe Api::PapersController do
   before :each do
     # Init variables
     @me   = create(:me)

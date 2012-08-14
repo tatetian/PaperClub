@@ -1,4 +1,4 @@
-class PapersController < ApplicationController
+class Api::PapersController < ApplicationController
   # List papers in a club
   #
   # URL     GET /club/<club_id>/papers
