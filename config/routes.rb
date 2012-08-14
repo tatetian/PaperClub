@@ -1,4 +1,9 @@
 PaperClub::Application.routes.draw do
+  # Landing page for the app
+  root :to => 'welcome#index'
+  # Home of the app(after login)
+  match "/home" => "home#index", :via => :get
+
   # Sessions
   resources :sessions, only: [:create, :destroy]
   # Signin & signout
@@ -105,9 +110,6 @@ PaperClub::Application.routes.draw do
   #     resources :products
   #   end
 
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  # root :to => 'welcome#index'
 
   # See how all your routes lay out with "rake routes"
 

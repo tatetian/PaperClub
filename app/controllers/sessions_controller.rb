@@ -1,4 +1,6 @@
 class SessionsController < ApplicationController
+  skip_before_filter :authorize, :only => [:create] 
+
   # Signin
   def create
     puts 'try to login...'
