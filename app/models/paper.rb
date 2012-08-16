@@ -1,5 +1,6 @@
 class Paper < ActiveRecord::Base
-  attr_accessible :uuid, :pub_date, :title, :club_id, :uploader_id
+  attr_accessible :uuid, :pub_date, :title, :num_pages,
+                  :club_id, :uploader_id
 
   belongs_to :club
 

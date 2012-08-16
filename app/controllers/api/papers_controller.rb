@@ -49,15 +49,18 @@ class Api::PapersController < ApplicationController
     # Check uniqueness
     # ...
     # Extract title
-    title = uuid
-    pub_date = nil
+    temp_pdf_path = temp_pdf.path
+    json_meta = %x[pdf2htmlEX --only-meta 1 "#{temp_pdf_path}"] 
+    parsed_meta = ActiveSupport::JSON.decode json_meta
     # Save the paper in DB
-    paper = Paper.create(uuid: uuid, title: title, pub_date: pub_date,
-                         club_id: club.id, uploader_id: current_user.id)
+    paper = Paper.create( title:    parsed_meta["title"], 
+                          pub_date: parsed_meta["modified_date"],
+                          num_pages: parsed_meta["num_pages"],
+                          uuid: uuid,
+                          club_id: club.id, uploader_id: current_user.id)
     if paper
       render :json => paper
       # Convert the file from PDF to HTML5
-      temp_pdf_path = temp_pdf.path
       temp_pdf_basename = File.basename(temp_pdf_path, 
                                         File.extname(temp_pdf_path)) 
       html_dest_dir = Rails.root.join("public", "uploads", uuid)
