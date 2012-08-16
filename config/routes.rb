@@ -15,11 +15,9 @@ PaperClub::Application.routes.draw do
 
     match "/clubs" => "clubs#index", :via => :get
 
-    match "/club/:club_id" => "clubs#show", :via => :get
+    match "/clubs/:club_id" => "clubs#show", :via => :get
 
-    match "/paper/:paper_id" => "papers#show", :via => :get
-
-    match "/reader/:paper_id" => "reader#show", :via => :get
+    match "/papers/:paper_id" => "papers#show", :via => :get
   end
 
   # All the url of Web services are prefixed "api"

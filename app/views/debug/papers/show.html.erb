@@ -1,0 +1,30 @@
+<!-- Club info -->
+<div id="pdf-main">
+</div>
+<script type="text/template" id="paper-view-template">
+</script>
+<script type="text/javascript">
+var PAPER_ID = <%= @paper.id %>
+var PAPER_UUID = "<%= @paper_uuid %>";
+var base_url = "/uploads/" + PAPER_UUID;
+$(function() {
+    function loadCss() {
+      var all_css_url = [base_url, "all.css"].join("/")
+      $("<link>").appendTo("head").attr({
+        rel: "stylesheet",
+        type: "text/css",
+        href: all_css_url
+      });
+    }
+    function loadPage(pageNum) {
+      hexPageNum = (pageNum).toString(16) 
+      page_html_url = [base_url, hexPageNum + ".page"].join("/")
+      $.get(page_html_url, null, function(page_html_data) {
+        $("#pdf-main").append(page_html_data);
+      }, "html");
+    }
+
+    loadCss()
+    loadPage(1);
+});
+</script>

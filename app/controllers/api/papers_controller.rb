@@ -33,8 +33,44 @@ class Api::PapersController < ApplicationController
   #
   # URL     POST  /club/<club_id>/papers
   # ROLE    member
+  require "tempfile"
   def create
+    # Authenticate
+    club = can_access_club?(params[:club_id])
 
+    # Save the uploaded file as a tempfile
+    temp_pdf = Tempfile.new('uploaded-pdf-', )
+    temp_pdf.binmode
+    temp_pdf.write(params[:file].read)
+    temp_pdf.flush
+    temp_pdf.close
+    # Calculate the hash
+    uuid = Paper.calculate_uuid temp_pdf 
+    # Check uniqueness
+    # ...
+    # Extract title
+    title = uuid
+    pub_date = nil
+    # Save the paper in DB
+    paper = Paper.create(doc_hash: uuid, title: title, pub_date: pub_date,
+                 club_id: club.id, uploader_id: current_user.id)
+    if paper
+      render :json => paper
+      # Convert the file from PDF to HTML5
+      temp_pdf_path = temp_pdf.path
+      temp_pdf_basename = File.basename(temp_pdf_path, 
+                                        File.extname(temp_pdf_path)) 
+      html_dest_dir = Rails.root.join("public", "uploads", uuid)
+      Dir.mkdir html_dest_dir  
+      cmd = "pdf2htmlEX --dest-dir #{html_dest_dir.to_s} #{temp_pdf_path.to_s}"
+      pid = Process.spawn cmd
+      # Move pdf file to its permanent location
+      #final_pdf_path = Rails.root.join("public", "uploads", )
+      #FileUtils.mv(temp_pdf_path, )
+      #temp_pdf.unlink
+    else
+      error "Can't save in database"
+    end
   end
 
   # Remove a paper from a club

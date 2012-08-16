@@ -2,11 +2,16 @@
 <html>
 <head>
   <title>PaperClub</title>
+  
+  <meta charset="utf-8">
+
   <%= stylesheet_link_tag    "reset", :media => "all" %>
   <%= stylesheet_link_tag    params[:controller], :media => "all" %>
   <%= javascript_include_tag "jquery-1.8.0.js" %>
   <%= javascript_include_tag "underscore.js" %>
   <%= javascript_include_tag "backbone.js" %>
+  <%= javascript_include_tag "plupload.js" %>
+  <%= javascript_include_tag "plupload.html5.js" %>
   <%= javascript_include_tag params[:controller] %>
   <%= csrf_meta_tags %>
 </head>
