@@ -1,5 +1,5 @@
 class Paper < ActiveRecord::Base
-  attr_accessible :doc_hash, :pub_date, :title, :club_id, :uploader_id
+  attr_accessible :uuid, :pub_date, :title, :club_id, :uploader_id
 
   belongs_to :club
 
@@ -28,7 +28,7 @@ class Paper < ActiveRecord::Base
       id:       self.id,
       title:    self.title, 
       pub_date: self.pub_date,
-      doc_hash: self.doc_hash,
+      uuid:     self.uuid,
       tags:     self.tags.map { |t|
                   t.as_json(options)
                 }

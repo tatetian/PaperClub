@@ -9,7 +9,7 @@ describe Paper do
 
   it { should respond_to(:title) }
   it { should respond_to(:pub_date) }
-  it { should respond_to(:doc_hash) }
+  it { should respond_to(:uuid) }
   it { should respond_to(:uploader) }
   it { should respond_to(:club_id) }
 

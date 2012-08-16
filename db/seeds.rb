@@ -14,7 +14,7 @@ membership = Membership.create!(role: "admin",
                                club_id: demo_club.id, user_id: demo_user.id)
 demo_paper = Paper.create!( title: "The Case for Determinism in Database Systems", 
                             pub_date: 10.days.ago, 
-                            doc_hash: "19oj9asdf21a9sdjklasd901as",
+                            uuid: "19oj9asdf21a9sdjklasd901as",
                             uploader_id: demo_user.id,
                             club_id: demo_club.id )
 demo_tag1 = Tag.create!(name: "Database", club_id: demo_club.id)

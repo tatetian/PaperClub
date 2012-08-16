@@ -52,7 +52,7 @@ class Api::PapersController < ApplicationController
     title = uuid
     pub_date = nil
     # Save the paper in DB
-    paper = Paper.create(doc_hash: uuid, title: title, pub_date: pub_date,
+    paper = Paper.create(uuid: uuid, title: title, pub_date: pub_date,
                          club_id: club.id, uploader_id: current_user.id)
     if paper
       render :json => paper
