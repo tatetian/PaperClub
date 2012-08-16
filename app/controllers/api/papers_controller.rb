@@ -39,7 +39,7 @@ class Api::PapersController < ApplicationController
     club = can_access_club?(params[:club_id])
 
     # Save the uploaded file as a tempfile
-    temp_pdf = Tempfile.new('uploaded-pdf-', )
+    temp_pdf = Tempfile.new('uploaded-pdf-')
     temp_pdf.binmode
     temp_pdf.write(params[:file].read)
     temp_pdf.flush
@@ -53,7 +53,7 @@ class Api::PapersController < ApplicationController
     pub_date = nil
     # Save the paper in DB
     paper = Paper.create(doc_hash: uuid, title: title, pub_date: pub_date,
-                 club_id: club.id, uploader_id: current_user.id)
+                         club_id: club.id, uploader_id: current_user.id)
     if paper
       render :json => paper
       # Convert the file from PDF to HTML5
