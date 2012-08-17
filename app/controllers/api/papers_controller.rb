@@ -7,7 +7,8 @@ class Api::PapersController < ApplicationController
     begin
       # Authenticate
       club = can_access_club?(params[:club_id])
-      render :json => club.papers
+      # Construct query
+      render :json => Paper.search(club.id, params)
     rescue ActiveRecord::RecordNotFound
       error "Can't access the club"
     end
@@ -46,8 +47,12 @@ class Api::PapersController < ApplicationController
     temp_pdf.close
     # Calculate the hash
     uuid = Paper.calculate_uuid temp_pdf 
-    # Check uniqueness
-    # ...
+    # If existing, return
+    paper = Paper.find_by_uuid(uuid)
+    if paper
+      render :json => paper
+      return
+    end
     # Extract title
     temp_pdf_path = temp_pdf.path
     json_meta = %x[pdf2htmlEX --only-meta 1 "#{temp_pdf_path}"] 

@@ -14,6 +14,19 @@ class Paper < ActiveRecord::Base
 
   default_scope :order => 'papers.updated_at DESC'
 
+  # Search papers in a club given keywords, tag and uploader
+  def self.search(club_id, params) 
+    conditions = ["papers.club_id=#{club_id}"]
+    conditions << "papers.title LIKE ('%#{params[:keywords]}%')" if params[:keywords]
+    conditions << "papers.uploader_id=#{params[:user_id]}" if params[:user_id]
+    if(params[:tag_id])
+      where << "collections.tag_id=#{params[:tag_id]}"
+      return Paper.joins(:collections).where(conditions.join(" AND "))
+    else
+      return Paper.where(conditions.join(" AND "))
+    end
+  end
+
   # Get who uploaded the paper
   def uploader
     User.find(self.uploader_id)
@@ -32,7 +45,9 @@ class Paper < ActiveRecord::Base
       uuid:     self.uuid,
       tags:     self.tags.map { |t|
                   t.as_json(options)
-                }
+                },
+      created_at: self.created_at,
+      updated_at: self.updated_at
     }
   end
 
@@ -70,6 +85,4 @@ class Paper < ActiveRecord::Base
     # e.g. "dOEP83tWjnbFFmzosO3fKg"
     res = base64[0...-2]
   end
-
-
 end

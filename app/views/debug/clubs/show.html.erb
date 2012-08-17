@@ -1,8 +1,15 @@
 <!-- Club info -->
 <div id="club-view">
 </div>
+<!-- Upload -->
 <div id="uploader">
   <input id="upload-btn" type="submit" value="Upload"></input>
+</div>
+<!-- Search -->
+<div id="search">
+  <div id="users"></div>
+  <div id="tags"></div>
+  <input type="search" placeholder='Type keywords to search papers in club' style="width: 250px;"></input>
 </div>
 <!-- Papers -->
 <div>
@@ -56,7 +63,11 @@ $(function() {
   });
   var Papers = Backbone.Collection.extend({
     model: Paper,
-    url: '/api/clubs/' + CLUB_ID + '/papers' 
+    url: '/api/clubs/' + CLUB_ID + '/papers',
+    search: function(args) {
+      // Append args to the end of url
+      this.fetch({data: args})
+    }
   });
   var PaperView = Backbone.View.extend({
     tagName: 'li',
@@ -123,5 +134,21 @@ $(function() {
     }
   });
   var uploader = new UploaderView();
+  /*=================== Search ================*/
+  var SearchView = Backbone.View.extend({
+    el: "#search",
+    events: {
+    },
+    initialize: function() {
+      this.$el.find("input[type=search]").on('search', function(e) {
+        var keywords = e.target.value;
+        if(keywords)
+          papers.search({ keywords: keywords })
+        else
+          papers.search();
+      });
+    }
+  });  
+  var searchView = new SearchView();
 });
 </script>
