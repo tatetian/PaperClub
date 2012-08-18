@@ -140,7 +140,7 @@ $(function() {
     events: {
     },
     initialize: function() {
-      this.$el.find("input[type=search]").on('search', function(e) {
+      this.$("input[type=search]").on('search', function(e) {
         var keywords = e.target.value;
         if(keywords)
           papers.search({ keywords: keywords })

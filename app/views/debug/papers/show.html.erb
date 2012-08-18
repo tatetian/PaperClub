@@ -1,30 +1,261 @@
 <!-- Club info -->
-<div id="pdf-main">
+<div id="viewport">
+  <ul class="viewport-pages">
+  </ul>
 </div>
 <script type="text/template" id="paper-view-template">
 </script>
 <script type="text/javascript">
-var PAPER_ID = <%= @paper.id %>
+var PAPER_ID = <%= @paper.id %>;
 var PAPER_UUID = "<%= @paper_uuid %>";
-var base_url = "/uploads/" + PAPER_UUID;
-$(function() {
-    function loadCss() {
-      var all_css_url = [base_url, "all.css"].join("/")
-      $("<link>").appendTo("head").attr({
-        rel: "stylesheet",
-        type: "text/css",
-        href: all_css_url
-      });
-    }
-    function loadPage(pageNum) {
-      hexPageNum = (pageNum).toString(16) 
-      page_html_url = [base_url, hexPageNum + ".page"].join("/")
-      $.get(page_html_url, null, function(page_html_data) {
-        $("#pdf-main").append(page_html_data);
-      }, "html");
-    }
+var NUM_PAGES = <%= @paper.num_pages %>;
+var BASE_URL = "/uploads/" + PAPER_UUID;
 
-    loadCss()
-    loadPage(1);
+$(function() { 
+    var PageView = Backbone.View.extend({
+      tagName: "li",
+      className: "viewport-page",
+      state: "blank",
+      nowVisible: false,
+      widthHeightRatio: 1.41421356237, // hegiht/width of A size(A1, A2, A3, A4, ...)
+      states: {
+        blank: {
+          transition: function(previousState) {
+          },
+          onVisible: function() {
+            this.setState("loading");
+          },
+          onInvisible: function() {}
+        },
+        loading: {
+          transition: function(previousState) {
+            this.states.loading.doLoading.apply(this);
+          },
+          onVisible: function() {
+          },
+          onInvisible: function() {
+          },
+          doLoading: function() {
+            if(this.pageContent) return;
+
+            var that = this;
+            var hexPageNum = (this.pageNum).toString(16) 
+            var pageHtmlUrl = [BASE_URL, hexPageNum + ".page"].join("/")
+            $.ajax({
+              url: pageHtmlUrl,
+              data: null, 
+              context: that,
+              dataType: "html"
+            })
+            .done(this.states.loading.onSuccess)
+            .fail(this.states.loading.onFail);
+          },
+          onSuccess: function(pageContent) {
+            this.pageContent = pageContent;
+
+            if(this.nowVisible) 
+              this.setState("viewable");
+            else
+              this.setState("hidden");
+          },
+          onFail: function() {
+            alert("fail");
+
+            if(this.nowVisible) {
+              var that = this;
+              setTimeout(function(){this.doLoading()}, 3000);
+            }
+            else
+              this.setState("blank");
+          }
+        },
+        viewable: {
+          transition: function(previousState) {
+            if(!this.$pageContent) {
+              var $pc = this.$pageContent = $(this.pageContent);
+
+              this.widthHeightRatio = $pc.height() / $pc.width() ;
+
+              this.$el.css("background-color", "white");
+              this.resize();
+              this.$el.append($pc);
+            }
+            else {
+              this.$pageContent.show();
+            }
+          },
+          onVisible: function() {            
+          },
+          onInvisible: function() {
+            this.setState("hidden")
+          }
+        },
+        hidden: {
+          transition: function(previousState) {
+    
+            if(this.$pageContent)
+              this.$pageContent.hide();
+          },
+          onVisible: function() {
+            this.setState("viewable");
+          },
+          onInvisible: function() {
+          }
+        }
+      },
+      initialize: function() {
+        this.pageNum = this.options.pageNum;
+
+  //      this.$el.width(this.options.width+"px")
+//                .height(this.options.width * this.widthHeightRatio+"px");
+        this.setWidth(this.options.width);
+
+        // Init blank state                
+        this.states.blank.transition.apply(this, ["blank"]);
+      },
+      setState: function(state) {
+        var previousState = this.state;
+        this.state = state; 
+        this.states[this.state].transition.apply(this, [previousState]);
+      },
+      onVisible: function() {
+        this.nowVisible = true;
+        this.states[this.state].onVisible.apply(this, arguments);
+      },
+      onInvisible: function() {
+        this.nowVisible = false;
+        this.states[this.state].onInvisible.apply(this, arguments);
+      },
+      setWidth: function(width) {
+        this.$el.width(width+"px");
+
+        this.resize(); 
+      },
+      resize: function() {
+        var $pc = this.$pageContent;
+        if($pc) {
+          var zoomPc = this.$el.width() / $pc.width() ;
+          console.debug("zoomPc="+zoomPc)
+          $pc.css({scale: zoomPc});
+        }
+        
+        this.$el.height(this.$el.width() * this.widthHeightRatio + "px");
+      },
+      getHeight: function() {
+        return this.$el.height();           
+      }
+    });
+
+    var Viewport = Backbone.View.extend({
+      el: "#viewport",
+      zoomFactor: 0.6,
+      events: {
+        
+      },
+      initialize: function(options) {
+        var that = this;
+
+        this.loadCss();
+
+        var numPages = this.numPages = options.numPages,
+            pages    = this.pages    = new Array(numPages),
+            viewportWidth = this.$el.width();
+
+        $.each(pages, function(i) {
+          pages[i] = new PageView({
+            pageNum:  i+1, 
+            width: that.zoomFactor * viewportWidth,
+            viewport: that
+          });
+          that.$(".viewport-pages").append(pages[i].$el);
+        });
+        pages[0].onVisible();
+        pages[1].onVisible();
+        //        var ;
+        var scrolling = false, 
+            lastScrollTime = Date.now(),
+            scrollTimer = null;
+        this.$el.scroll(function() {
+ //         var now = Date.now();
+ //         if (now - lastScrollTime < 500) return;
+ //         else lastScrollTime = now;
+          lastScrollTime = Date.now();
+          if(scrollTimer) clearInterval(scrollTimer);
+          scrollTimer = setInterval(function() {
+            if (Date.now() - lastScrollTime > 450) {
+            console.debug("timeup");
+              clearInterval(scrollTimer);
+              that.updatePages();
+            }
+          }, 200);
+        });
+      },
+      updatePages: function() {
+        var that = this, pages = this.pages,
+            viewportHeight = that.$el.height(),
+            l = pages.length;
+        // Find the first visible page
+        for(var first = 0; first < l; ++first) {
+          if(that.isPageVisible(pages[first], viewportHeight))
+            break;
+        }
+        // Find the last visible page
+        for(var last = l - 1; last >= 0; --last) {
+          if(that.isPageVisible(pages[last], viewportHeight))
+            break;
+        }
+        // Set invisible
+        that.setVisibilities(first == 0 ? first : first-1, 
+                             last == l - 1 ? last : last + 1, true);
+        that.setVisibilities(0, first - 2, false);
+        that.setVisibilities(last + 2, l-1, false);
+      },
+      isPageVisible: function(page, viewportHeight) {
+        var t = page.$el.position().top,
+            b = t + page.$el.height();
+        return ( ! ( b < 0 || t >= viewportHeight ) );
+      },
+      setVisibilities: function(from, to, visible) {
+        if(visible)
+        console.debug("visible: from="+from+", to="+to)        
+
+        for(var i = from; i <= to; ++i) {
+          if(visible) {
+            this.pages[i].onVisible(); 
+          }
+          else { 
+            this.pages[i].onInvisible(); 
+          }
+        }
+      },
+      loadCss: function() {
+        var allCssUrl = [BASE_URL, "all.css"].join("/")
+        $("<link>").appendTo("head").attr({
+          rel: "stylesheet",
+          type: "text/css",
+          href: allCssUrl
+        });
+      },
+      // pageWidth = factor * viewportWidth
+      zoom: function(factor) {
+        this.zoomFactor = factor;
+
+        var viewportWidth = this.$el.width(),
+            pageWidth = factor * viewportWidth;
+        $.each(this.pages, function(i, page) {
+          page.setWidth(pageWidth);
+        })
+      },
+      resize: function() {
+        $.each(this.pages, function(i, page) {
+          page.resize();
+        })
+      }
+    });
+    var options = {
+      numPages: NUM_PAGES
+    };
+    var viewport = new Viewport(options);
+    window.vp = viewport;
 });
 </script>

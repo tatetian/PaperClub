@@ -1,3 +1,44 @@
-// Place all the styles related to the debug/papers controller here.
-// They will automatically be included in application.css.
-// You can use Sass (SCSS) here: http://sass-lang.com/
+body, html {
+  overflow: hidden;
+}
+
+#viewport {
+  font-family: sans-serif;
+  position:absolute;
+  top:0;
+  left:0;
+  bottom:0;
+  right:0;
+  overflow:auto;
+  background-color:white;
+  /* for Chrome & Safari */
+  -webkit-text-stroke-width:0.13px; 
+}
+.viewport-pages {
+  width: 100%;
+}
+.viewport-page {
+  margin: 13px auto;
+  position: relative;
+  border: solid 1px;
+  border-color: gray;
+  background-color: gray;
+  overflow: hidden;
+}
+.viewport-page > .p {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  background-color:white;
+  -webkit-transform-origin: 0% 0%;
+  -moz-transform-origin: 0% 0%;
+  -o-transform-origin: 0% 0%;
+  -ms-transform-origin: 0% 0%;
+  transform-origin: 0% 0%;
+}
+#viewport ::selection{
+  background: rgba(127,255,255,1);
+}
+#viewport ::-moz-selection{
+  background: rgba(127,255,255,1);
+}
