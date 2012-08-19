@@ -608,7 +608,11 @@
       },
 
       set: function(elem, value) {
-        var t = $(elem).css('transform') || new Transform();
+        // Modified by tatetian
+        var t = $(elem).css('transform');
+        if( !t || t == 'none') {
+          t = new Transform();
+        }
         t.setFromString(prop, value);
 
         $(elem).css({ transform: t });
