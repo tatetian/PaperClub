@@ -51,6 +51,19 @@ PaperClub::Application.configure do
   # Disable delivery errors, bad email addresses will be ignored
   # config.action_mailer.raise_delivery_errors = false
 
+  # Enable email deliverty
+  config.action_mailer.delivery_method = :smtp
+
+  config.action_mailer.smtp_settings = {
+    :address      => "smtp:gmail.com",
+    :port         => 587,
+    :domain       => "paperclub.com",
+    :authentication =>  "plain",
+    :user_name    => "paperclub.mailer",
+    :password     => "TianHongliang",
+    :enable_starttls_auto => true
+  }
+
   # Enable threaded mode
   # config.threadsafe!
 
