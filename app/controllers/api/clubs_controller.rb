@@ -22,13 +22,23 @@ class Api::ClubsController < ApplicationController
   # Create a new club
   #
   # URL     POST /clubs
-  # PARAMS  club[name]
-  #         club[description]
+  # PARAMS  club[:name]
+  #         club[:description]
+  #         invititation_emails  -- array
   # ROLE    member
   def create
     club = Club.create(params[:club])
     if club
       if Membership.create(club_id: club.id, user_id: current_user.id)
+        emails = params[:invitation_emails]
+        if emails
+          emails.each { |e| 
+            Invitation.create( invitor_id: current_user.id,
+                               invitee_email: e,
+                               club_id: club.id, 
+                               role: "member")
+          }
+        end
         render :json => club
       else
         club.destroy

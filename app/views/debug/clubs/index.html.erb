@@ -1,5 +1,25 @@
 <!-- Show all clubs of current users -->
 <div>
+  <h1>New club</h1>
+  <%= form_for(:club, url: api_clubs_path) do |c| %>
+    <div>
+      <%= c.label :name %>
+      <%= c.text_field :name %>
+    </div>
+    <div>
+      <%= c.label :description %>
+      <%= c.text_field :description %>
+    </div>
+    <div>
+      <%= label_tag :invitation_emails %>
+      <p>1. <%= text_field :invitation_emails, nil, :id => nil%></p>
+      <p>2. <%= text_field :invitation_emails, nil, :id => nil%></p>
+      <p>3. <%= text_field :invitation_emails, nil, :id => nil%></p>
+    </div>
+    <%= c.submit "Create", class: "" %>
+    <%= c.label :description %>
+  <% end %>
+
   <h1>Clubs of current user:</h1>
   <ul id="club-list">
   </ul>

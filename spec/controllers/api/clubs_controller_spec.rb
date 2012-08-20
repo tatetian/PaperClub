@@ -25,13 +25,24 @@ describe Api::ClubsController do
   end
 
   describe "POST 'create'" do
+    before do
+      email_address = attributes_for(:invitation)[:invitee_email],
+      @invitation_emails = [email_address, email_address]
+      ActionMailer::Base.deliveries = []
+    end
+
     it "creates a new club" do
-      post 'create', club: attributes_for(:club, name: 'Another Club')
+      post 'create', club: attributes_for(:club, name: 'Another Club'), invitation_emails: @invitation_emails
       @me.clubs.size.should == 2
     end
 
     it "renders a JSON" do
-      post 'create', club: attributes_for(:club, name: 'Another Club')
+      post 'create', club: attributes_for(:club, name: 'Another Club'), invitation_emails: @invitation_emails
+    end
+
+    it "sends a email" do
+      post 'create', club: attributes_for(:club, name: 'Another Club'), invitation_emails: @invitation_emails
+      ActionMailer::Base.deliveries.size.should == 2
     end
   end
 
