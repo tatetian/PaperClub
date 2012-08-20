@@ -1,5 +1,5 @@
 class Notifer < ActionMailer::Base
-  default from: "paperclub.mailer@gmail.com"
+  default from: "PaperClub<paperclub.mailer@gmail.com>"
 
   # Subject can be set in your I18n file at config/locales/en.yml
   # with the following lookup:

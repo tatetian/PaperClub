@@ -1,7 +1,6 @@
 class Api::ClubsController < ApplicationController
 
   # TODO: role!!!
-  # TODO: destroy
 
   # List all clubs of current user
   #
@@ -21,7 +20,7 @@ class Api::ClubsController < ApplicationController
 
   # Create a new club
   #
-  # URL     POST /clubs
+  # URL     POST /api/clubs
   # PARAMS  club[:name]
   #         club[:description]
   #         invititation_emails  -- array
@@ -51,13 +50,13 @@ class Api::ClubsController < ApplicationController
 
   # Update the details of a club
   #
-  # URL     PUT /club/<club_id>
+  # URL     PUT /api/club/<id>
   # PARAMS  club[name]
   #         club[description]
   # ROLE    admin
   def update
     #if current_user.role == "admin"
-    club = current_user.clubs.find(params[:id])
+    club = current_user.clubs.find_by_id(params[:id])
     if club
       if club.update_attributes(params[:club])
         render :json => club
@@ -70,8 +69,14 @@ class Api::ClubsController < ApplicationController
   end
 
   # Destroy of a club
-  # URL     DEL /club/<club_id>
+  # URL     DEL /api/club/<id>
   # ROLE    admin
   def destroy
+    club = current_user.clubs.find_by_id(params[:id])
+    if club and club.destroy
+      render :json => {id: club.id}
+    else
+      error "Failed to delete the club"
+    end
   end
 end
