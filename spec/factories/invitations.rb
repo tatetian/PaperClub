@@ -6,5 +6,6 @@ FactoryGirl.define do
     invitor_id 1
     invitee_email "tatetian@gmail.com"
     role "member"
+    token "18usadfjoisadf09i09j"
   end
 end

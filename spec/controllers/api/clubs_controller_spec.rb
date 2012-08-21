@@ -31,12 +31,12 @@ describe Api::ClubsController do
     end
 
     it "creates a new club" do
-      post 'create', club: attributes_for(:club, name: 'Another Club'), invitation_emails: @email
+      post 'create', club: attributes_for(:club, name: 'Another Club'), invitation_emails: [@email]
       @me.clubs.size.should == 2 
     end
 
     it "renders a JSON" do
-      post 'create', club: attributes_for(:club, name: 'Another Club'), invitation_emails: @email
+      post 'create', club: attributes_for(:club, name: 'Another Club'), invitation_emails: [@email]
     end
 
     it "sends emails" do

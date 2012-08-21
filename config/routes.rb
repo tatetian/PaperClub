@@ -7,6 +7,9 @@ PaperClub::Application.routes.draw do
   # Signin & signout
   match '/signin', to: 'sessions#create', via: :post
   match '/signout', to: 'sessions#destroy', via: :delete
+
+  # Invitation
+  match '/invitations/:token', to: 'invitations#accept', via: :get
   
   # All debug purpose only pages are prefixed "debug"
   # and the following line should be commented in deployment
