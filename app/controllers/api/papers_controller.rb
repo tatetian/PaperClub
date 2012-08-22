@@ -47,20 +47,28 @@ class Api::PapersController < ApplicationController
     temp_pdf.close
     # Calculate the hash
     uuid = Paper.calculate_uuid temp_pdf 
-    # If existing, return
+    # Create or get metadata
+    metadata = Metadata.find_by_uuid(uuid)
+    if not metadata
+      # Extract metadata from PDF
+      temp_pdf_path = temp_pdf.path
+      json_meta = %x[pdf2htmlEX --only-meta 1 "#{temp_pdf_path}"] 
+      parsed_meta = ActiveSupport::JSON.decode json_meta
+      metadata = Metadata.create( title: parsed_meta["title"], 
+                                  pub_date: parsed_meta["modified_date"],
+                                  num_pages: parsed_meta["num_pages"],
+                                  uuid: uuid )
+    end
+    # If the paper is uploaded again in the club, just update its timestamp
     paper = Paper.find_by_uuid(uuid)
-    if paper
+    if paper and paper.touch
       render :json => paper
       return
     end
-    # Extract title
-    temp_pdf_path = temp_pdf.path
-    json_meta = %x[pdf2htmlEX --only-meta 1 "#{temp_pdf_path}"] 
-    parsed_meta = ActiveSupport::JSON.decode json_meta
     # Save the paper in DB
-    paper = Paper.create( title:    parsed_meta["title"], 
-                          pub_date: parsed_meta["modified_date"],
-                          num_pages: parsed_meta["num_pages"],
+    paper = Paper.create( title:    metadata.title, 
+                          pub_date: metadata.pub_date,
+                          num_pages: metadata.num_pages,
                           uuid: uuid,
                           club_id: club.id, uploader_id: current_user.id)
     if paper
@@ -69,9 +77,12 @@ class Api::PapersController < ApplicationController
       temp_pdf_basename = File.basename(temp_pdf_path, 
                                         File.extname(temp_pdf_path)) 
       html_dest_dir = Rails.root.join("public", "uploads", uuid)
-      Dir.mkdir html_dest_dir  
-      cmd = "pdf2htmlEX --dest-dir #{html_dest_dir.to_s} #{temp_pdf_path.to_s}"
-      pid = Process.spawn cmd
+      # If PDF is not processed before, convert PDF to HTML
+      unless File.directory?(html_dest_dir)
+        Dir.mkdir html_dest_dir  
+        cmd = "pdf2htmlEX --dest-dir #{html_dest_dir.to_s} #{temp_pdf_path.to_s}"
+        pid = Process.spawn cmd
+      end
       # Move pdf file to its permanent location
       #final_pdf_path = Rails.root.join("public", "uploads", )
       #FileUtils.mv(temp_pdf_path, )

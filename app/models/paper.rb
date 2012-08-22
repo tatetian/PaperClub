@@ -14,6 +14,14 @@ class Paper < ActiveRecord::Base
 
   default_scope :order => 'papers.updated_at DESC'
 
+  # Remove the associated metadata if no paper uses it
+  after_destroy { |paper|
+    metadata = Metadata.find_by_uuid(paper.uuid)
+    if metadata and not metadata.used?
+      metadata.destroy
+    end
+  }
+
   # Search papers in a club given keywords, tag and uploader
   def self.search(club_id, params) 
     conditions = ["papers.club_id=#{club_id}"]

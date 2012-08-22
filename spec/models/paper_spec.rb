@@ -3,6 +3,7 @@ require 'spec_helper'
 describe Paper do
   before do
     @paper = create(:paper)
+    @metadata = create(:metadata, uuid: @paper.uuid)
   end
 
   subject { @paper }
@@ -24,5 +25,5 @@ describe Paper do
   it "has notes" do
     note = create(:note, paper_id: @paper.id)
     @paper.notes.should == [note]
-  end 
+  end
 end

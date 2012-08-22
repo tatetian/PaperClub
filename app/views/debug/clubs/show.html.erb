@@ -1,3 +1,5 @@
+<!--- TODO: update collection automatically when a model is destroyed --->
+
 <!-- Club info -->
 <div id="club-view">
 </div>
@@ -93,7 +95,6 @@ $(function() {
     deletePaper: function() {
       var model = this.model,
       collection = model.collection;
-      alert(collection);
       model.destroy();
       collection.remove(model);
     }
