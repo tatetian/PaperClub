@@ -30,6 +30,7 @@
       </span>
       <%% }); %>
   </p>
+  <input type="button" value="Delete Paper" />
 </script>
 <script type="text/template" id="club-view-template">
   <h1><%%= name %></h1>
@@ -60,6 +61,12 @@ $(function() {
   var clubView = new ClubView({model: club});
   /*=================== Paper =======================*/
   var Paper = Backbone.Model.extend({
+    'urlRoot': '/api/papers/',
+    initialize: function() {
+      this.on("destory", function(model, collection, options) {
+        //collection.remove(model);
+      }, this);
+    }
   });
   var Papers = Backbone.Collection.extend({
     model: Paper,
@@ -74,6 +81,7 @@ $(function() {
     initialize: function() {    
     },
     events: {
+      'click input[type=button]': 'deletePaper'
     },
     template: _.template($("#paper-view-template").html()),
     render: function() {
@@ -81,6 +89,13 @@ $(function() {
       var json = this.model.toJSON();
       this.$el.append(this.template(json));
       return this;
+    },
+    deletePaper: function() {
+      var model = this.model,
+      collection = model.collection;
+      alert(collection);
+      model.destroy();
+      collection.remove(model);
     }
   });
   var PapersView = Backbone.View.extend({

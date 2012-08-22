@@ -88,7 +88,7 @@
     // Bind one or more space separated events, `events`, to a `callback`
     // function. Passing `"all"` will bind the callback to all events fired.
     on: function(events, callback, context) {
-
+      
       var calls, event, node, tail, list;
       if (!callback) return this;
       events = events.split(eventSplitter);
@@ -541,7 +541,6 @@
       var error = this.validate(attrs, options);
       if (!error) return true;
 
-      alert('not valid');
       if (options && options.error) {
         options.error(this, error, options);
       } else {
@@ -1316,7 +1315,7 @@
   // it difficult to read the body of `PUT` requests.
   Backbone.sync = function(method, model, options) {
     var type = methodMap[method];
-
+    
     // Default options, unless specified.
     options || (options = {});
 
