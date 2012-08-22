@@ -28,7 +28,7 @@ class Api::ClubsController < ApplicationController
   def create
     club = Club.create(params[:club])
     if club
-      if Membership.create(club_id: club.id, user_id: current_user.id)
+      if Membership.create(club_id: club.id, user_id: current_user.id, role: "admin")
         emails = params[:invitation_emails]
         if emails
           emails.each { |e| 
@@ -68,15 +68,23 @@ class Api::ClubsController < ApplicationController
     end
   end
 
-  # Destroy of a club
+  # Quit or/and destroy a club
   # URL     DEL /api/club/<id>
   # ROLE    admin
+  # PARAMS  delete_club
   def destroy
     club = current_user.clubs.find_by_id(params[:id])
-    if club and club.destroy
-      render :json => {id: club.id}
-    else
-      error "Failed to delete the club"
+    if club
+      membership = current_user.memberships.find_by_club_id(club.id) 
+      # Quit
+      if membership and membership.destroy
+        # Delete club (optional) if you're an admin
+        club.destroy if params[:delete_club] and membership.role == "admin"
+
+        render :json => { id: club.id }
+        return
+      end
     end
+    error "Failed to quite or delete the club"
   end
 end

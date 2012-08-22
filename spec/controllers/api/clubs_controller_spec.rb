@@ -58,4 +58,19 @@ describe Api::ClubsController do
       response.body.should == @club.to_json
     end
   end
+
+  describe "DELETE 'destroy'" do
+    it "quits a club" do
+      @me.clubs.should == [@club]
+      delete 'destroy', id: @club
+      @me.reload
+      @me.clubs.should == []
+      @club.reload.should_not == nil
+    end
+    
+    it "deletes a club" do
+      delete 'destroy', id: @club, delete_club: true
+      expect { @club.reload }.to raise_error 
+    end
+  end
 end

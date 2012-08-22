@@ -17,7 +17,6 @@
       <p>3. <%= text_field :invitation_emails, nil, :id => nil%></p>
     </div>
     <%= c.submit "Create", class: "" %>
-    <%= c.label :description %>
   <% end %>
 
   <h1>Clubs of current user:</h1>
@@ -31,6 +30,9 @@
   <%% _.each(users, function(user) { %>
       <p><%%= user.fullname %>, <%%= user.email %></p>
   <%% }); %>
+<!--  <input type="button" class="delete-club" value="Delete Club" /> -->
+  <input type="button" class="quit-club" value="Quit Club" />
+  <br /><br />
 </script>
 <script type="text/javascript">
 $(function() {
@@ -45,6 +47,8 @@ $(function() {
     initialize: function() {    
     },
     events: {
+//      'click .delete-club': 'deleteClub',
+      'click .quit-club': 'quitClub'
     },
     template: _.template($("#club-view-template").html()),
     render: function() {
@@ -52,6 +56,12 @@ $(function() {
       var json = this.model.toJSON();
       this.$el.append(this.template(json));
       return this;
+    },
+    /*deleteClub: function() {
+      this.model.destroy({data: {delete_club: true}});
+    },*/
+    quitClub: function() {
+      this.model.destroy();
     }
   });
   var ClubsView = Backbone.View.extend({
