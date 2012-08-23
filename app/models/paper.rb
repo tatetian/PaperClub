@@ -1,5 +1,6 @@
 class Paper < ActiveRecord::Base
   attr_accessible :uuid, :pub_date, :title, :num_pages,
+                  :width, :height,
                   :club_id, :uploader_id
 
   belongs_to :club

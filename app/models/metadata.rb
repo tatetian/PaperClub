@@ -1,5 +1,5 @@
 class Metadata < ActiveRecord::Base
-  attr_accessible :num_pages, :pub_date, :title, :uuid
+  attr_accessible :num_pages, :pub_date, :title, :uuid, :width, :height
 
   after_destroy :remove_files
 

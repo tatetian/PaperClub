@@ -52,12 +52,8 @@ class Api::PapersController < ApplicationController
     if not metadata
       # Extract metadata from PDF
       temp_pdf_path = temp_pdf.path
-      json_meta = %x[pdf2htmlEX --only-meta 1 "#{temp_pdf_path}"] 
-      parsed_meta = ActiveSupport::JSON.decode json_meta
-      metadata = Metadata.create( title: parsed_meta["title"], 
-                                  pub_date: parsed_meta["modified_date"],
-                                  num_pages: parsed_meta["num_pages"],
-                                  uuid: uuid )
+      
+      metadata = create_metadata_from(temp_pdf_path, uuid)
     end
     # If the paper is uploaded again in the club, just update its timestamp
     paper = Paper.find_by_uuid(uuid)
@@ -136,4 +132,33 @@ class Api::PapersController < ApplicationController
       error "Can't access the club or paper"
     end
   end
+
+private
+  def create_metadata_from pdf_file, uuid
+    json_meta = %x[pdf2htmlEX --only-meta 1 "#{pdf_file}"] 
+    parsed_meta = ActiveSupport::JSON.decode json_meta
+
+    title = parsed_meta["title"]
+    # Too short
+    if title.mb_chars.length < 5
+      title = params[:file].original_filename
+    end
+    # Too long
+    if title.mb_chars.length > 100
+      title = title.slice(0,100)
+    end
+    # Empty date
+    pub_date = parsed_meta["modified_date"]
+    if pub_date.empty?
+      pub_date = nil
+    end
+
+    metadata = Metadata.create( title: title,
+                                pub_date: pub_date,
+                                num_pages: parsed_meta["num_pages"],
+                                width: parsed_meta["width"],  
+                                height: parsed_meta["height"],
+                                uuid: uuid )
+  end
+
 end
