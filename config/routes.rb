@@ -1,8 +1,9 @@
 PaperClub::Application.routes.draw do
+
   # Landing page for the app
   root :to => 'welcome#index'
   # Home of the app(after login)
-  match "/home" => "home#index", :via => :get
+  match "/app" => "app#index", :via => :get
 
   # Signin & signout
   match '/signin', to: 'sessions#create', via: :post
