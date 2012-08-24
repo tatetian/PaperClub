@@ -1,2 +1,55 @@
-<h1>App#index</h1>
-<p>Find me in app/views/app/index.html.erb</p>
+<script type="text/template" id="clubs-screen-template">
+  <div class="p-sidebar" id="p-sidebar-nav">
+    <div class="section ">
+      <div class="header fs24 color-black fw-bold mb15 font-c">
+        Clubs
+      </div>
+      <a class="c-btn-newclub color-blue fs18 font-d" href="#">NEW CLUB</a>
+    </div>
+  </div>
+  <div class="p-paper-list cf">
+    <ul>
+    </ul>
+  </div> 
+</script>
+
+<script type="text/template" id="invited-club-template">
+<div class="header fs24 color-black fw-bold mb20 "><%%= name %></div>
+<div class="section cf ">
+  <div class="section-left fl column-50">
+    <div class=" fs24 color-grey3 pl40 mb20"><%%= description %></div>
+    <div class="left-footer pl40">
+      <span class="fs-16 color-grey2 mr10"><em class=" fs42 color-grey1 font-icon">K</em><%%= num_papers %></span>
+      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">f</em><%%= num_members %></span>
+      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
+    </div>
+  </div>
+  <div class="section-right case-invited fl column-50 mt-15">
+    <div class=" fs24 color-grey3 fs-ita">You are invited by <span class=" color-black fw-bold" ><%%= invitor_name %></span></div>
+    <a class="c-btn-join asblock font-d fw-bold lh15 fs18 pl40 mt10" href="#">Join it</a> 
+    <a class="c-btn-deny asblock font-d color-grey3 lh15 fs18 pl40 mt10" href="#">Decline invitation</a> 
+  </div>
+</div>
+</script>
+
+<script type="text/template" id="create-new-club-template">
+<div class="m-m-wrapper newclub">
+  <div class="m-m-overlay"></div>
+    <div class="m-m-container shadow4lv1 fs18"  draggable="true" >
+      <div class="m-m-title font-d ">Create a new club</div>
+      <div class="m-m-content">
+        <dl class=" ">
+          <dt class="m-f-input flv1 font-c color-grey2 fs20  mt20 color-black column-50" contenteditable="true"/>Name the club</dt>
+          <dd class="m-f-input font-c color-grey2 fs20  mt20 ml40"  contenteditable="true"/>Add  a description or extra details(optional)</dd>
+          <dt class="font-d fs-ita color-black mt30">Type emails to invite people — you can do this later, too.</dt>
+          <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5  ">f</span><p class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;</p></dd>
+          <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5 ">f</span><p class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;</p></dd>
+          <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5 ">f</span><p class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;</p></dd>
+        </dl>
+        <a href="#" class="c-btn-creatclub font-d asblock fr color-black fw-bold mt10" >Create the club</a>
+      </div>
+      <div class="m-m-footer"></div>
+    </div>
+  </div>
+</div>  
+</script>
