@@ -1,3 +1,4 @@
+<!------------------- AllClubsScreen's template --------------->
 <script type="text/template" id="clubs-screen-template">
   <div class="p-sidebar" id="p-sidebar-nav">
     <div class="section ">
@@ -68,5 +69,63 @@
     </div>
     <div class="m-m-footer"></div>
   </div>
+</div>
+</script>
+
+<script type="text/template" id="club-screen-summary-template">
+<div class="header fs24 color-black fw-bold mb15 font-c">
+  <%%= name %>
+</div>
+<div class="content fs16 color-grey2 lh12 font-d">
+  <%%= description %>
+</div>
+</script>
+
+<script type="text/template" id="club-screen-template">
+<div class="p-sidebar" id="p-sidebar-nav">
+  <!-- insert summary view here -->
+  <dl class="section p-nav-menu fs16 color-grey2 mt30 lh15 font-d">
+    <dt class="menu-paper f18 color-grey3 mt10"><a href="#">PAPERS</a></dt>
+      <dd><a  href="#">Filters</a></dd>
+      <dd><a  href="#">Upload</a></dd>
+    <dt class="menu-paper f18 color-grey3 mt10"><a href="#">EVERYONE</a></dt>
+    <dt class="menu-paper fs18 color-grey3 mt10"><a href="#">SETTINGS</a></dt>
+  </dl>
+  <div class="section p-btn-back font-d">
+    <a href="#" >
+      <span class="asblock fs13 color-grey2 ">back to</span>
+      <span class="asblock fs16 color-grey3 ">CLUBS</span>
+    </a>
+  </div>
+</div>
+<div class="p-paper-list">
+  <ul>
+    <div class="mb15 column-62"><form><input class="m-f-input column-62 font-d fs13" type="text"  placeholder="Search" /></form></div>
+    <li class="mb30 clearfloat">
+      <div class="fl column-62">
+        <div class="title fs26 font-c color-black fs-ita"><a href="#">Brighthouse: An Analytic Data Warehouse for Ad-hoc Queries</a></div>
+        <div class="footer color-grey2 fs13  font-c mt-15">
+          <a class="  ml10"><em class="fs42 font-icon color-grey1 p-btn-fav ">*</em>10</a>
+          <span class=" ml10"><em class="fs36 font-icon color-grey1 ">E</em>10</span>
+          <span class=" ml10"><em class="fs36 font-icon color-grey1">b</em>10</span>
+          <span class="fs16 column-62 inblock fr "><em class="fs36 font-icon color-grey1 ">J</em> <i class="mr5">cloud computing,</i><i></i><i class="mr10">google</i><i class=class="mr10"> map reduce</i> </span>
+        </div>
+      </div>
+      <div class="fl column-38">
+        <div class="fs36 font-c fw-bold color-grey2 mt20">&#8220;</div>
+        <div class="content pl15 textin2 fs18 color-grey3 font-c mt-25 huanhang" >It is essential to the success of interaction design that designers find a way to understand the perceptions of users.</div>
+        <div class="footer fr mt15">
+        <span class="asblock fr ml10"><img class="img33" src="header.png" /></span>
+        <div class=" fr">
+          <span class="asblock fr cb color-grey1 font-c fs-ita fs16 fw-bold">20mins ago</span>
+            <div class="fr cb">
+              <span class="color-grey3 fw-bold fs16 fs-ita font-c" >written by</span>
+              <span class="color-grey3  fs16  font-c">用户名</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </li>
+  </ul>
 </div>
 </script>

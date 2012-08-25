@@ -40,9 +40,11 @@ $(function() {
           that.switchScreen(that.getCachedScreen("clubs"));
         },
         showClub: function(clubId) {
+          clubId = parseInt(clubId);
           that.switchScreen(that.getCachedScreen("club", clubId));
         },
         showPaper: function(paperId) {
+          paperid = parseInt(paperId);
           that.switchScreen(that.getCachedScreen("paper", paperId))
         }
       });
@@ -77,16 +79,19 @@ $(function() {
         if(!clubScreen) {
           clubScreen = this.cache.clubScreen[id]
                      = new OneClubScreen({
-                         clubId: id
+                         id: id
                        }); 
-          return clubScreen;
         }
+        return clubScreen;
       }
       else if(name=="paper") {
-        var paperScreen = this.cache.paperScreen[id]
-                        = new PaperScreen({
-                            paperId: id
-                          }); 
+        var paperScreen = this.cache.paperScreen[id];
+        if(!paperScreen) {
+          paperscreen = this.cache.paperScreen[id]
+                      = new PaperScreen({
+                          id: id
+                        });
+        } 
         return paperScreen;
       }
     }
@@ -126,12 +131,12 @@ $(function() {
   // ==========================================
   var AllClubsScreen = PaperClub.AllClubsScreen = Screen.extend({
     className: "p-page-content shadow024 bgwhite",
-    initialize: function(options) {
+    initialize: function() {
       this.render();
 
       this.initEvents();
 
-      this.clubs = new Clubs();
+      this.clubs = SharedData.getClubs();
       this.clubs.on('add', this.onAddOne, this)
                 .on('reset', this.onAddAll, this)
                 .fetch();
@@ -150,10 +155,6 @@ $(function() {
     render: function() {
       this.$el.empty()
               .append(this.template()); 
-/*      var invited = new InvitedClubView();
-      this.$("ul").append(invited.render().$el);
-      var joined = new JoinedClubView();
-      this.$("ul").append(joined.render().$el);*/
       this.onResize();
       return this;      
     },
@@ -259,8 +260,8 @@ $(function() {
     tagName: "li",
     className: "font-c mb30 cf",
     template: _.template($("#joined-club-template").html()),
-    initialize: function(options) {
-      this.club = options.club;
+    initialize: function() {
+      this.club = this.options.club;
     },
     render: function() {
       var json = this.club.toJSON();
@@ -301,7 +302,48 @@ $(function() {
   //    OneClubScreen
   // ==========================================
   var OneClubScreen = PaperClub.OneClubScreen = Screen.extend({
-    initialize: function(options) {
+    className: "p-page-content shadow024 bgwhite",
+    template: _.template($("#club-screen-template").html()),
+    initialize: function() {
+      this.id = this.options.id;
+      this.summaryView = new ClubScreenSummaryView({id: this.id});
+
+      this.render(); 
+    },
+    initEvents: function() {
+      var that = this;
+      
+      $(window).resize(function() { 
+        if(that.visible) that.onResize() 
+      });
+    },
+    render: function() {
+      this.$el.empty()
+              .append(this.template())
+              .find(".p-sidebar").prepend(this.summaryView.render().$el);
+      this.onResize();
+      return this;      
+    },
+    onResize: function() {
+      // White area shoudl not be too short
+			this.$el.css('min-height', $(window).height() - 24*2);
+    }
+  });
+
+  var ClubScreenSummaryView = Backbone.View.extend({
+    className: "section",
+    template: _.template($("#club-screen-summary-template").html()),
+    initialize: function() {
+      this.id = this.options.id;
+      this.club = SharedData.getClub(this.id); 
+
+      this.club.on("change", this.render, this)
+               .fetch();
+    },
+    render: function() {
+      this.$el.empty()
+              .append(this.template(this.club.toJSON()));
+      return this; 
     }
   });
 
@@ -309,9 +351,34 @@ $(function() {
   //    PaperScreen
   // ==========================================
   var PaperScreen = PaperClub.PaperScreen = Screen.extend({
-    initialize: function(options) {
+    initialize: function() {
     } 
   });
+
+  // ==========================================
+  //    SharedStore
+  //
+  //    All collections and models in SharedStore are shared among different 
+  //    screens and views in the application to reduce unnecessary data request
+  // ==========================================
+  var SharedData= PaperClub.SharedData = (function() {
+    var clubs = new Clubs();
+
+    return {
+      getClubs: function() {
+        return clubs;
+      },
+      getClub: function(id) {
+        var club = clubs.get(id);
+        if(!club) {
+          club = new Club({id: id});
+          clubs.add(club);
+        }
+        return club;
+      } 
+    };
+  })();
+  window.SharedData = SharedData;
 
   // ==========================================
   // Start application
