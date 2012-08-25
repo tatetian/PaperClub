@@ -130,43 +130,172 @@ $(function() {
       this.render();
 
       this.initEvents();
+
+      this.clubs = new Clubs();
+      this.clubs.on('add', this.onAddOne, this)
+                .on('reset', this.onAddAll, this)
+                .fetch();
     },
     template: _.template($("#clubs-screen-template").html()),
     initEvents: function() {
       var that = this;
+      this.$(".c-btn-newclub").click(function(e) {
+        that.onNewClub();
+        e.preventDefault();
+      });
       $(window).resize(function() { 
-        if(this.visible) that.onResize() 
+        if(that.visible) that.onResize() 
       });
     },
     render: function() {
       this.$el.empty()
               .append(this.template()); 
+/*      var invited = new InvitedClubView();
+      this.$("ul").append(invited.render().$el);
+      var joined = new JoinedClubView();
+      this.$("ul").append(joined.render().$el);*/
       this.onResize();
       return this;      
     },
     onResize: function() {
       // White area not too short
-			this.$el.css('min-height' , 
-                                    $(window).height() - 24*2);
-      // Size of new club dialog
-      var whtml=$(window).width();
-			var wst_c=(whtml-48-255-18-36)*0.5;
-			this.$('.newclub .m-m-container').css({"width":wst_c+88,"height":310});
+			this.$el.css('min-height', $(window).height() - 24*2);
+    },
+    onNewClub: function() {
+      if(!this.newClubDialoge)
+        this.newClubDialoge = new NewClubDialoge();
+      this.newClubDialoge.show();
+    },
+    onAddOne: function(club, that, options) {
+      var clubView = new JoinedClubView({club: club});
+      this.$("ul").append(clubView.render().$el)
+    },
+    onAddAll: function() {
+      this.$("ul").empty();
+      this.clubs.each(this.onAddOne, this);      
     }
   });
+
+  var NewClubDialoge = Backbone.View.extend({
+    className: "m-m-wrapper newclub",
+    template: _.template($("#new-club-dialoge-template").html()),
+    visible: false,
+    events: {
+      "click .c-btn-creatclub": "onOK"
+    },
+    initialize: function() {
+      var that = this;
+
+      $(window).size(function() {
+        if(that.visible)
+          that.onResize();
+      });
+    },
+    render: function() {
+      return this;
+    },
+    show: function() {
+      this.$el.appendTo($("body")).show();
+      this.visible = true;
+
+      this.model = new Club();
+
+      this.$el.empty()
+              .append(this.template(this.model.toJSON()));
+      this.onResize();
+    },
+    hide: function() {
+      this.$el.detach().hide();
+      this.visible = false;
+    },
+    onResize: function() {
+      // Size of new club dialog
+      var whtml = $(window).width();
+			var wst_c = (whtml-48-255-18-36)*0.5;
+			this.$('.m-m-container').css({"width":wst_c+88,"height":310});
+    },
+    onOK: function(e) {
+      this.model.set(this.retrieveValues())
+                .save();  
+      
+      this.hide();
+
+      e.preventDefault();
+    },
+    retrieveValues: function() {
+      var emails = [];
+      _.forEach([0,1,2], function(i) { 
+        var email = $.trim( this.$("#new-club-email-"+i).text() );
+        if(email.length > 0)
+          emails.push(email);
+      });
+
+      return {
+        name: this.$("#new-club-name").text(),
+        description: this.$("#new-club-description").text(),
+        invitation_emails: emails 
+      };
+    }
+  });
+
   var InvitedClubView = Backbone.View.extend({
     tagName: "li",
     className: "font-c mb30 cf",
     template: _.template($("#invited-club-template").html()),
-    render: function() {
-      // TODO: jioajoidasioddas 
+    render: function() { 
       this.$el.append(this.template({
-        name: "",
-        description: "",
-     //.. 
+        name: "Club's name",
+        description: "Club's description",
+        num_papers: 0,
+        num_members: 0,
+        num_notes: 0,
+        invitor_name: "..."
       }));
+      return this;
     }
   });
+
+  var JoinedClubView = Backbone.View.extend({
+    tagName: "li",
+    className: "font-c mb30 cf",
+    template: _.template($("#joined-club-template").html()),
+    initialize: function(options) {
+      this.club = options.club;
+    },
+    render: function() {
+      var json = this.club.toJSON();
+      json.avatar_urls = json.users.map(function(u) {
+                            return u.avatar_url;
+                         });
+      this.$el.append(this.template(json));
+      /* {
+        name: "Club's name",
+        description: "Club's description",
+        num_papers: 0,
+        num_members: 0,
+        num_notes: 0,
+        avatar_urls: []
+      }*/
+      return this;
+    }
+  });
+
+  var Club = PaperClub.Club = Backbone.Model.extend({
+    urlRoot: "/api/clubs/",
+    defaults: function() {
+      return {
+        "name": "Name the club",
+        "description": "Add a description or extra details(optional)",
+        "invitation_emails": ["", "", ""]
+      }
+    }
+  });
+
+  var Clubs = PaperClub.Clubs = Backbone.Collection.extend({
+    model: Club,
+    url: "/api/clubs"
+  });
+
 
   // ==========================================
   //    OneClubScreen

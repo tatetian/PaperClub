@@ -14,8 +14,9 @@ class Club < ActiveRecord::Base
       :id           => self.id, 
       :name         => self.name,
       :description  => self.description,
-      :papers_num   => self.papers.size,
-      :notes_num    => 0,
+      :num_papers   => self.papers.size,
+      :num_notes    => 0,
+      :num_members  => self.users.count,
       :users        => self.users.map { |u|
                           u.as_json(options)
                        }

@@ -8,7 +8,7 @@
     </div>
   </div>
   <div class="p-paper-list cf">
-    <ul>
+    <ul class="mb30">
     </ul>
   </div> 
 </script>
@@ -32,24 +32,41 @@
 </div>
 </script>
 
-<script type="text/template" id="create-new-club-template">
-<div class="m-m-wrapper newclub">
-  <div class="m-m-overlay"></div>
-    <div class="m-m-container shadow4lv1 fs18"  draggable="true" >
-      <div class="m-m-title font-d ">Create a new club</div>
-      <div class="m-m-content">
-        <dl class=" ">
-          <dt class="m-f-input flv1 font-c color-grey2 fs20  mt20 color-black column-50" contenteditable="true"/>Name the club</dt>
-          <dd class="m-f-input font-c color-grey2 fs20  mt20 ml40"  contenteditable="true"/>Add  a description or extra details(optional)</dd>
-          <dt class="font-d fs-ita color-black mt30">Type emails to invite people — you can do this later, too.</dt>
-          <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5  ">f</span><p class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;</p></dd>
-          <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5 ">f</span><p class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;</p></dd>
-          <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5 ">f</span><p class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;</p></dd>
-        </dl>
-        <a href="#" class="c-btn-creatclub font-d asblock fr color-black fw-bold mt10" >Create the club</a>
-      </div>
-      <div class="m-m-footer"></div>
+<script type="text/template" id="joined-club-template">
+<div class="header fs24 color-black fw-bold mb20 "><a href="#/clubs/<%%= id %>"><%%= name %></a></div>
+<div class="section cf ">
+  <div class="section-left fl column-50">
+    <div class=" fs24 color-grey3 pl40 mb20"><%%= description %></div>
+    <div class="left-footer pl40">
+      <span class="fs-16 color-grey2 mr10"><em class=" fs42 color-grey1 font-icon">K</em><%%= num_papers %></span>
+      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">f</em><%%= num_members %></span>
+      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
     </div>
   </div>
-</div>  
+  <div class="section-right fl column-50 mt-20 c-case-img">
+    <%% _.each(avatar_urls, function(url, index) { %>
+      <img class="img48 mr15 mb15" src="<%%= url %>"/>
+    <%% }); %>
+  </div>
+</div>
+</script>
+
+<script type="text/template" id="new-club-dialoge-template">
+<div class="m-m-overlay">
+  <div class="m-m-container shadow4lv1 fs18">
+    <div class="m-m-title font-d">Create a new club</div>
+    <div class="m-m-content">
+      <dl class=" " >
+        <dt id="new-club-name" class="m-f-input flv1 font-c color-grey2 fs20  mt20 color-black column-50" contenteditable="true"><%%= name %></dt>
+        <dd id="new-club-description" class="m-f-input font-c color-grey2 fs20  mt20 ml40"  contenteditable="true"><%%= description %></dd>
+        <dt class="font-d fs-ita color-black mt30">Type emails to invite people — you can do this later, too.</dt>
+        <%% _.each(invitation_emails, function(email, index) { %>
+            <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5  ">f</span><p id="new-club-email-<%%= index %>" class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;<%%= email %></p></dd>
+        <%% }); %>
+      </dl>
+      <a href="#" class="c-btn-creatclub font-d asblock fr color-black fw-bold mt10" >Create the club</a>
+    </div>
+    <div class="m-m-footer"></div>
+  </div>
+</div>
 </script>
