@@ -307,6 +307,9 @@ $(function() {
     initialize: function() {
       this.id = this.options.id;
       this.summaryView = new ClubScreenSummaryView({id: this.id});
+      this.paperListView = new PaperListView({clubId: this.id});
+
+      this.initEvents();
 
       this.render(); 
     },
@@ -320,6 +323,7 @@ $(function() {
     render: function() {
       this.$el.empty()
               .append(this.template())
+              .append(this.paperListView.render().$el)
               .find(".p-sidebar").prepend(this.summaryView.render().$el);
       this.onResize();
       return this;      
@@ -344,6 +348,80 @@ $(function() {
       this.$el.empty()
               .append(this.template(this.club.toJSON()));
       return this; 
+    }
+  });
+
+  var PaperListView = Backbone.View.extend({
+    className: "p-paper-list",
+    template: _.template($("#club-screen-paper-list").html()),
+    initialize: function() {
+      this.clubId = this.options.clubId;
+
+      this.$el.append(this.template());
+
+      this.initEvents();
+
+      this.papers = new Papers(null, {clubId: this.clubId});//SharedData.getPapers(this.clubId);
+      this.papers.on('add', this.onAddOne, this)
+                 .on('reset', this.onAddAll, this);
+    },
+    initEvents: function() {
+    },
+    render: function() {
+      this.papers.fetch();
+      return this; 
+    },
+    onAddOne: function(paper, that, options) {
+      var paperView = new PaperItemView({paper: paper});
+      this.$("ul").append(paperView.render().$el)
+    },
+    onAddAll: function() {
+      this.$("ul").empty();
+      this.papers.each(this.onAddOne, this);      
+    }
+  });
+
+  var PaperItemView = Backbone.View.extend({
+    tagName: "li",
+    className: "mb30 clearfloat",
+    template: _.template($("#club-screen-paper-item").html()), 
+    initialize: function() {
+      this.paper = this.options.paper;
+
+      this.paper.on('change', this.render, this);
+    },
+    render: function() {
+      this.$el.empty()
+              .append(this.template({
+                        //this.paper.toJSON()
+                        title: this.paper.get('title'),
+                        num_favs: 0,
+                        num_reads: 0,
+                        num_notes: 0,
+                        tags: this.paper.get('tags'),
+                        news: {
+                          content: "",
+                          timestamp: "Just now",
+                          action: "uploaded",
+                          author: "Tate Tian",
+                          avatar_url: ""
+                        }
+                      }));
+      return this;       
+    }
+  });
+
+  var Paper = PaperClub.Paper = Backbone.Model.extend({
+    urlRoot: "/api/papers"
+  });
+
+  var Papers = PaperClub.Papers = Backbone.Collection.extend({
+    model: Paper,
+    url: function() { 
+      return "/api/clubs/" + this.clubId + "/papers";
+    },
+    initialize: function(models, options) {
+      this.clubId = options.clubId;            
     }
   });
 

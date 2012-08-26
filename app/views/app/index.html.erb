@@ -1,4 +1,5 @@
 <!------------------- AllClubsScreen's template --------------->
+
 <script type="text/template" id="clubs-screen-template">
   <div class="p-sidebar" id="p-sidebar-nav">
     <div class="section ">
@@ -72,14 +73,7 @@
 </div>
 </script>
 
-<script type="text/template" id="club-screen-summary-template">
-<div class="header fs24 color-black fw-bold mb15 font-c">
-  <%%= name %>
-</div>
-<div class="content fs16 color-grey2 lh12 font-d">
-  <%%= description %>
-</div>
-</script>
+<!------------------- OneClubScreen's template --------------->
 
 <script type="text/template" id="club-screen-template">
 <div class="p-sidebar" id="p-sidebar-nav">
@@ -98,34 +92,66 @@
     </a>
   </div>
 </div>
-<div class="p-paper-list">
-  <ul>
-    <div class="mb15 column-62"><form><input class="m-f-input column-62 font-d fs13" type="text"  placeholder="Search" /></form></div>
-    <li class="mb30 clearfloat">
-      <div class="fl column-62">
-        <div class="title fs26 font-c color-black fs-ita"><a href="#">Brighthouse: An Analytic Data Warehouse for Ad-hoc Queries</a></div>
-        <div class="footer color-grey2 fs13  font-c mt-15">
-          <a class="  ml10"><em class="fs42 font-icon color-grey1 p-btn-fav ">*</em>10</a>
-          <span class=" ml10"><em class="fs36 font-icon color-grey1 ">E</em>10</span>
-          <span class=" ml10"><em class="fs36 font-icon color-grey1">b</em>10</span>
-          <span class="fs16 column-62 inblock fr "><em class="fs36 font-icon color-grey1 ">J</em> <i class="mr5">cloud computing,</i><i></i><i class="mr10">google</i><i class=class="mr10"> map reduce</i> </span>
-        </div>
-      </div>
-      <div class="fl column-38">
-        <div class="fs36 font-c fw-bold color-grey2 mt20">&#8220;</div>
-        <div class="content pl15 textin2 fs18 color-grey3 font-c mt-25 huanhang" >It is essential to the success of interaction design that designers find a way to understand the perceptions of users.</div>
-        <div class="footer fr mt15">
-        <span class="asblock fr ml10"><img class="img33" src="header.png" /></span>
-        <div class=" fr">
-          <span class="asblock fr cb color-grey1 font-c fs-ita fs16 fw-bold">20mins ago</span>
-            <div class="fr cb">
-              <span class="color-grey3 fw-bold fs16 fs-ita font-c" >written by</span>
-              <span class="color-grey3  fs16  font-c">用户名</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </li>
-  </ul>
+<!-- insesrt paper list view here -->
+</script>
+
+<script type="text/template" id="club-screen-summary-template">
+<div class="header fs24 color-black fw-bold mb15 font-c">
+  <%%= name %>
+</div>
+<div class="content fs16 color-grey2 lh12 font-d">
+  <%%= description %>
+</div>
+</script>
+
+<script type="text/template" id="club-screen-paper-list">
+<div class="mb15 column-62"><form><input class="m-f-input column-62 font-d fs13" type="text"  placeholder="Search" /></form></div>
+<ul>
+  <!-- insert paper items here -->
+</ul>
+</script>
+
+<script type="text/template" id="club-screen-paper-item">
+<div class="fl column-62">
+  <div class="title fs26 font-c color-black fs-ita" style="line-height:32px;">
+    <a href="#"><%%= title %></a>
+  </div>
+  <div class="footer color-grey2 fs13 font-c" style="line-height:32px;height:32px;">
+    <a class="ml10" style="margin-left:32px;"><em class="font-icon color-grey1 p-btn-fav" style="font-size:30px;line-height:32px;">*</em><%%= num_favs %></a>
+    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:30px;line-height:32px;">E</em><%%= num_reads %></span>
+    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:30px;line-height:32px;">b</em><%%= num_notes %></span>
+    <em class="fs36 font-icon color-grey1" style="margin-left:32px;font-size:30px;">J</em>
+    <%% _.each(tags, function(tag, index) { %>
+      <i class="mr5">
+        <%%= tag.name %><%%= ( index >= tags.length-1 ? "" : "," ) %>
+      </i>    
+    <%% }); %>
+  </div>
+</div>
+<div class="fl column-38" style="">
+  <div style="margin-top: 15px; width: 100%;">
+  </div>
+  <%% if (news.content.length > 0) { %>
+    <div class="fs36 font-c fw-bold color-grey2" style="margin-top: 28px;">
+      &#8220;
+    </div>
+    <div class="content pl15 fs18 color-grey3 font-c huanhang" style="text-indent: 16px; margin-top: -32px;">
+      <%%= news.content %>
+    </div>
+  <%% } %>
+  <div class="footer fr" style="width: 100%; height: 34px;position: relative; overflow: visible; margin-top: 12px;">
+    <img class="img34" style="position: absolute; right: 0px; top: 0px; "src="<%%= news.avatar_url %>" />
+    <div class="color-grey1 font-c fs-ita fs16 fw-bold" style="position: absolute; right: 42px; top: 0px; line-height: 1.2; height: 16px;"> 
+      <%%= news.timestamp %>
+    </div>
+    <div style="position: absolute; right: 44px; top: 16px; line-height:1.2; height: 16px;">
+      <span class="fr color-grey3   fw-bold fs16  font-c">
+        <%%= news.author %>
+      </span>
+      <span class="fr color-grey3 fs16 fs-ita font-c" >
+        <%%= news.action %> by&nbsp;   
+      </span>
+    </div>
+  </div>
 </div>
 </script>
