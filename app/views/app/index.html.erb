@@ -80,8 +80,8 @@
   <!-- insert summary view here -->
   <dl class="section p-nav-menu fs16 color-grey2 mt30 lh15 font-d">
     <dt class="menu-paper f18 color-grey3 mt10"><a href="#">PAPERS</a></dt>
-      <dd><a  href="#">Filters</a></dd>
-      <dd><a  href="#">Upload</a></dd>
+    <dd><a id="paper-upload-btn" href="#">Upload</a></dd>
+    <dd><a  href="#">Filters</a></dd>
     <dt class="menu-paper f18 color-grey3 mt10"><a href="#">EVERYONE</a></dt>
     <dt class="menu-paper fs18 color-grey3 mt10"><a href="#">SETTINGS</a></dt>
   </dl>
@@ -117,15 +117,17 @@
     <a href="#"><%%= title %></a>
   </div>
   <div class="footer color-grey2 fs13 font-c" style="line-height:32px;height:32px;">
-    <a class="ml10" style="margin-left:32px;"><em class="font-icon color-grey1 p-btn-fav" style="font-size:30px;line-height:32px;">*</em><%%= num_favs %></a>
-    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:30px;line-height:32px;">E</em><%%= num_reads %></span>
-    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:30px;line-height:32px;">b</em><%%= num_notes %></span>
-    <em class="fs36 font-icon color-grey1" style="margin-left:32px;font-size:30px;">J</em>
-    <%% _.each(tags, function(tag, index) { %>
+    <a class="ml10" style="margin-left:32px;"><em class="font-icon color-grey1 p-btn-fav" style="font-size:32px;line-height:32px;">*</em><%%= num_favs %></a>
+    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:32px;line-height:32px;">E</em><%%= num_reads %></span>
+    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:32px;line-height:32px;">b</em><%%= num_notes %></span>
+    <em class="fs36 font-icon color-grey1" style="margin-left:10px;font-size:32px;">J</em>
+    <%% if(tags.length > 0) { _.each(tags, function(tag, index) { %>
       <i class="mr5">
         <%%= tag.name %><%%= ( index >= tags.length-1 ? "" : "," ) %>
       </i>    
-    <%% }); %>
+    <%% }); } else { %>
+      <i class="mr5">(no tags)</i>
+    <%% } %>
   </div>
 </div>
 <div class="fl column-38" style="">

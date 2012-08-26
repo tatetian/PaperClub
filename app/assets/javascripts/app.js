@@ -40,7 +40,8 @@ $(function() {
           that.switchScreen(that.getCachedScreen("clubs"));
         },
         showClub: function(clubId) {
-          clubId = parseInt(clubId);
+          SharedData.currentClubId = clubId 
+                                   = parseInt(clubId);
           that.switchScreen(that.getCachedScreen("club", clubId));
         },
         showPaper: function(paperId) {
@@ -203,6 +204,7 @@ $(function() {
 
       this.$el.empty()
               .append(this.template(this.model.toJSON()));
+
       this.onResize();
     },
     hide: function() {
@@ -288,7 +290,7 @@ $(function() {
         "name": "Name the club",
         "description": "Add a description or extra details(optional)",
         "invitation_emails": ["", "", ""]
-      }
+      };
     }
   });
 
@@ -311,6 +313,8 @@ $(function() {
 
       this.initEvents();
 
+      this.uploader = new PaperUploader({clubId: this.id});
+
       this.render(); 
     },
     initEvents: function() {
@@ -326,11 +330,18 @@ $(function() {
               .append(this.paperListView.render().$el)
               .find(".p-sidebar").prepend(this.summaryView.render().$el);
       this.onResize();
+
       return this;      
     },
     onResize: function() {
       // White area shoudl not be too short
 			this.$el.css('min-height', $(window).height() - 24*2);
+    },
+    show: function() {
+      Screen.prototype.show.apply(this);
+      // Uploader must be initialized after DOM is ready
+      window.uploader = this.uploader;
+      this.uploader.init(); 
     }
   });
 
@@ -355,13 +366,11 @@ $(function() {
     className: "p-paper-list",
     template: _.template($("#club-screen-paper-list").html()),
     initialize: function() {
-      this.clubId = this.options.clubId;
-
       this.$el.append(this.template());
 
       this.initEvents();
 
-      this.papers = new Papers(null, {clubId: this.clubId});//SharedData.getPapers(this.clubId);
+      this.papers = SharedData.getPapers();
       this.papers.on('add', this.onAddOne, this)
                  .on('reset', this.onAddAll, this);
     },
@@ -411,6 +420,50 @@ $(function() {
     }
   });
 
+  var PaperUploader = function(options) {
+    var clubId = options.clubId;
+    
+    this.papers = SharedData.getPapers();
+
+    var uploader = this.uploader = new plupload.Uploader({
+      runtimes : 'html5',
+      browse_button : 'paper-upload-btn',
+//      container: 'uploader',
+      max_file_size : '10mb',
+      url : '/api/clubs/' + clubId + '/papers',
+      multipart_params: {
+      },
+      filters : [
+          {title : "PDF files", extensions : "pdf"}
+      ]
+    });   
+  };
+
+  _.extend(PaperUploader.prototype, {}, {
+    _initialized: false,
+    init: function() {
+      if(this._initialized)
+        return;
+
+      this._initialized = true;
+
+      var uploader = this.uploader,
+          that     = this;
+
+      uploader.init();
+      uploader.bind('FilesAdded', function(up, files) {
+        $.each(files, function(i, file) {
+          uploader.start();
+        });
+      });
+      uploader.bind('FileUploaded', function(up, file, result) {
+        //var response = JSON.parse(result.response),
+        //papers.create()
+        that.papers.fetch();
+      });
+    }
+  });
+
   var Paper = PaperClub.Paper = Backbone.Model.extend({
     urlRoot: "/api/papers"
   });
@@ -440,21 +493,44 @@ $(function() {
   //    screens and views in the application to reduce unnecessary data request
   // ==========================================
   var SharedData= PaperClub.SharedData = (function() {
-    var clubs = new Clubs();
-
-    return {
-      getClubs: function() {
-        return clubs;
-      },
-      getClub: function(id) {
-        var club = clubs.get(id);
-        if(!club) {
-          club = new Club({id: id});
-          clubs.add(club);
-        }
-        return club;
-      } 
-    };
+    var _clubs = new Clubs(),
+        _papersOfClub = {},
+        _data = {
+          currentClubId: null,
+          getClubs: function() {
+            return _clubs;
+          },
+          getClub: function(id) {
+            var club = _clubs.get(id);
+            if(!club) {
+              club = new Club({id: id});
+              _clubs.add(club);
+            }
+            return club;
+          },
+          getPapers: function() {
+            var currentClubId = _data.currentClubId;
+            if(currentClubId != null) {
+              var papers = _papersOfClub[currentClubId];
+              if(!papers) {
+                papers = _papersOfClub[currentClubId] 
+                       = new Papers(null, {clubId: currentClubId});
+              }
+              return papers;
+            }
+            return null;
+          },
+          getPaper: function(paperId) {
+            var papers = _data.getPapers(),
+                paper = null;
+            if(papers)
+              paper = papers.get(paperId);
+            if(!paper)
+              paper = new Paper({id: paperId});
+            return paper;
+          }
+        };
+    return _data;
   })();
   window.SharedData = SharedData;
 
