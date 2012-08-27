@@ -1,5 +1,4 @@
 PaperClub::Application.routes.draw do
-
   # Landing page for the app
   root :to => 'welcome#index'
   # Home of the app(after login)
@@ -74,8 +73,11 @@ PaperClub::Application.routes.draw do
     # Show a reply
     # Destroy a reply
     resources :replies, only: [:destroy]
-
   end
+  
+  match "/api/fulltext/:paper_id/all.css" => "api/fulltext#css", :via => :get
+  match "/api/fulltext/:paper_id/pages/:page_num" => "api/fulltext#pages", :via => :get
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

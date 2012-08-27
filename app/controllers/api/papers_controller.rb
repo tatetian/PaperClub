@@ -72,7 +72,7 @@ class Api::PapersController < ApplicationController
       # Convert the file from PDF to HTML5
       temp_pdf_basename = File.basename(temp_pdf_path, 
                                         File.extname(temp_pdf_path)) 
-      html_dest_dir = Rails.root.join("public", "uploads", uuid)
+      html_dest_dir = Rails.root.join("uploads", uuid)
       # If PDF is not processed before, convert PDF to HTML
       unless File.directory?(html_dest_dir)
         Dir.mkdir html_dest_dir  

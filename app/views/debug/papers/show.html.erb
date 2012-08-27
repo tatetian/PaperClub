@@ -9,7 +9,7 @@
 var PAPER_ID = <%= @paper.id %>;
 var PAPER_UUID = "<%= @paper_uuid %>";
 var NUM_PAGES = <%= @paper.num_pages %>;
-var BASE_URL = "/uploads/" + PAPER_UUID;
+var BASE_URL = "/api/fulltext/" + PAPER_ID;
 
 $(function() { 
     var PageView = Backbone.View.extend({
@@ -39,8 +39,7 @@ $(function() {
             if(this.pageContent) return;
 
             var that = this;
-            var hexPageNum = (this.pageNum).toString(16) 
-            var pageHtmlUrl = [BASE_URL, hexPageNum + ".page"].join("/")
+            var pageHtmlUrl = [BASE_URL, 'pages', this.pageNum].join("/")
             $.ajax({
               url: pageHtmlUrl,
               data: null, 
