@@ -51,7 +51,9 @@ class Paper < ActiveRecord::Base
       id:       self.id,
       title:    self.title, 
       pub_date: self.pub_date,
-      uuid:     self.uuid,
+      num_pages: self.num_pages,
+      width:    self.width,
+      height:   self.height,
       tags:     self.tags.map { |t|
                   t.as_json(options)
                 },

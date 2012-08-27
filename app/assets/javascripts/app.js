@@ -45,7 +45,7 @@ $(function() {
           that.switchScreen(that.getCachedScreen("club", clubId));
         },
         showPaper: function(paperId) {
-          paperid = parseInt(paperId);
+          paperId = parseInt(paperId);
           that.switchScreen(that.getCachedScreen("paper", paperId))
         }
       });
@@ -80,7 +80,7 @@ $(function() {
         if(!clubScreen) {
           clubScreen = this.cache.clubScreen[id]
                      = new OneClubScreen({
-                         id: id
+                         clubId: id
                        }); 
         }
         return clubScreen;
@@ -90,7 +90,7 @@ $(function() {
         if(!paperScreen) {
           paperScreen = this.cache.paperScreen[id]
                       = new PaperScreen({
-                          id: id
+                          paperId: id
                         });
         } 
         return paperScreen;
@@ -307,13 +307,13 @@ $(function() {
     className: "p-page-content shadow024 bgwhite",
     template: _.template($("#club-screen-template").html()),
     initialize: function() {
-      this.id = this.options.id;
-      this.summaryView = new ClubScreenSummaryView({id: this.id});
-      this.paperListView = new PaperListView({clubId: this.id});
+      var clubId = this.clubId = this.options.clubId;
+      this.summaryView = new ClubScreenSummaryView({clubId: clubId});
+      this.paperListView = new PaperListView({clubId: clubId});
 
       this.initEvents();
 
-      this.uploader = new PaperUploader({clubId: this.id});
+      this.uploader = new PaperUploader({clubId: this.clubId});
 
       this.render(); 
     },
@@ -349,8 +349,8 @@ $(function() {
     className: "section",
     template: _.template($("#club-screen-summary-template").html()),
     initialize: function() {
-      this.id = this.options.id;
-      this.club = SharedData.getClub(this.id); 
+      this.clubId = this.options.clubId;
+      this.club = SharedData.getClub(this.clubId); 
 
       this.club.on("change", this.render, this)
                .fetch();
@@ -484,22 +484,129 @@ $(function() {
   // ==========================================
   var PaperScreen = PaperClub.PaperScreen = Screen.extend({
     initialize: function() {
-      this.id = this.options.id;
+      var that = this;
 
-      this.paper = SharedData.getPaper(this.id);
+      this.paperId = this.options.paperId;
 
-      this.toolbar = new PsToolbar({screen: this});
-      this.pageNumber = new PsPageNumber({screen: this});
-      this.viewport = new PsViewport({screen: this});
+      this.paper = SharedData.getPaper(this.paperId);
+ 
+      this.paper.fetch({
+        success: function() {
+          that.toolbar = new PsToolbar({screen: that});
+          that.pageNumber = new PsPageNumber({screen: that});
+          that.viewport = new PsViewport({screen: that});
 
-      this.render();  
-
-      this.paper.fetch();
+          that.render();  
+        }
+      });
     },
     render: function() {
       this.$el.empty()
-              .append(this.toolbar.render().$el);
+              .append(this.toolbar.render().$el)
+              .append(this.viewport.render().$el);
       return this;      
+    }
+  });
+
+  var PsViewport = Backbone.View.extend({
+    tagName: "ul",
+    className: "r-viewport",
+    initialize: function() {
+      this.screen = this.options.screen;
+      
+      var that  = this,
+          paper = this.paper = this.screen.paper,
+          w     = parseInt(paper.get("width")),
+          h     = parseInt(paper.get("height")),
+          numPages = this.numPages = paper.get("num_pages"),
+          pages = this.pages = new Array(numPages),
+          W     = this.viewportWidth = 0.62 * $(window).width(),
+          H     = W*h/w,
+          z     = this.zoomFactor = 1; 
+  
+      this._loadCss();
+
+      $.each(pages, function(i) {
+        pages[i] = new PsPage({
+          pageNum:  i+1, 
+          width: W,
+          height: H,
+          viewport: that
+        });
+        that.$(".viewport-pages").append(pages[i].$el);
+        pages[i]._load();
+      });
+    },
+    render: function() {
+      var $this = this.$el,
+          pages = this.pages;
+
+      $.each(pages, function(i) {
+        $this.append(pages[i].render().$el);
+      });
+
+      return this;
+    },
+    zoom: function(zoomFactor) {
+      this.zoomFactor = zoomFactor;
+      $.each(pages, function(i) {
+        pages[i].zoom(this.zoomFactor);
+      });
+    },
+    _loadCss: function() {
+      var allCssUrl = ["/api/fulltext", this.paper.id, "all.css"].join("/");
+      // Remove the all one(if exists)
+      $("#fulltext-css").remove();
+      // Add the new one
+      $("<link id=\"fulltext-css\">").appendTo("head").attr({
+        rel: "stylesheet",
+        type: "text/css",
+        href: allCssUrl
+      });
+    }
+  });
+
+  var PsPage = Backbone.View.extend({
+    tagName: "li",
+    className: "r-viewport-page",
+    initialize: function() {
+      this.pageNum  = this.options.pageNum;
+      this.width    = this.options.width;
+      this.height   = this.options.height;
+      this.viewport = this.options.viewport;
+      this.zoomFactor = 1.0;
+    },
+    _load:function() {
+      var that = this,
+          pageHtmlUrl = ['/api/fulltext', 
+                         this.viewport.paper.id, 
+                         'pages', 
+                         this.pageNum].join("/");
+      $.ajax({
+        url: pageHtmlUrl,
+        data: null, 
+        context: that,
+        dataType: "html"
+      })
+      .done(function(pageContent){
+        var $pc = that.$pageContent = $(pageContent),
+            ow  = $pc.css('width'),
+            oh  = $pc.css('height');
+        that.orignalWidth   = parseInt(ow.slice(0, ow.length-2));
+        that.orignalHeight  = parseInt(oh.slice(0, oh.length-2));
+        $pc.css({scale: that.width/that.orignalWidth})
+        that.$el.append(that.$pageContent);
+      })
+      .fail(function(){alert("failed");});
+    },
+    zoom: function(zoomFactor) {
+      this.zoomFactor = zoomFactor;
+    },
+    render: function() {
+      this.$el.empty()
+              .width(this.width+"px")
+              .height(this.height+"px");
+      return this;        
     }
   });
 
@@ -525,13 +632,7 @@ $(function() {
     initialize: function() {
       this.screen = this.options.screen;
     }
-  });
-
-  var PsViewport = Backbone.View.extend({
-    initialize: function() {
-      this.screen = this.options.screen;
-    }
-  });
+  }); 
 
   // ==========================================
   //    SharedStore

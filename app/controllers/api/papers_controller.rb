@@ -65,6 +65,8 @@ class Api::PapersController < ApplicationController
     paper = Paper.create( title:    metadata.title, 
                           pub_date: metadata.pub_date,
                           num_pages: metadata.num_pages,
+                          width:  metadata.width,
+                          height: metadata.height,
                           uuid: uuid,
                           club_id: club.id, uploader_id: current_user.id)
     if paper
