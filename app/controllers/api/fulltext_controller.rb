@@ -35,4 +35,19 @@ class Api::FulltextController < ApplicationController
     end
   end
 
+  # Get the PDF of the paper
+  #
+  # URL     GET /api/fulltext/<paper_id>/download
+  # PARAM   paper_id
+  # ROLE    member
+  def download
+    # Find the paper
+    paper = Paper.find(params[:paper_id])
+    # Authenticate
+    can_access_club?(paper.club_id)
+
+    # Send file
+    pdf_path = Rails.root.join("uploads", paper.uuid, "fulltext.pdf")
+    send_file pdf_path, :type=>"application/pdf", :x_sendfile=>true 
+  end
 end
