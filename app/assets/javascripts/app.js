@@ -88,7 +88,7 @@ $(function() {
       else if(name=="paper") {
         var paperScreen = this.cache.paperScreen[id];
         if(!paperScreen) {
-          paperscreen = this.cache.paperScreen[id]
+          paperScreen = this.cache.paperScreen[id]
                       = new PaperScreen({
                           id: id
                         });
@@ -403,6 +403,7 @@ $(function() {
       this.$el.empty()
               .append(this.template({
                         //this.paper.toJSON()
+                        id:  this.paper.get('id'),
                         title: this.paper.get('title'),
                         num_favs: 0,
                         num_reads: 0,
@@ -483,7 +484,53 @@ $(function() {
   // ==========================================
   var PaperScreen = PaperClub.PaperScreen = Screen.extend({
     initialize: function() {
-    } 
+      this.id = this.options.id;
+
+      this.paper = SharedData.getPaper(this.id);
+
+      this.toolbar = new PsToolbar({screen: this});
+      this.pageNumber = new PsPageNumber({screen: this});
+      this.viewport = new PsViewport({screen: this});
+
+      this.render();  
+
+      this.paper.fetch();
+    },
+    render: function() {
+      this.$el.empty()
+              .append(this.toolbar.render().$el);
+      return this;      
+    }
+  });
+
+  var PsToolbar = Backbone.View.extend({
+    className: "r-footer bgwhite shadow0210 tc",
+    template: _.template($("#paper-screen-toolbar-template").html()),
+    initialize: function() {
+      this.screen = this.options.screen;
+      this.paper = this.screen.paper;
+
+      this.paper.on('change', this.render, this);
+    },
+    render: function() {
+      this.$el.empty()
+              .append(this.template({
+                        title: this.screen.paper.get('title')
+                      }));
+      return this;
+    }
+  });
+
+  var PsPageNumber = Backbone.View.extend({
+    initialize: function() {
+      this.screen = this.options.screen;
+    }
+  });
+
+  var PsViewport = Backbone.View.extend({
+    initialize: function() {
+      this.screen = this.options.screen;
+    }
   });
 
   // ==========================================

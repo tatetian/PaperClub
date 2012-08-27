@@ -1,4 +1,4 @@
-<!------------------- AllClubsScreen's template --------------->
+<!------------------- AllClubsScreen's templates --------------->
 
 <script type="text/template" id="clubs-screen-template">
   <div class="p-sidebar" id="p-sidebar-nav">
@@ -73,7 +73,7 @@
 </div>
 </script>
 
-<!------------------- OneClubScreen's template --------------->
+<!------------------- OneClubScreen's templates --------------->
 
 <script type="text/template" id="club-screen-template">
 <div class="p-sidebar" id="p-sidebar-nav">
@@ -81,7 +81,7 @@
   <dl class="section p-nav-menu fs16 color-grey2 mt30 lh15 font-d">
     <dt class="menu-paper f18 color-grey3 mt10"><a href="#">PAPERS</a></dt>
     <dd><a id="paper-upload-btn" href="#">Upload</a></dd>
-    <dd><a  href="#">Filters</a></dd>
+    <dd><a  href="#">Find</a></dd>
     <dt class="menu-paper f18 color-grey3 mt10"><a href="#">EVERYONE</a></dt>
     <dt class="menu-paper fs18 color-grey3 mt10"><a href="#">SETTINGS</a></dt>
   </dl>
@@ -114,7 +114,7 @@
 <script type="text/template" id="club-screen-paper-item">
 <div class="fl column-62">
   <div class="title fs26 font-c color-black fs-ita" style="line-height:32px;">
-    <a href="#"><%%= title %></a>
+    <a href="#/papers/<%%= id %>"><%%= title %></a>
   </div>
   <div class="footer color-grey2 fs13 font-c" style="line-height:32px;height:32px;">
     <a class="ml10" style="margin-left:32px;"><em class="font-icon color-grey1 p-btn-fav" style="font-size:32px;line-height:32px;">*</em><%%= num_favs %></a>
@@ -155,5 +155,29 @@
       </span>
     </div>
   </div>
+</div>
+</script>
+
+<!------------------- PaperScreen's templates -------------->
+
+<script type="text/template" id="paper-screen-template">
+  
+</script>
+
+<script type="text/template" id="paper-screen-toolbar-template">
+<div class="r-paper-title fs26 font-c color-black fs-ita h100 mt-5" style="line-height: 44px;">
+   <a href="#" class="r-btn-fav font-icon fs36  color-grey1 mr5" style="font-style: normal;">*</a>
+   <%%= title %>
+</div>
+            
+<div class="r-footer-left pa fl" style="line-height: 44px;"> 
+  <a href="#" class="r-btn-back  ml10 mr10 fs18 font-d color-grey1 inblock h100 pt21"> <em class="font-icon lh100 fs24">-</em>papers</a>
+  <a href="#" class="r-btn-notes btn-active ml5  tc pl5 pr5 font-d fs18  inblock color-grey2  h100 pt21">NOTES</a>
+  <a href="#" class="r-btn-details  tc pl5 pr5 font-d fs18  inblock  color-grey2 h100 pt21">DETAILS</a>
+</div>
+<div class="r-footer-right fr pa h100 color-grey1" sytle="line-height: 44px;">
+  <a class="zoom+ font-icon fs36 mr15" style="line-height: 44px;">y</a>
+  <a class="zoom- font-icon fs36 mr15">z</a>
+  <a class="download font-icon fs36 mr15">D</a>
 </div>
 </script>
