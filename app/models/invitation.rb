@@ -10,8 +10,7 @@ class Invitation < ActiveRecord::Base
   after_create :send_email
 
   def send_email
-    # TODO: send email asynchronously
-    Notifer.send_invitation(self).deliver
+    Notifer.delay.send_invitation(self)
   end
 
   def init_token

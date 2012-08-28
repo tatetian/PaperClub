@@ -81,11 +81,10 @@ class Api::PapersController < ApplicationController
         Dir.mkdir html_dest_dir  
         cmd = "pdf2htmlEX --dest-dir #{html_dest_dir.to_s} #{temp_pdf_path.to_s}"
         pid = Process.spawn cmd
-
         # Move temp PDF file to its permanent location
-        final_pdf_path = Rails.root.join("uploads", uuid, "fulltext.pdf")
-        FileUtils.mv(temp_pdf_path, final_pdf_path)
-        temp_pdf.unlink
+        #final_pdf_path = Rails.root.join("uploads", uuid, "fulltext.pdf")
+        #FileUtils.mv(temp_pdf_path, final_pdf_path)
+        #temp_pdf.unlink
       end
     else
       error "Can't save in database"

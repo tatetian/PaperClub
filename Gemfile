@@ -38,6 +38,9 @@ gem 'bcrypt-ruby', '~> 3.0.0'
 # gem 'ruby-debug19', :require => 'ruby-debug'
 #
 
+gem 'delayed_job_active_record'
+gem "daemons"
+
 group :development, :test do
   gem "rspec-rails", "~> 2.10.1"
   gem "factory_girl_rails", "~> 3.2.0"
