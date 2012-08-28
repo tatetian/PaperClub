@@ -415,13 +415,26 @@ $(function() {
                         tags: this.paper.get('tags'),
                         news: {
                           content: "",
-                          timestamp: "Just now",
+                          timestamp: this.formatDate(this.paper.get('created_at')),
                           action: "uploaded",
                           author: "Tate Tian",
                           avatar_url: ""
                         }
                       }));
       return this;       
+    },
+    formatDate: function(date) {
+      var d = new Date(Date.parse(date)),
+          n = new Date();   // now
+
+      if( ( d.getDate()  == n.getDate()  ) &&
+          ( d.getMonth() == n.getMonth() ) && 
+          ( d.getYear()  == n.getYear()  ) ) {
+        return d.toLocaleTimeString();
+      }
+      else {
+        return d.toDateString();
+      }
     }
   });
 
@@ -592,7 +605,7 @@ $(function() {
         if(scrollTimer) clearInterval(scrollTimer);
         scrollTimer = setInterval(function() {
           // When stop scrolling
-          if (Date.now() - lastScrollTime > 450) {
+          if (Date.now() - lastScrollTime > 300) {
             clearInterval(scrollTimer);
             // Redraw pages
             that.updatePages();
@@ -857,9 +870,9 @@ $(function() {
         that.hide();
       }, 1000);
 
-      this.initEvents();
+      this.initMouseEvents();
     },
-    initEvents: function() {          
+    initMouseEvents: function() {          
       var that = this;
 
       // Keep window's width & height
