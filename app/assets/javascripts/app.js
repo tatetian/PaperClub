@@ -809,9 +809,12 @@ $(function() {
       this.paper.on('change', this.render, this);
     },
     render: function() {
+      var paper = this.screen.paper;
+
       this.$el.empty()
               .append(this.template({
-                        title: this.screen.paper.get('title')
+                        title: paper.get('title'),
+                        download_url: "/api/fulltext/" + paper.id + "/download"
                       }));
       return this;
     },
