@@ -603,11 +603,24 @@ $(function() {
 
       return this;
     },
-    zoom: function(zoomFactor) {
+    zoomIn: function() {
+      this._zoom(this.zoomFactor + 0.1);      
+    },
+    zoomOut: function() {
+      this._zoom(this.zoomFactor - 0.1);
+    },
+    _zoom: function(zoomFactor) {
+      if(zoomFactor > 3 || zoomFactor < 0.4)
+        return;
+
       this.zoomFactor = zoomFactor;
+      
+      var pages = this.pages,
+          that  = this;
       $.each(pages, function(i) {
-        pages[i].zoom(this.zoomFactor);
+        pages[i].zoom(that.zoomFactor);
       });
+      $(window).scrollTop($(window).scrollTop()*zoomFactor);
     },
     _loadCss: function() {
       var allCssUrl = ["/api/fulltext", this.paper.id, "all.css"].join("/");
@@ -655,7 +668,6 @@ $(function() {
           .fail(this.states.loading._onFail);
         },
         _onSuccess: function(pageContent) {
-        /*  */
           this.pageContent = pageContent;
 
           if(this.nowVisible) 
@@ -664,13 +676,11 @@ $(function() {
             this.setState("hidden");
         },
         _onFail: function() {
-          alert("fail");
-
           if(this.nowVisible) {
             var that = this;
             setTimeout(function(){
               this.states.loading._doLoading.apply(this);
-            }, 3000);
+            }, 1000);
           }
           else
             this.setState("blank");
@@ -684,7 +694,7 @@ $(function() {
                 oh  = $pc.css('height');
             this.orignalWidth   = parseInt(ow.slice(0, ow.length-2));
             this.orignalHeight  = parseInt(oh.slice(0, oh.length-2));
-            $pc.css({scale: this.width/this.orignalWidth})
+            $pc.css({scale: this.zoomFactor * this.width/this.orignalWidth})
             this.$el.append(this.$pageContent);
           }
           else {
@@ -733,6 +743,11 @@ $(function() {
     },
     zoom: function(zoomFactor) {
       this.zoomFactor = zoomFactor;
+
+      this.$el.width(this.width * this.zoomFactor)
+              .height(this.height * this.zoomFactor);
+      if(this.$pageContent)
+        this.$pageContent.css({scale: zoomFactor * this.width / this.orignalWidth});
     },
     render: function() {
       this.$el.empty()
@@ -745,6 +760,10 @@ $(function() {
   var PsToolbar = Backbone.View.extend({
     className: "r-footer bgwhite shadow0210 tc",
     template: _.template($("#paper-screen-toolbar-template").html()),
+    events: {
+      "click a.zoomIn": "zoomIn",
+      "click a.zoomOut": "zoomOut"
+    },
     initialize: function() {
       this.screen = this.options.screen;
       this.paper = this.screen.paper;
@@ -757,6 +776,12 @@ $(function() {
                         title: this.screen.paper.get('title')
                       }));
       return this;
+    },
+    zoomIn: function() {
+      this.screen.viewport.zoomIn();
+    },
+    zoomOut: function() {
+      this.screen.viewport.zoomOut();
     }
   });
 
