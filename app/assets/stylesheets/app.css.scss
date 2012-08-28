@@ -210,7 +210,21 @@ html, body{background-color:#afafaf; overflow: auto; }
 /*page-reading --css*/	
 .r-paper-container{ width:920px; min-height:500px; position:absolute;  margin:0 auto; left:0px; right:0px; z-index:1px;}
 .r-pagination{position:fixed;bottom:50px; left:0px;right:0px; width:64px; height:32px; line-height:32px;margin:0 auto; z-index:2;display: none;}
-.r-footer{ position:relative; position:fixed; height:44px;  left:24px; right:24px; bottom:0px; z-index:6;}
+.r-footer{ 
+  position:relative; position:fixed; height:44px;  left:24px; right:24px; bottom:-44px; z-index:6;
+  -webkit-transition: all 0.4s ease-in-out;
+  -moz-transition: all 0.4s ease-in-out;
+  -o-transition: all 0.4s ease-in-out;
+  -ms-transition: all 0.4s ease-in-out;
+  transition: all 0.4s ease-in-out
+}
+.r-footer.active {
+  -webkit-transform: translate(0, -44px);
+  -moz-transform: translate(0, -44px);
+  -o-transform: translate(0, -44px);
+  -ms-transform: translate(0, -44px);
+  transform: translate(0, -44px);
+}
 .r-footer-left{left:0px; bottom:0px; height:65px; }
 .r-footer-right{right:0px; top:0px; height:100%; }
 .r-footer-left a:hover {color:#2ea1dd;}
@@ -261,6 +275,21 @@ html, body{background-color:#afafaf; overflow: auto; }
 .c-btn-creatclub:hover{color:#2ea1dd;}
 .section-right.case-invited{margin-top:0px;}
 .c-case-img{height:126px; overflow:hidden;}
+
+/* CSS animation */
+.transit-o {
+  transition: opacity 0.8s;
+  -moz-transition: opacity 0.8s; /* Firefox 4 */
+  -webkit-transition: opacity 0.8s; /* Safari and Chrome */
+  -o-transition: opacity 0.8s; /* Opera */
+}
+
+.transit-o {
+  transition: opacity 0.8s;
+  -moz-transition: opacity 0.8s; /* Firefox 4 */
+  -webkit-transition: opacity 0.8s; /* Safari and Chrome */
+  -o-transition: opacity 0.8s; /* Opera */
+}
 
 /*font-family definition*/
 @font-face {

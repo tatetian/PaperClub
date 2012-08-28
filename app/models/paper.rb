@@ -57,6 +57,7 @@ class Paper < ActiveRecord::Base
       tags:     self.tags.map { |t|
                   t.as_json(options)
                 },
+      club_id:  self.club_id,
       uploader_id:  self.uploader_id,
       news:     nil,
       created_at: self.created_at,

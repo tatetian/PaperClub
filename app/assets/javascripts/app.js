@@ -796,23 +796,76 @@ $(function() {
   });
 
   var PsToolbar = Backbone.View.extend({
-    className: "r-footer bgwhite shadow0210 tc",
+    className: "r-footer active bgwhite shadow0210 tc",
     template: _.template($("#paper-screen-toolbar-template").html()),
     events: {
       "click a.zoomIn": "zoomIn",
       "click a.zoomOut": "zoomOut"
     },
+    visible: true,
     initialize: function() {
       this.screen = this.options.screen;
       this.paper = this.screen.paper;
 
       this.paper.on('change', this.render, this);
+
+      var that = this;
+      setTimeout(function() {
+        that.hide();
+      }, 1000);
+
+      this.initEvents();
+    },
+    initEvents: function() {          
+      var that = this;
+
+      // Keep window's width & height
+      var W = $(window).width(),
+          H = $(window).height();
+      $(window).resize(function() {
+        W = $(window).width();
+        H = $(window).height();
+      });
+
+      // Monitor slideArea
+      var l = 48, r = 48, h = 36,
+          timer = null;
+      $(window).mousemove(function(e) {
+        var x = e.screenX,
+            y = e.screenY;
+        // Invisible => visible
+        if(l < x && x < W - r &&
+           H - h <= y && y <= H) {
+          if(timer) clearTimeout(timer); 
+          if(!that.visible) {
+            that.show();
+          }
+        }
+        // Visible => invisible
+        else{
+          if(that.visible) {
+            if(timer) clearTimeout(timer);
+            timer = setTimeout(function() {
+                      that.hide();
+                    }, 1000);
+          }
+        }  
+      });
+    },
+    show: function() {
+      this.visible = true;
+      this.$el.addClass("active");
+    },
+    hide: function() {
+      this.visible = false;
+      this.$el.removeClass("active");
     },
     render: function() {
       var paper = this.screen.paper;
 
       this.$el.empty()
               .append(this.template({
+                        club_id: paper.get("club_id"),
                         title: paper.get('title'),
                         download_url: "/api/fulltext/" + paper.id + "/download"
                       }));
