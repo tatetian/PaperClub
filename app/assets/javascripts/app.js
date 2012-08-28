@@ -492,9 +492,10 @@ $(function() {
  
       this.paper.fetch({
         success: function() {
-          that.toolbar = new PsToolbar({screen: that});
-          that.pageNumber = new PsPageNumber({screen: that});
           that.viewport = new PsViewport({screen: that});
+
+          that.pageNumber = new PsPageNumber({screen: that});
+          that.toolbar = new PsToolbar({screen: that});
 
           that.render();  
         }
@@ -502,6 +503,7 @@ $(function() {
     },
     render: function() {
       this.$el.empty()
+              .append(this.pageNumber.render().$el)
               .append(this.toolbar.render().$el)
               .append(this.viewport.render().$el);
       return this;      
@@ -511,6 +513,7 @@ $(function() {
   var PsViewport = Backbone.View.extend({
     tagName: "ul",
     className: "r-viewport",
+    currentPageNum: 1,
     initialize: function() {
       this.screen = this.options.screen;
       
@@ -542,15 +545,50 @@ $(function() {
           lastScrollTime = Date.now(),
           scrollTimer = null;
         $(window).scroll(function() {
+          // Start scrolling
+          if(!scrolling) {
+            scrolling = true;
+            that.trigger("startScrolling");
+          }
+
+          // When scrolling
+          var currentPageNum = that.decidePageNum();
+          if(currentPageNum != that.currentPageNum) {
+            that.currentPageNum = currentPageNum;
+            that.trigger("changePage", currentPageNum);
+          }
+
+          // Use timer to decide when to redraw pages
           lastScrollTime = Date.now();
           if(scrollTimer) clearInterval(scrollTimer);
           scrollTimer = setInterval(function() {
+            // When stop scrolling
             if (Date.now() - lastScrollTime > 450) {
               clearInterval(scrollTimer);
+              // Redraw pages
               that.updatePages();
+              // End scrolling
+              that.trigger("endScrolling");
+              scrolling =  false;
             }
           }, 200);
         });
+    },
+    decidePageNum: function() {
+      var pages = this.pages,
+          l     = pages.length,
+          $w    = $(window),
+          H     = $w.height(),
+          st    = $w.scrollTop(),
+          threshold = H - 50;
+
+      for(var i = 0; i < l; ++i) {
+        t = pages[i].$el.offset().top - st;
+        if( t > threshold ) {
+          break;
+        }
+      }
+      return i;
     },
     updatePages: function() {
       var that = this, pages = this.pages,
@@ -786,8 +824,29 @@ $(function() {
   });
 
   var PsPageNumber = Backbone.View.extend({
+    pageNum: 1,
+    className: "r-pagination bgwhite shadow024 tc fs30 fw-bold fs-ita color-blue font-c",
     initialize: function() {
       this.screen = this.options.screen;
+
+      var viewport = this.screen.viewport;
+      viewport.on('changePage',       this.setPageNumber, this)
+              .on('startScrolling',   this.show, this)
+              .on('endScrolling',     this.hide, this);
+    },
+    setPageNumber: function(pageNum) {
+      this.pageNum = pageNum;
+      this.$el.text(pageNum);
+    },
+    render: function() {
+      this.$el.text(this.pageNum);
+      return this;        
+    },
+    show: function() {
+      this.$el.show();
+    },
+    hide: function() {
+      this.$el.hide();
     }
   }); 
 

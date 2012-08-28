@@ -209,7 +209,7 @@ html, body{background-color:#afafaf; overflow: auto; }
 	
 /*page-reading --css*/	
 .r-paper-container{ width:920px; min-height:500px; position:absolute;  margin:0 auto; left:0px; right:0px; z-index:1px;}
-.r-pagination{position:fixed;bottom:50px; left:0px;right:0px; width:64px; height:32px; line-height:32px;margin:0 auto; z-index:2;}
+.r-pagination{position:fixed;bottom:50px; left:0px;right:0px; width:64px; height:32px; line-height:32px;margin:0 auto; z-index:2;display: none;}
 .r-footer{ position:relative; position:fixed; height:44px;  left:24px; right:24px; bottom:0px; z-index:6;}
 .r-footer-left{left:0px; bottom:0px; height:65px; }
 .r-footer-right{right:0px; top:0px; height:100%; }
