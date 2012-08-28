@@ -116,12 +116,16 @@ $(function() {
         return;
       this.$el.appendTo("body").show();
       this.visible = true;
+
+      this.trigger("show");
     },
     hide: function() {
       if(!this.visible)
         return;
       this.$el.detach().hide();      
       this.visible = false;
+
+      this.trigger("hide");
     } 
   });
     
@@ -528,6 +532,8 @@ $(function() {
           z     = this.zoomFactor = 1; 
   
       this._loadCss();
+      this.screen.on("show", this._loadCss, this);
+      this.screen.on("hide", this._unloadCss, this);
 
       $.each(pages, function(i) {
         pages[i] = new PsPage({
@@ -662,14 +668,19 @@ $(function() {
     },
     _loadCss: function() {
       var allCssUrl = ["/api/fulltext", this.paper.id, "all.css"].join("/");
-      // Remove the all one(if exists)
-      $("#fulltext-css").remove();
+
+      this._unloadCss();
+
       // Add the new one
       $("<link id=\"fulltext-css\">").appendTo("head").attr({
         rel: "stylesheet",
         type: "text/css",
         href: allCssUrl
       });
+    },
+    _unloadCss: function() {
+      // Remove the all one(if exists)
+      $("#fulltext-css").remove();
     }
   });
 
@@ -762,6 +773,11 @@ $(function() {
 
       // Init blank state
       this.setState("blank");
+
+      var that = this;
+      this.viewport.screen.on("hide", function() {
+        if(this.state == "viewable") that.setState("hidden");
+      });
     },
     setState: function(state) {
       var previousState = this.state;
@@ -830,33 +846,34 @@ $(function() {
       // Monitor slideArea
       var l = 48, r = 48, h = 36,
           timer = null;
+      window.that =that;
       $(window).mousemove(function(e) {
-        var x = e.screenX,
-            y = e.screenY;
+        var x = e.clientX,
+            y = e.clientY;
+        console.debug("W="+W+";H="+H+";l="+l+";r="+r+";h="+h);
+        console.debug("x="+x+";y="+y);
         // Invisible => visible
         if(l < x && x < W - r &&
            H - h <= y && y <= H) {
-          if(timer) clearTimeout(timer); 
-          if(!that.visible) {
-            that.show();
-          }
+          that.show();
+          console.debug("yes");
         }
         // Visible => invisible
         else{
-          if(that.visible) {
-            if(timer) clearTimeout(timer);
-            timer = setTimeout(function() {
-                      that.hide();
-                    }, 1000);
-          }
+          console.debug("no");
+          that.hide();
         }  
       });
     },
     show: function() {
+      if(this.visible) return;
+
       this.visible = true;
       this.$el.addClass("active");
     },
     hide: function() {
+      if(!this.visible) return;
+
       this.visible = false;
       this.$el.removeClass("active");
     },
