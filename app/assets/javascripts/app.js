@@ -532,7 +532,17 @@ $(function() {
           z     = this.zoomFactor = 1; 
   
       this._loadCss();
-      this.screen.on("show", this._loadCss, this);
+      this.screen.on("show", function() {
+        this._loadCss();
+
+        var that = this;
+        setTimeout(function() {
+          var pages = that.pages;
+
+          if(pages.length > 0) pages[0].onVisible();
+          if(pages.length > 1) pages[1].onVisible();
+        }, 600);
+      }, this);
       this.screen.on("hide", this._unloadCss, this);
 
       $.each(pages, function(i) {
@@ -544,41 +554,54 @@ $(function() {
         });
         that.$(".viewport-pages").append(pages[i].$el);
       });
-      if(pages.length > 0) pages[0].onVisible();
-      if(pages.length > 1) pages[1].onVisible();
+      setTimeout(function() {
+        var pages = that.pages;
 
-      var scrolling = false, 
+        if(pages.length > 0) pages[0].onVisible();
+        if(pages.length > 1) pages[1].onVisible();
+      }, 600);
+
+      this.initScrollEvents();
+
+      this.screen.on("hide", function() {
+        $(window).unbind("scroll.viewport");
+      }, this);
+      this.screen.on("show", this.initScrollEvents, this);
+    },
+    initScrollEvents: function() {
+      var that = this,
+          scrolling = false, 
           lastScrollTime = Date.now(),
           scrollTimer = null;
-        $(window).scroll(function() {
-          // Start scrolling
-          if(!scrolling) {
-            scrolling = true;
-            that.trigger("startScrolling");
-          }
+      $(window).on("scroll.viewport", function() {
+        // Start scrolling
+        if(!scrolling) {
+          scrolling = true;
+          that.trigger("startScrolling");
+        }
 
-          // When scrolling
-          var currentPageNum = that.decidePageNum();
-          if(currentPageNum != that.currentPageNum) {
-            that.currentPageNum = currentPageNum;
-            that.trigger("changePage", currentPageNum);
-          }
+        // When scrolling
+        var currentPageNum = that.decidePageNum();
+        if(currentPageNum != that.currentPageNum) {
+          that.currentPageNum = currentPageNum;
+          that.trigger("changePage", currentPageNum);
+        }
 
-          // Use timer to decide when to redraw pages
-          lastScrollTime = Date.now();
-          if(scrollTimer) clearInterval(scrollTimer);
-          scrollTimer = setInterval(function() {
-            // When stop scrolling
-            if (Date.now() - lastScrollTime > 450) {
-              clearInterval(scrollTimer);
-              // Redraw pages
-              that.updatePages();
-              // End scrolling
-              that.trigger("endScrolling");
-              scrolling =  false;
-            }
-          }, 200);
-        });
+        // Use timer to decide when to redraw pages
+        lastScrollTime = Date.now();
+        if(scrollTimer) clearInterval(scrollTimer);
+        scrollTimer = setInterval(function() {
+          // When stop scrolling
+          if (Date.now() - lastScrollTime > 450) {
+            clearInterval(scrollTimer);
+            // Redraw pages
+            that.updatePages();
+            // End scrolling
+            that.trigger("endScrolling");
+            scrolling =  false;
+          }
+        }, 200);
+      });
     },
     decidePageNum: function() {
       var pages = this.pages,
@@ -774,10 +797,14 @@ $(function() {
       // Init blank state
       this.setState("blank");
 
-      var that = this;
       this.viewport.screen.on("hide", function() {
-        if(this.state == "viewable") that.setState("hidden");
-      });
+        if(this.state == "viewable") { 
+           this.setState("hidden");
+        }
+        else if(this.state == "loading") {
+          this.setState("blank");  
+        }
+      }, this);
     },
     setState: function(state) {
       var previousState = this.state;
@@ -850,17 +877,15 @@ $(function() {
       $(window).mousemove(function(e) {
         var x = e.clientX,
             y = e.clientY;
-        console.debug("W="+W+";H="+H+";l="+l+";r="+r+";h="+h);
-        console.debug("x="+x+";y="+y);
+        //console.debug("W="+W+";H="+H+";l="+l+";r="+r+";h="+h);
+        //console.debug("x="+x+";y="+y);
         // Invisible => visible
         if(l < x && x < W - r &&
            H - h <= y && y <= H) {
           that.show();
-          console.debug("yes");
         }
         // Visible => invisible
         else{
-          console.debug("no");
           that.hide();
         }  
       });
