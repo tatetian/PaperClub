@@ -143,7 +143,7 @@
 .m-m-wrapper,.m-m-overlay{position:absolute;width:100%;height:100%;left:0px; top:0px; }
 .m-m-wrapper{z-index:100;}
 .m-m-overlay{ z-index:101; background-color:rgba(0,0,0,0.5);}
-.m-m-container{z-index:102; position:absolute; left:0;right:0; top:0; bottom:0; margin:auto; background-color:#fff; padding:40px;}
+.m-m-container{z-index:102; position:absolute; left:0;right:0; top:0; bottom:0; margin:auto; background-color:#fff;}
 
 
 .bg-logo{background:url(logo.png) no-repeat; background-size:cover;}
@@ -200,15 +200,16 @@ html, body{background-color:#afafaf;}
 	height:245px;
 }
 .m-m-container.signup{
-	width:1050px;
-	height:330px;
+	width:960px;
+	height:280px;
 	box-sizing:border-box;
+  padding: 24px;
 }
 .m-m-container.login{
-	width:380px;
-	height:600px;
+	width:320px;
+	height:560px;
 	box-sizing:border-box;
-	
+	padding: 42px;
 }
 .log-sign .m-m-overlay{
 	background-color:#afafaf;

@@ -4,9 +4,12 @@ PaperClub::Application.routes.draw do
   # Home of the app(after login)
   match "/app" => "app#index", :via => :get
 
-  # Signin & signout
-  match '/signin', to: 'sessions#create', via: :post
-  match '/signout', to: 'sessions#destroy', via: :delete
+  # Signin & signout API
+  match '/api/signin', to: 'sessions#create', via: :post
+  match '/api/signout', to: 'sessions#destroy', via: :delete
+
+  match 'signin', to: 'welcome#signin', via: :get
+  match 'signup', to: 'welcome#signup', via: :get
 
   # Invitation
   match '/invitations/:token', to: 'invitations#accept', via: :get
