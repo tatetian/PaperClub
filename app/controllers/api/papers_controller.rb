@@ -48,12 +48,14 @@ class Api::PapersController < ApplicationController
     # Calculate the hash
     uuid = Paper.calculate_uuid temp_pdf 
     # Create or get metadata
+    new_metadata = false
     metadata = Metadata.find_by_uuid(uuid)
     if not metadata
+      new_metadata = true
       # Extract metadata from PDF
       temp_pdf_path = temp_pdf.path
       
-      metadata = create_metadata_from(temp_pdf_path, uuid)
+      metadata = Api::PapersController.create_metadata_from(temp_pdf_path, uuid)
     end
     # If the paper is uploaded again in the club, just update its timestamp
     paper = Paper.find_by_uuid(uuid)
@@ -75,16 +77,8 @@ class Api::PapersController < ApplicationController
       temp_pdf_basename = File.basename(temp_pdf_path, 
                                         File.extname(temp_pdf_path)) 
       html_dest_dir = Rails.root.join("uploads", uuid)
-      # If PDF is not processed before, convert PDF to HTML
-      unless File.directory?(html_dest_dir)
-        # PDF -> HTML5
-        Dir.mkdir html_dest_dir  
-        cmd = "pdf2htmlEX --dest-dir #{html_dest_dir.to_s} #{temp_pdf_path.to_s}"
-        pid = Process.spawn cmd
-        # Move temp PDF file to its permanent location
-        #final_pdf_path = Rails.root.join("uploads", uuid, "fulltext.pdf")
-        #FileUtils.mv(temp_pdf_path, final_pdf_path)
-        #temp_pdf.unlink
+      if new_metadata 
+        Api::PapersController.delay.pdf2htmlEX(temp_pdf_path, html_dest_dir)
       end
     else
       error "Can't save in database"
@@ -137,7 +131,7 @@ class Api::PapersController < ApplicationController
   end
 
 private
-  def create_metadata_from pdf_file, uuid
+  def self.create_metadata_from pdf_file, uuid
     json_meta = %x[pdf2htmlEX --only-meta 1 "#{pdf_file}"] 
     parsed_meta = ActiveSupport::JSON.decode json_meta
 
@@ -164,4 +158,16 @@ private
                                 uuid: uuid )
   end
 
+  def self.pdf2htmlEX(temp_pdf_path,html_dest_dir)
+    # If PDF is not processed before, convert PDF to HTML
+    unless File.directory?(html_dest_dir)
+      # PDF -> HTML5
+      Dir.mkdir html_dest_dir  
+      %x[pdf2htmlEX --dest-dir "#{html_dest_dir.to_s}" "#{temp_pdf_path.to_s}"]
+      # Move temp PDF file to its permanent location
+      final_pdf_path = Rails.root.join("uploads", uuid, "fulltext.pdf")
+      FileUtils.mv(temp_pdf_path, final_pdf_path)
+    end
+  end
+  #handle_asynchronously :pdf2htmlEX
 end
