@@ -55,10 +55,11 @@ class Api::PapersController < ApplicationController
       # Extract metadata from PDF
       temp_pdf_path = temp_pdf.path
       
-      metadata = Api::PapersController.create_metadata_from(temp_pdf_path, uuid)
+      metadata = Api::PapersController.
+                  create_metadata_from(temp_pdf_path, uuid, params[:file].original_filename)
     end
     # If the paper is uploaded again in the club, just update its timestamp
-    paper = Paper.find_by_uuid(uuid)
+    paper = club.papers.find_by_uuid(uuid)
     if paper and paper.touch
       render :json => paper
       return
@@ -73,11 +74,12 @@ class Api::PapersController < ApplicationController
                           club_id: club.id, uploader_id: current_user.id)
     if paper
       render :json => paper
-      # Convert the file from PDF to HTML5
-      temp_pdf_basename = File.basename(temp_pdf_path, 
-                                        File.extname(temp_pdf_path)) 
-      html_dest_dir = Rails.root.join("uploads", uuid)
       if new_metadata 
+        # Convert the file from PDF to HTML5
+        temp_pdf_basename = File.basename(temp_pdf_path, 
+                                        File.extname(temp_pdf_path)) 
+        html_dest_dir = Rails.root.join("uploads", uuid)
+
         Api::PapersController.delay.pdf2htmlEX(temp_pdf_path, html_dest_dir)
       end
     else
@@ -131,18 +133,18 @@ class Api::PapersController < ApplicationController
   end
 
 private
-  def self.create_metadata_from pdf_file, uuid
+  def self.create_metadata_from pdf_file, uuid, original_filename
     json_meta = %x[pdf2htmlEX --only-meta 1 "#{pdf_file}"] 
     parsed_meta = ActiveSupport::JSON.decode json_meta
 
     title = parsed_meta["title"]
     # Too short
     if title.mb_chars.length < 5
-      title = params[:file].original_filename
+      title = File.basename(original_filename, File.extname(original_filename))
     end
     # Too long
     if title.mb_chars.length > 100
-      title = title.slice(0,100)
+      title = title.slice(0,100) + "..."
     end
     # Empty date
     pub_date = parsed_meta["modified_date"]

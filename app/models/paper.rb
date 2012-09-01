@@ -89,14 +89,13 @@ class Paper < ActiveRecord::Base
     # e.g. "t\xE1\x0F\xF3{V\x8Ev\xC5\x16l\xE8\xB0\xED\xDF*"
     bytes = [shorter].pack("H*")
     # Encode the bytes of uuid in Base64 encoding for shorter representation
+    # A-Z, a-z, 0-9, -, _
     # e.g. "dOEP83tWjnbFFmzosO3fKg=="
     require "base64"
     base64 = Base64.urlsafe_encode64(bytes)
-    # Discard the trailing '==' 
-    #   In base 64 encoding, the trailing '=' is padding
-    #     '==' indicates that the last group contains only 1 bytes
-    #     '=' indicates that the last group contains 2 bytes
-    # e.g. "dOEP83tWjnbFFmzosO3fKg"
-    res = base64[0...-2]
+    # Replace "-" with "+" because "-" has special meaning in shell command
+    base64.gsub!('-', '+')
+
+    base64
   end
 end

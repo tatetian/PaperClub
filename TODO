@@ -1,13 +1,24 @@
 Iteration 1
-  login: auto redirect, error message
+* login: auto redirect, error message
     15:50 -- 16:15  25min
-  logout
-    16:17
+* logout
+    16:17 -- 17:10  50min
+    Time sucker: don't know how to use form_tag
+    Use ajax instead of form in the end
+  upload bugs
+    17:30 -- 18:45
+    dash file issue
+    original filename fallback
+    uploaded before
+  upload features
+    progress
+    multifile
+    concurrency
   new club: cancel, auto refresh
   invitation accept/deny?
   signup: submit, js validate, error message 
   avatar: picture, default
-  papers: upload progress, pagination, search
+  papers: pagination, search
 
   bug fix
 
