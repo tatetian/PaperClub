@@ -8,8 +8,8 @@ PaperClub::Application.routes.draw do
   match '/api/signin', to: 'sessions#create', via: :post
   match '/api/signout', to: 'sessions#destroy', via: :delete
 
-  match 'signin', to: 'welcome#signin', via: :get
-  match 'signup', to: 'welcome#signup', via: :get
+  match '/signin', to: 'welcome#signin', via: :get
+  match '/signup', to: 'welcome#signup', via: :get
 
   # Invitation
   match '/invitations/:token', to: 'invitations#accept', via: :get

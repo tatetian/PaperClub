@@ -8,17 +8,19 @@
       </p>
     </div>
     <div class="m-m-content font-d">
-      <form class="fs16 color-grey2" style="margin: 24px 0 50px;">
-        <!--<p class="tc fs18 color-grey3">
-          <em class="fs24 fs-ita mr5 fw-bold">Log in</em> to visit  your PaperClub
-          </p>-->
-        <input class="m-f-input  mt30 w100" type="text" placeholder="Email" />
-        <input class="m-f-input w100 mt20 " type="password" placeholder="Password" />
+      <form action="/api/signin" method="post" class="fs16 color-grey2" style="margin: 24px 0 38px;">
+        <input name="session[email]" class="m-f-input  mt30 w100" type="text" 
+          placeholder="Email" style="line-height:1.5;" />
+        <input name="session[password]" class="m-f-input w100 mt15" type="password" 
+          placeholder="Password" style="line-height:1.5;" />
         <p class="cf">
-            <a href="#" class="asblock fr color-black fw-bold inblock mt20  fs18 blue-hover" >Sign in</a>
+          <input name="submit" type="submit" value="Sign in" href="#" 
+            class="asblock fr color-black fw-bold inblock mt20  fs18 blue-hover" 
+            style="border:none; background-color: transparent; cursor:pointer;" />
         </p>
       </form>
-      <p class="fs16 color-grey2 tc" style="margin-top: 98px;">Not a member? <a href="#" class=" fs-ita  fw-bold mr5 blue-hover">Sign up</a>now</p>
+      <p class="fs16 tc" style="color: red; line-height: 1.5;">&nbsp; <%= flash[:error] %>  </p> 
+      <p class="fs16 color-grey2 tc" style="margin-top: 26px;">Not a member? <a href="/signup" class=" fs-ita  fw-bold mr5 blue-hover">Sign up</a>now</p>
       <p class="fs16 color-grey2 tc" style="margin-top: 12px;">Forgot password? <a href="#" class=" fs-ita  fw-bold blue-hover">Click here</a></p>  
     </div>
   </div>

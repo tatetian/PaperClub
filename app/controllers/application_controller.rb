@@ -12,9 +12,9 @@ protected
   def authorize
     unless signed_in?
       store_location
-      flash[:notice] = "Please login"
+      flash[:notice] = "Please signin"
       #redirect_to(:controller => "user", :action => "login")
-      redirect_to "/debug/login"
+      redirect_to "/signin"
     end
   end
 

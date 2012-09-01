@@ -1,6 +1,6 @@
 <!-- Login form -->
 <h1>Login</h1>
-<%= form_for(:session, url: signin_path) do |f| %>
+<%= form_for(:session, url: api_signin_path) do |f| %>
   <%= f.label :email %>
   <%= f.text_field :email %>
 
@@ -11,4 +11,4 @@
 <% end %>
 
 <h1>Logout</h1>
-<%= button_to "Sign out", signout_path, :method => :delete %>
+<%= button_to "Sign out", api_signout_path, :method => :delete %>

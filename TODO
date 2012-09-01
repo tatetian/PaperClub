@@ -1,126 +1,22 @@
-Homepage
-Signup/Signin
-Clubs
-Papers | People
-Reading
+Iteration 1
+  login: auto redirect, error message
+    15:50 -- 16:15  25min
+  new club: cancel, auto refresh
+  invitation accept/deny?
+  signup: submit, js validate, error message 
+  avatar: picture, default
+  papers: upload progress, pagination, search
 
-  # TODO: Controller names: singular --> plural, e.g. ClubController --> ClubsController
+  bug fix
 
-Actions
-  index
-  show
-  create
-  update
-  destroy
+  launch
 
-Controller
-  User
-    show        member    GET   /api/club/<club_id>/users
-    create      all       POST  /api/users
-    update      self      PUT   /api/user/<user_id>
-  Club
-    index       member    GET   /api/clubs
-    show        member    GET   /api/club/<club_id>
-    create      signin    POST  /api/clubs
-    update      admin     PUT   /api/club/<club_id>
-    destroy     admin     DEL   /api/club/<club_id>
+  tonight
 
-    Paper 
-      index       member    GET   /api/club/<club_id>/papers?tag_id=..&keywords[]=..
-      show        member    GET   /api/club/<club_id>/paper/<paper_id>
-      create      member    POST  /api/club/<club_id>/papers
-      update      member    PUT   /api/club/<club_id>/paper/<paper_id>
-      destroy     member    DEL   /api/club/<club_id>/paper/<paper_id>
-      
-      Tag
-        index     member    GET   /api/club/<club_id>/paper/<paper_id>/tags
-        create    member    POST  /api/club/<club_id>/paper/<paper_id>/tags  
-        destroy   member    DEL   /api/club/<club_id>/paper/<paper_id>/tag/<tag_id>
+Iteration 2
+  details
+  notes
+  people
+  settings
 
-      Note
-        index     member    GET   /api/club/<club_id>/paper/<paper_id>/notes
-        create    member    POST  /api/club/<club_id>/paper/<paper_id>/notes          
-
-    Tag  
-      index     member    GET     /api/club/<club_id>/tags
-      create    member    POST    /api/club/<club_id>/tags
-      update    member    PUT     /api/club/<club_id>/tag/<tag_id>
-      destroy   member    DEL     /api/club/<club_id>/tag/<tag_id>
-      
-    Note
-      show      member    GET   /api/club/<club_id>/note/<note_id>
-      update    member    PUT   /api/club/<club_id>/note/<note_id>
-      destroy   member    DEL   /api/club/<club_id>/note/<note_id> 
-
-      Reply
-        index   member    GET   /api/club/<club_id>/note/<note_id>/replies/
-        create  member    POST  /api/club/<club_id>/note/<note_id>/replies/
-        destroy owner     DEL   /api/club/<club_id>/note/<note_id>/reply/<reply_id>
-
-Models
-  User
-    fullname
-    password
-    email
-    avatar_url
-?   remember_token
-    
-    clubs     --> membership
-  Club
-    name
-    description
-    
-    users     --> membership
-  Membership
-    uploaded_tag
-    fav_tag
-    mine_tag
-    role  [:admin, :normal, :invited]
-
-    my_papers       *=
-    uploaded_papers *=
-    fav_papers      *=
-
-    club      -->
-    user      -->
-  Metadata
-    title
-    year
-    uuid
-  Paper
-    title
-    year
-    hash
-    uploader  --> user
-    tags  -->
-    notes -->
-
-    news *= notes[notes.size-1] || 'XXX uploaded'
-  Tag
-    name
-    count  *= papers.size
-    club_id
-    papers -->
-  Collection
-    paper_id
-    tag_id
-  Note
-    content
-    position
-    user  --> 
-    paper -->
-  Reply
-    content
-    user  -->
-    note  -->
-  Invitation
-    club
-    email
-Controllers
-    
-Views
-
-内嵌字体
-  encoding
-
-
+  bug fix

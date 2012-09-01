@@ -8,11 +8,11 @@ class SessionsController < ApplicationController
       # Sign the user in and redirect to the user's show page.
       sign_in user
 
-      redirect_back_or "/debug/clubs"
+      redirect_back_or "/app"
     else
       # Create an error message and re-render the signin form.
-      flash.now[:error] = 'Invalid email/password combination'
-      redirect_to "/debug/login"
+      flash[:error] = 'Invalid email or password'
+      redirect_to "/signin"
     end
   end
 
@@ -21,6 +21,6 @@ class SessionsController < ApplicationController
     sign_out
 #    redirect_to root_path
 #    render :json => {}
-    redirect_to "/debug/login"
+    redirect_to "/"
   end
 end
