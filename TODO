@@ -1,6 +1,8 @@
 Iteration 1
   login: auto redirect, error message
     15:50 -- 16:15  25min
+  logout
+    16:17
   new club: cancel, auto refresh
   invitation accept/deny?
   signup: submit, js validate, error message 
