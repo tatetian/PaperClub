@@ -86,8 +86,8 @@
   <!-- insert summary view here -->
   <dl class="section p-nav-menu fs16 color-grey2 mt30 lh15 font-d">
     <dt class="menu-paper fs18 color-grey3 mt10"><a href="#">PAPERS</a></dt>
-    <dd><a id="paper-upload-btn" href="#">Upload</a></dd>
-    <dd><a  href="#">Find</a></dd>
+      <dd class="upload-btn-wrapper"><!-- insert upload btn here--></dd>
+      <dd><a href="#">Find</a></dd>
     <dt class="menu-paper fs18 color-grey3 mt10"><a href="#">EVERYONE</a></dt>
     <dt class="menu-paper fs18 color-grey3 mt10"><a href="#">SETTINGS</a></dt>
   </dl>
@@ -99,6 +99,15 @@
   </div>
 </div>
 <!-- insesrt paper list view here -->
+</script>
+
+<script type="text/template" id="paper-upload-btn-template">
+  Upload<%% if(uploading){ %>ing 
+    (<%%= progress %>% 
+    <%% if(errors > 0) { %>
+      ,<span style="color:red;"><%%= errors %> failures</span>
+    <%% }; %>
+    ) <%% }; %>
 </script>
 
 <script type="text/template" id="club-screen-summary-template">

@@ -93,9 +93,15 @@ class Paper < ActiveRecord::Base
     # e.g. "dOEP83tWjnbFFmzosO3fKg=="
     require "base64"
     base64 = Base64.urlsafe_encode64(bytes)
+    # Discard the trailing '==' 
+    #   In base 64 encoding, the trailing '=' is padding
+    #     '==' indicates that the last group contains only 1 bytes
+    #     '=' indicates that the last group contains 2 bytes
+    # e.g. "dOEP83tWjnbFFmzosO3fKg"
+    res = base64[0...-2]
     # Replace "-" with "+" because "-" has special meaning in shell command
-    base64.gsub!('-', '+')
+    res.gsub!('-', '+')
 
-    base64
+    res
   end
 end

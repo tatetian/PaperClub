@@ -5,15 +5,22 @@ Iteration 1
     16:17 -- 17:10  50min
     Time sucker: don't know how to use form_tag
     Use ajax instead of form in the end
-  upload bugs
+* upload bugs
     17:30 -- 18:45
     dash file issue
     original filename fallback
     uploaded before
+
+    String.gsub
+
+    touch "-"
+    rm -r -- "-"
   upload features
+    19:50 -- 
     progress
     multifile
     concurrency
+  uuid remove "=="
   new club: cancel, auto refresh
   invitation accept/deny?
   signup: submit, js validate, error message 

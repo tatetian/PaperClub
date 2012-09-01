@@ -325,9 +325,9 @@ $(function() {
       this.summaryView = new ClubScreenSummaryView({clubId: clubId});
       this.paperListView = new PaperListView({clubId: clubId});
 
-      this.initEvents();
+      this.uploader = new PaperUploader({clubId: this.clubId, screen: this});
 
-      this.uploader = new PaperUploader({clubId: this.clubId});
+      this.initEvents();
 
       this.render(); 
     },
@@ -341,8 +341,10 @@ $(function() {
     render: function() {
       this.$el.empty()
               .append(this.template())
-              .append(this.paperListView.render().$el)
-              .find(".p-sidebar").prepend(this.summaryView.render().$el);
+              .append(this.paperListView.render().$el);
+      this.$el.find(".p-sidebar").prepend(this.summaryView.render().$el);
+      this.$el.find(".upload-btn-wrapper").append(this.uploader.render().$el);
+              
       this.onResize();
 
       return this;      
@@ -350,12 +352,6 @@ $(function() {
     onResize: function() {
       // White area shoudl not be too short
 			this.$el.css('min-height', $(window).height() - 24*2);
-    },
-    show: function() {
-      Screen.prototype.show.apply(this);
-      // Uploader must be initialized after DOM is ready
-      window.uploader = this.uploader;
-      this.uploader.init(); 
     }
   });
 
@@ -448,47 +444,112 @@ $(function() {
     }
   });
 
-  var PaperUploader = function(options) {
-    var clubId = options.clubId;
+  var PaperUploader = Backbone.View.extend({
+    tagName: "a",
+    id: "paper-upload-btn",
+    initialize: function() {
+      var that = this, 
+          clubId = this.options.clubId;
+      
+      this.screen = this.options.screen;
+      this.papers = SharedData.getPapers();
+
+      var uploader = this.uploader = new plupload.Uploader({
+        runtimes : 'html5',
+        browse_button : 'paper-upload-btn',
+        max_file_size : '10mb',
+        url : '/api/clubs/' + clubId + '/papers',
+        multipart_params: {
+        },
+        filters : [
+            {title : "PDF files", extensions : "pdf"}
+        ]
+      });   
     
-    this.papers = SharedData.getPapers();
+      // Init events after the required DOM element is ready  
+      var firstTime = true;
+      this.screen.on("show", function() {
+        if(!firstTime)
+          return;
 
-    var uploader = this.uploader = new plupload.Uploader({
-      runtimes : 'html5',
-      browse_button : 'paper-upload-btn',
-//      container: 'uploader',
-      max_file_size : '10mb',
-      url : '/api/clubs/' + clubId + '/papers',
-      multipart_params: {
-      },
-      filters : [
-          {title : "PDF files", extensions : "pdf"}
-      ]
-    });   
-  };
+        firstTime = false;
+        that._initEvents();
+      });      
+    },
+    _template: _.template($("#paper-upload-btn-template").html()),
+    _state: {
+      uploading: false,
+      progress: 0,
+      num_files: 0,
+      current: 0,
+      errors: 0
+    },
+    _initEvents: function() {
+      var that     = this,
+          uploader = this.uploader,
+          state    = this._state;
 
-  _.extend(PaperUploader.prototype, {}, {
-    _initialized: false,
-    init: function() {
-      if(this._initialized)
-        return;
-
-      this._initialized = true;
-
-      var uploader = this.uploader,
-          that     = this;
-
+        
       uploader.init();
       uploader.bind('FilesAdded', function(up, files) {
-        $.each(files, function(i, file) {
-          uploader.start();
-        });
+        //$.each(files, function(i, file) {
+        //});
+        // Disable the btn
+        uploader.disableBrowse(true);
+
+        state.uploading = true;
+        state.progress = 0;
+        state.num_files = files.length;
+        state.current = 0;
+        state.errors = 0;
+
+        that.render();
+
+        uploader.start();
+      });
+      uploader.bind('UploadProgress', function(up, file) {
+        state.progress = Math.round( 
+          file.percent / state.num_files + 
+          ( state.current > 0 ? (state.current - 1) / state.num_files : 0 ) * 100 );
+
+        that.render();
       });
       uploader.bind('FileUploaded', function(up, file, result) {
-        //var response = JSON.parse(result.response),
-        //papers.create()
         that.papers.fetch();
+
+        state.current ++;
+        state.progress = Math.round(100 * state.current / state.num_files);
+        if(state.current == state.num_files) {
+          state.progress = 100; 
+          uploader.disableBrowse(false);
+
+          setTimeout(function() {
+            state.uploading = false;
+            that.render();
+          }, state.errors > 0 ? 5000 : 1000);
+        }
+        that.render();
       });
+      uploader.bind('Error', function() {
+        state.current ++;
+        state.errors ++;
+
+        state.progress = Math.round(100 * state.current / state.num_files);
+        if(state.current == state.num_files) {
+          state.progress = 100; 
+          uploader.disableBrowse(false);
+
+          setTimeout(function() {
+            state.uploading = false;
+            that.render();
+          }, state.errors > 0 ? 5000 : 1000); // Show error message long enough
+        }
+        that.render();
+      });      
+    },
+    render: function() {
+      this.$el.html(this._template(this._state));
+      return this;        
     }
   });
 
