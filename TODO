@@ -39,22 +39,34 @@ Iteration 1
 * pagenum with total # of pages
     15:35 -- 15:50 15min
     
-  new club: cancel, auto refresh
-    16:20 -- 
-  invitation accept/deny?
-  signup: submit, js validate, error message 
-  avatar: picture, default
-  papers: pagination, search
+* new club: cancel, auto refresh
+    16:20 -- 17:00 40min 
 
-  demo club that everyone has
+  Top goals: 
+* signup: submit
+    invitation accept/deny?
+    demo club that everyone has
+    slogan refinement
+  
+  launch
+
+  papers: pagination, search
+  avatar: picture, default
+  smart float
 
   bug fix
-
-  launch
 
   tonight
 
 Iteration 2
+  invite people after club creation
+
+  detect incomplete all.css and *.pages
+
+  signup
+    js validate, error message 
+
+
   details
   notes
   people

@@ -3,19 +3,24 @@ class Api::UsersController < ApplicationController
   
   # Create a new user(Signup)
   #
-  # URL     POST http://www.paperclub.com/users/
+  # URL     POST http://www.paperclub.com/api/users/
   # PARAMS  fullname
   #         email
   #         password
   #         password_confirmation
   # ROLE    any
   def create
-    @user = User.new(params[:user])
+    # Ignore password confirmation
+    user = params[:user]
+    user[:password_confirmation] = user[:password]
+    
+    @user = User.new(user)
     if @user.save
       sign_in @user
-      render :json => @user 
+      redirect_to "/app"
     else
-      error 'Failed to save new User record'
+      flash.now[:error] = "Invalid user information"
+      redirect_to "/signup"
     end
   end
 

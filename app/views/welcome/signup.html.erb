@@ -8,15 +8,29 @@
       </p>
     </div>
     <div class="m-m-content font-d fr column-50" style="margin-top: 18px;">
-      <p class=" font-d fs24 fs-ita color-grey3">Creat an acount</p>
-      <form class=" font-d  fs16 color-grey2 mt20">
-        <input class="  m-f-input mb20 column-62" type="text" placeholder="Fullname" /><span class="inblock fs13 ml30 "> </span>
-        <input class="  m-f-input mb20 column-62 input-green" type="text" placeholder="Email" /><span class="inblock fs13 ml30"> </span>
-        <input class="  m-f-input column-62 input-red" type="password" placeholder="Password" /><span class="inblock fs13 ml30">Enter a longer password </span>
+      <p class="font-d fs24 fs-ita color-grey3">Creat an acount</p>
+ 
+      <%= form_for(:user, 
+                   :url => "/api/users", 
+                   :html => { :class => "font-d  fs16 color-grey2 mt20" } ) do |f| %>
+        <%= f.text_field :fullname, :class => "m-f-input mb20 column-62", 
+                         :placeholder => "Fullname", :size => nil  %>
+        <span class="inblock fs13 ml30 "></span>
+
+        <%= f.email_field :email, :class => "m-f-input mb20 column-62 input-green", 
+                                  :placeholder => "Email" %>
+        <span class="inblock fs13 ml30"></span>
+
+        <%= f.password_field :password, :class => "m-f-input column-62 input-red",
+                                        :placeholder => "Password" %>
+        <span class="inblock fs13 ml30"></span>
         <p class="column-62">
-          <a href="#" class=" font-d asblock fr color-grey3 fw-bold inblock mt30 fs18 blue-hover" >Create account</a>
+          <%= f.submit :submit, 
+            :class => " font-d asblock fr color-grey3 fw-bold inblock mt30 fs18 blue-hover",
+            :style => "border:none; background-color: transparent;",
+            :value => "Create account" %>
         </p>
-      </form>
+      <% end %>
     </div>
   </div>
 </div>
