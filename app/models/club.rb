@@ -22,4 +22,6 @@ class Club < ActiveRecord::Base
                        }
     }
   end
+
+  default_scope :order => 'clubs.created_at DESC'
 end

@@ -6,7 +6,7 @@
       <div class="header fs24 color-black fw-bold mb15 font-c">
         Clubs
       </div>
-      <a class="c-btn-newclub color-blue fs18 font-d" href="#">NEW CLUB</a>
+      <a class="c-btn-newclub color-blue fs18 font-d" href="#">New Club</a>
     </div>
     <div class="section p-btn-back font-d">
       <a href="#" id="signout-btn">
@@ -62,17 +62,21 @@
 <script type="text/template" id="new-club-dialoge-template">
 <div class="m-m-overlay">
   <div class="m-m-container shadow4lv1 fs18">
-    <div class="m-m-title font-d">Create a new club</div>
     <div class="m-m-content">
       <dl class=" " >
-        <dt id="new-club-name" class="m-f-input flv1 font-c color-grey2 fs20  mt20 color-black column-50" contenteditable="true"><%%= name %></dt>
-        <dd id="new-club-description" class="m-f-input font-c color-grey2 fs20  mt20 ml40"  contenteditable="true"><%%= description %></dd>
-        <dt class="font-d fs-ita color-black mt30">Type emails to invite people — you can do this later, too.</dt>
+        <dt id="new-club-name" class="m-f-input flv1 font-c color-grey2 fs20 color-black column-50" 
+                              style="white-space: nowrap;overflow: hidden;" 
+                              contenteditable="true"><%%= name %></dt>
+        <dd id="new-club-description" class="m-f-input font-c color-grey2 fs20  mt20 ml40"  
+                              style="white-space: nowrap;overflow: hidden;" 
+                              contenteditable="true"><%%= description %></dd>
+        <dt class="font-d fs-ita color-black mt30" style="line-height">Type emails to invite people — you can do this later, too.</dt>
         <%% _.each(invitation_emails, function(email, index) { %>
             <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5  ">f</span><p id="new-club-email-<%%= index %>" class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;<%%= email %></p></dd>
         <%% }); %>
       </dl>
-      <a href="#" class="c-btn-creatclub font-d asblock fr color-black fw-bold mt10" >Create the club</a>
+      <a href="#" class="c-btn-creatclub font-d asblock fr color-black fw-bold mt25" >Create Club</a>
+      <a href="#" class="c-btn-cancelclub font-d asblock fr color-grey3 mt25 mr20 fs16" style="line-height: 1.5;" >Cancel</a>
     </div>
     <div class="m-m-footer"></div>
   </div>

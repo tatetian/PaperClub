@@ -197,7 +197,8 @@ $(function() {
     template: _.template($("#new-club-dialoge-template").html()),
     visible: false,
     events: {
-      "click .c-btn-creatclub": "onOK"
+      "click .c-btn-creatclub": "onOK",
+      "click .c-btn-cancelclub": "onCancel"
     },
     initialize: function() {
       var that = this;
@@ -229,15 +230,23 @@ $(function() {
       // Size of new club dialog
       var whtml = $(window).width();
 			var wst_c = (whtml-48-255-18-36)*0.5;
-			this.$('.m-m-container').css({"width":wst_c+88,"height":310});
+			this.$('.m-m-container').css({"width":wst_c+88,"height":276});
     },
     onOK: function(e) {
       this.model.set(this.retrieveValues())
-                .save();  
-      
+                .save(null, {
+                  success: function() {
+                    SharedData.getClubs().fetch();
+                  }
+                });  
       this.hide();
 
       e.preventDefault();
+    },
+    onCancel: function(e) {
+      this.hide();
+
+      e.preventDefault();      
     },
     retrieveValues: function() {
       var emails = [];

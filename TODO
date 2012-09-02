@@ -40,10 +40,13 @@ Iteration 1
     15:35 -- 15:50 15min
     
   new club: cancel, auto refresh
+    16:20 -- 
   invitation accept/deny?
   signup: submit, js validate, error message 
   avatar: picture, default
   papers: pagination, search
+
+  demo club that everyone has
 
   bug fix
 
