@@ -43,8 +43,13 @@ Iteration 1
     16:20 -- 17:00 40min 
 
   Top goals: 
-* signup: submit
-    invitation accept/deny?
+  * signup: submit
+  * invite people after club creation
+    20:30 -- 20:55 stub 
+  * invitation accept/deny?
+      partially done
+      signup case not completed yet
+    
     demo club that everyone has
     slogan refinement
   
@@ -59,7 +64,6 @@ Iteration 1
   tonight
 
 Iteration 2
-  invite people after club creation
 
   detect incomplete all.css and *.pages
 

@@ -6,15 +6,22 @@ class InvitationsController < ApplicationController
 
     # If the email address is registered
     if user 
-      if current_user.id == user.id 
-        # Redirect to home
+      Club.join_member(invitation.club_id, user.id)
+      if signed_in?
+        if current_user.id == user.id 
+          redirect_to "/app"
+        else
+          sign_out  
+          redirect_to "/signin"
+        end
       else
-        # Redirect to login
+        redirect_to "/signin"
       end
     # Otherwise, then signup
     else 
       # Redirect to signup
+      flash[:invitation] = params[:token]
+      redirect_to "/signup"
     end
-    render :json => "Not implemented yet" 
   end
 end

@@ -21,7 +21,6 @@ module SessionsHelper
     @current_user ||= User.find_by_remember_token(cookies[:remember_token])
   end
 
-
   # Friendly forwarding
   # See http://ruby.railstutorial.org/chapters/updating-showing-and-deleting-
   # users?version=3.1#sec%3afriendly_forwarding
@@ -38,5 +37,4 @@ private
   def clear_return_to
     session.delete(:return_to)
   end
-
 end

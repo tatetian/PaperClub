@@ -24,4 +24,10 @@ class Club < ActiveRecord::Base
   end
 
   default_scope :order => 'clubs.created_at DESC'
+
+  def self.join_member(club_id, user_id) 
+    membership = Membership.create(:club_id => club_id, 
+                                   :user_id => user_id,
+                                   :role => "member")
+  end
 end

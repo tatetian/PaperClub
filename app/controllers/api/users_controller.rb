@@ -14,6 +14,10 @@ class Api::UsersController < ApplicationController
     user = params[:user]
     user[:password_confirmation] = user[:password]
     
+    # In case signup action is redirected from invitation action
+    puts ">>>>>>>>>>>>>>>>create of user>>>>>>>>>>>>"
+    puts flash[:invitation]
+
     @user = User.new(user)
     if @user.save
       sign_in @user

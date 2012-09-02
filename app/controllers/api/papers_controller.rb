@@ -167,7 +167,7 @@ private
   def self.pdf2htmlEX(pdf_path,html_dest_dir, uuid)
     tmp_dir = "/tmp/paperclub-" + $$.to_s + "-" + uuid 
     # PDF -> HTML5
-    %x[pdf2htmlEX --tmp-dir "#{tmp_dir}" --dest-dir "#{html_dest_dir.to_s}" "#{pdf_path.to_s}"]
+    %x[pdf2htmlEX --embed-base-font 0 --tmp-dir "#{tmp_dir}" --dest-dir "#{html_dest_dir.to_s}" "#{pdf_path.to_s}"]
   end
   #handle_asynchronously :pdf2htmlEX
 end

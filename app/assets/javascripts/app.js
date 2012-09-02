@@ -291,7 +291,7 @@ $(function() {
     render: function() {
       var json = this.club.toJSON();
       json.avatar_urls = json.users.map(function(u) {
-                            return u.avatar_url;
+                            return u.avatar_url || "";
                          });
       this.$el.append(this.template(json));
       /* {
@@ -394,6 +394,10 @@ $(function() {
                  .on('reset', this.onAddAll, this);
     },
     initEvents: function() {
+      this.$(".invite-btn").click(function(e) {
+        notYetImplemented();
+        e.preventDefault();
+      });
     },
     render: function() {
       this.papers.fetch();
@@ -1091,6 +1095,10 @@ $(function() {
     return _data;
   })();
   window.SharedData = SharedData;
+
+  function notYetImplemented() {
+    alert("Thank you for trying out PaperClub. This feature is coming soon.");
+  }
 
   // ==========================================
   // Start application
