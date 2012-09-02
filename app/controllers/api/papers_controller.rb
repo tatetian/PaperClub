@@ -75,12 +75,16 @@ class Api::PapersController < ApplicationController
     if paper
       render :json => paper
       if new_metadata 
-        # Convert the file from PDF to HTML5
-        temp_pdf_basename = File.basename(temp_pdf_path, 
-                                        File.extname(temp_pdf_path)) 
+        # Paths
         html_dest_dir = Rails.root.join("uploads", uuid)
+        final_pdf_path = Rails.root.join("uploads", uuid, "fulltext.pdf")
 
-        Api::PapersController.delay.pdf2htmlEX(temp_pdf_path, html_dest_dir)
+        # Move temp PDF file to its permanent location
+        Dir.mkdir html_dest_dir  
+        FileUtils.mv(temp_pdf_path, final_pdf_path)
+
+        # Convert the file from PDF to HTML5
+        Api::PapersController.delay.pdf2htmlEX(final_pdf_path, html_dest_dir, uuid)
       end
     else
       error "Can't save in database"
@@ -160,16 +164,10 @@ private
                                 uuid: uuid )
   end
 
-  def self.pdf2htmlEX(temp_pdf_path,html_dest_dir)
-    # If PDF is not processed before, convert PDF to HTML
-    unless File.directory?(html_dest_dir)
-      # PDF -> HTML5
-      Dir.mkdir html_dest_dir  
-      %x[pdf2htmlEX --dest-dir "#{html_dest_dir.to_s}" "#{temp_pdf_path.to_s}"]
-      # Move temp PDF file to its permanent location
-      final_pdf_path = Rails.root.join("uploads", uuid, "fulltext.pdf")
-      FileUtils.mv(temp_pdf_path, final_pdf_path)
-    end
+  def self.pdf2htmlEX(pdf_path,html_dest_dir, uuid)
+    tmp_dir = "/tmp/paperclub-" + $$.to_s + "-" + uuid 
+    # PDF -> HTML5
+    %x[pdf2htmlEX --tmp-dir "#{tmp_dir}" --dest-dir "#{html_dest_dir.to_s}" "#{pdf_path.to_s}"]
   end
   #handle_asynchronously :pdf2htmlEX
 end

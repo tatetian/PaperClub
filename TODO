@@ -1,4 +1,7 @@
 Iteration 1
+
+  Sat. 1st, Sep
+
 * login: auto redirect, error message
     15:50 -- 16:15  25min
 * logout
@@ -15,12 +18,20 @@ Iteration 1
 
     touch "-"
     rm -r -- "-"
-  upload features
-    19:50 -- 
-    progress
+* uploading features
+    19:50 -- 22:10  2h 20min 
+    progress, error message
+
+    Logic is complex
+
+
+  Sun. 2nd, Sep
+
+  uploading features
+    10:15 -- 11:50 1h 30min
     multifile
     concurrency
-  uuid remove "=="
+
   new club: cancel, auto refresh
   invitation accept/deny?
   signup: submit, js validate, error message 

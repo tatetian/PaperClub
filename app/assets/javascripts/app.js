@@ -835,7 +835,7 @@ $(function() {
           if(this.nowVisible) {
             var that = this;
             setTimeout(function(){
-              this.states.loading._doLoading.apply(this);
+              that.states.loading._doLoading.apply(this);
             }, 1000);
           }
           else
