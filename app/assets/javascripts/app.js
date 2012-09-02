@@ -793,7 +793,7 @@ $(function() {
 
   var PsPage = Backbone.View.extend({
     tagName: "li",
-    className: "r-viewport-page",
+    className: "r-viewport-page shadow024",
     state: "blank",
     nowVisible: false,
     states: {
@@ -851,11 +851,10 @@ $(function() {
             this.orignalWidth   = parseInt(ow.slice(0, ow.length-2));
             this.orignalHeight  = parseInt(oh.slice(0, oh.length-2));
             $pc.css({scale: this.zoomFactor * this.width/this.orignalWidth})
+            this.$el.css('background-color', 'white');
             this.$el.append(this.$pageContent);
           }
-          else {
-            this.$pageContent.show();
-          }
+          this.$pageContent.show();
         },
         onInvisible: function() {
           this.setState("hidden")
@@ -863,8 +862,9 @@ $(function() {
       },
       hidden: {
         transition: function(previousState) {
-          if(this.$pageContent)
+          if(this.$pageContent) {
             this.$pageContent.hide();
+          }
         },
         onVisible: function() {
           this.setState("viewable");
@@ -1006,10 +1006,13 @@ $(function() {
   });
 
   var PsPageNumber = Backbone.View.extend({
+    numPages: 0,
     pageNum: 1,
-    className: "r-pagination bgwhite shadow024 tc fs30 fw-bold fs-ita color-blue font-c",
+    className: "r-pagination bgwhite shadow024 tc fs20 fw-bold color-blue font-c",
     initialize: function() {
       this.screen = this.options.screen;
+
+      this.numPages = this.screen.paper.get('num_pages');
 
       var viewport = this.screen.viewport;
       viewport.on('changePage',       this.setPageNumber, this)
@@ -1018,7 +1021,7 @@ $(function() {
     },
     setPageNumber: function(pageNum) {
       this.pageNum = pageNum;
-      this.$el.text(pageNum);
+      this.$el.text(pageNum+" of "+this.numPages);
     },
     render: function() {
       this.$el.text(this.pageNum);

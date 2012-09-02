@@ -27,11 +27,18 @@ Iteration 1
 
   Sun. 2nd, Sep
 
-  uploading features
+* uploading features
     10:15 -- 11:50 1h 30min
     multifile
     concurrency
 
+* reading: display ==> visibility
+    15:10 -- 15:33 15min
+      display:none is better
+
+* pagenum with total # of pages
+    15:35 -- 15:50 15min
+    
   new club: cancel, auto refresh
   invitation accept/deny?
   signup: submit, js validate, error message 

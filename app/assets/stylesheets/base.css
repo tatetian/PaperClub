@@ -15,7 +15,7 @@ legend{color:#000;}
 input,button,textarea,select,optgroup,option{font-family:inherit;font-size:inherit;font-style:inherit;font-weight:inherit; }
 input,button,textarea,select{*font-size:100%;}
 h1,h2,h3,h4,h5,h6{font-size:100%;font-weight:normal;} /*重定义标题字体大小样式*/
-a{text-decoration:none; color:inherit;}/*清除默认超链接样式*/
+a{text-decoration:none; color:inherit;outline: none;  }/*清除默认超链接样式*/
 a:link { }
 a:visited { }
 a:hover { cursor: pointer;}
