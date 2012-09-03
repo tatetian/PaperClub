@@ -161,28 +161,30 @@
 <div class="fl column-38" style="">
   <div style="margin-top: 15px; width: 100%;">
   </div>
-  <%% if (news.content.length > 0) { %>
-    <div class="fs36 font-c fw-bold color-grey2" style="margin-top: 28px;">
-      &#8220;
-    </div>
-    <div class="content pl15 fs18 color-grey3 font-c huanhang" style="text-indent: 16px; margin-top: -32px;">
-      <%%= news.content %>
+  <%% if(news) { %>
+    <%% if (news.detail && news.detail.length > 0) { %>
+      <div class="fs36 font-c fw-bold color-grey2" style="margin-top: 28px;">
+        &#8220;
+      </div>
+      <div class="content pl15 fs18 color-grey3 font-c huanhang" style="text-indent: 16px; margin-top: -32px;">
+        <%%= news.detail %>
+      </div>
+    <%% } %>
+    <div class="footer fr" style="width: 100%; height: 34px;position: relative; overflow: visible; margin-top: 12px;">
+      <img class="img34" style="position: absolute; right: 0px; top: 0px; " src="" />
+      <div class="color-grey1 font-c fs-ita fs16 fw-bold" style="position: absolute; right: 42px; top: 0px; line-height: 1.2; height: 16px;"> 
+        <%%= news.time %>
+      </div>
+      <div style="position: absolute; right: 44px; top: 16px; line-height:1.2; height: 16px;">
+        <span class="fr color-grey3   fw-bold fs16  font-c">
+          <%%= news.user %>
+        </span>
+        <span class="fr color-grey3 fs16 fs-ita font-c" >
+          <%%= news.action %> by&nbsp;   
+        </span>
+      </div>
     </div>
   <%% } %>
-  <div class="footer fr" style="width: 100%; height: 34px;position: relative; overflow: visible; margin-top: 12px;">
-    <img class="img34" style="position: absolute; right: 0px; top: 0px; "src="<%%= news.avatar_url %>" />
-    <div class="color-grey1 font-c fs-ita fs16 fw-bold" style="position: absolute; right: 42px; top: 0px; line-height: 1.2; height: 16px;"> 
-      <%%= news.timestamp %>
-    </div>
-    <div style="position: absolute; right: 44px; top: 16px; line-height:1.2; height: 16px;">
-      <span class="fr color-grey3   fw-bold fs16  font-c">
-        <%%= news.author %>
-      </span>
-      <span class="fr color-grey3 fs16 fs-ita font-c" >
-        <%%= news.action %> by&nbsp;   
-      </span>
-    </div>
-  </div>
 </div>
 </script>
 

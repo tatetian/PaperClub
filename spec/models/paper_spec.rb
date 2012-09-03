@@ -2,7 +2,8 @@ require 'spec_helper'
 
 describe Paper do
   before do
-    @paper = create(:paper)
+    @user = create(:user)
+    @paper = create(:paper, uploader_id: @user.id)
     @metadata = create(:metadata, uuid: @paper.uuid)
   end
 
@@ -25,5 +26,9 @@ describe Paper do
   it "has notes" do
     note = create(:note, paper_id: @paper.id)
     @paper.notes.should == [note]
+  end
+
+  it "has news" do
+    @paper.news.should == News.find_by_paper_id(@paper.id)
   end
 end

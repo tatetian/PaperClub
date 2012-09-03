@@ -423,6 +423,9 @@ $(function() {
       this.paper.on('change', this.render, this);
     },
     render: function() {
+      var news = this.paper.get('news');
+      if(news) news.time = this.formatDate(news.time);
+
       this.$el.empty()
               .append(this.template({
                         //this.paper.toJSON()
@@ -432,17 +435,13 @@ $(function() {
                         num_reads: 0,
                         num_notes: 0,
                         tags: this.paper.get('tags'),
-                        news: {
-                          content: "",
-                          timestamp: this.formatDate(this.paper.get('created_at')),
-                          action: "uploaded",
-                          author: "Tate Tian",
-                          avatar_url: ""
-                        }
+                        news: news
                       }));
       return this;       
     },
     formatDate: function(date) {
+      if(!date) return "";
+
       var d = new Date(Date.parse(date)),
           n = new Date();   // now
 

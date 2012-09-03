@@ -9,11 +9,16 @@ class Paper < ActiveRecord::Base
   has_many :tags, through: :collections
 
   has_many :notes
+  has_one  :news
 
   validate :title, presence: true
   validate :club_id, presence: true
 
   default_scope :order => 'papers.updated_at DESC'
+
+  after_create {
+    News.create_paper(self)
+  }
 
   # Remove the associated metadata if no paper uses it
   after_destroy { |paper|
@@ -58,8 +63,7 @@ class Paper < ActiveRecord::Base
                   t.as_json(options)
                 },
       club_id:  self.club_id,
-      uploader_id:  self.uploader_id,
-      news:     nil,
+      news:     self.news.as_json(options),
       created_at: self.created_at,
       updated_at: self.updated_at
     }

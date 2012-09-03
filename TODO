@@ -49,11 +49,24 @@ Iteration 1
   * invitation accept/deny?
       partially done
       signup case not completed yet
-    
-    demo club that everyone has
-    slogan refinement
   
+  Bugs
+    uploader_id ==> news
+    15:57 -- 17:10  1h10min
+
+    "Log in" of homepage
+    
+    Title
+      extra space
+      the line with biggest font size is not title
+
+    Uploaded but can't open
+    
   launch
+
+  demo club that everyone has
+  slogan refinement
+
 
   papers: pagination, search
   avatar: picture, default

@@ -6,7 +6,7 @@ describe Api::PapersController do
     @me   = create(:me)
     @club = create(:club)
     @membership = create(:membership, user_id: @me.id, club_id: @club.id)
-    @paper = create(:paper, club_id: @club.id)
+    @paper = create(:paper, club_id: @club.id, uploader: @me.id)
     # Login
     cookies[:remember_token] = @me.remember_token
   end
