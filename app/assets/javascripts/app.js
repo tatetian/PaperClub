@@ -394,10 +394,6 @@ $(function() {
                  .on('reset', this.onAddAll, this);
     },
     initEvents: function() {
-      this.$(".invite-btn").click(function(e) {
-        notYetImplemented();
-        e.preventDefault();
-      });
     },
     render: function() {
       this.papers.fetch();
@@ -1090,14 +1086,13 @@ $(function() {
   })();
   window.SharedData = SharedData;
 
-  function notYetImplemented() {
+  $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");
-  }
+    e.preventDefault();
+  });
 
   // ==========================================
   // Start application
   // =========================================
   var app = new App();
-
-    
 });
