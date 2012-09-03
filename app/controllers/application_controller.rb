@@ -5,7 +5,7 @@ class ApplicationController < ActionController::Base
   # "skip_before_filter :authorize" explicitly.
   before_filter :authorize
 
-  protect_from_forgery
+#  protect_from_forgery
 
   include SessionsHelper
 protected
