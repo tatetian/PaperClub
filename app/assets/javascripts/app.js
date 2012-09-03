@@ -744,9 +744,6 @@ $(function() {
       return res;
     },
     setVisibilities: function(from, to, visible) {
-      if(visible)
-        console.debug("visible: from="+from+", to="+to)        
-
       for(var i = from; i <= to; ++i) {
         if(visible) {
           this.pages[i].onVisible(); 
@@ -973,8 +970,6 @@ $(function() {
       $(window).mousemove(function(e) {
         var x = e.clientX,
             y = e.clientY;
-        //console.debug("W="+W+";H="+H+";l="+l+";r="+r+";h="+h);
-        //console.debug("x="+x+";y="+y);
         // Invisible => visible
         if(l < x && x < W - r &&
            H - h <= y && y <= H) {
