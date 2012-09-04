@@ -20,6 +20,8 @@ class User < ActiveRecord::Base
   before_save { |user| user.email = email.downcase }
   before_save :init_remember_token
 
+  after_create { |user| user.create_demo_club }
+
   def as_json(options)
     { :id       => self.id,
       :fullname => self.fullname, 
@@ -27,6 +29,25 @@ class User < ActiveRecord::Base
       :avatar_url => self.avatar_url }
   end
 
+  def join_club(club, role)
+    membership = Membership.create(:club_id => club.id, 
+                                   :user_id => self.id,
+                                   :role => role)
+  end
+
+  def create_demo_club
+    demo_club = Club.create(:name =>        "Explore PaperClub!", 
+                            :description => "A demo club to help you discover PaperClub")
+    self.join_club(demo_club, "admin")
+    Club.demo_papers_uuid.each do |uuid|
+      metadata = Metadata.find_by_uuid(uuid)
+      if metadata
+        paper = Paper.create_from_metadata(metadata, self, demo_club)
+      end
+    end
+    
+    demo_club
+  end
 private
   def init_remember_token
     # SecureRandom.urlsafe_base64 returns a random string of length 16 

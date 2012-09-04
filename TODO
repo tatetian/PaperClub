@@ -49,7 +49,24 @@ Iteration 1
   * invitation accept/deny?
       partially done
       signup case not completed yet
-  
+ 
+  Tuesday 4th, Sep
+
+    Refactor upload
+    15:19 -- 16:12 60min
+
+    Solve issues caused by Ubuntu upgrade
+    16:12 -- 16:27 15min
+
+    Debug refactored upload
+    16:27 -- 16:33 Done
+
+    Demo Club
+    16:30 -- 19:00 2h30min
+      Place PDF files
+      Init demo papers
+      Create demo club after user creation
+
   Bugs
     uploader_id ==> news
     15:57 -- 17:10  1h10min

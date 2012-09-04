@@ -5,6 +5,8 @@
 #
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
+Club.init_for_demo_clubs
+
 demo_user = User.create!(fullname: "Demo Boy", email: "paperclub-demo@gmail.com",
                           avatar_url: "", 
                           password: "123456", password_confirmation: "123456")
