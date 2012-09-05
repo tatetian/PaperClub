@@ -233,6 +233,8 @@ html, body{background-color:#afafaf; overflow: auto; }
   border-color: gray;
   background-color: #AFAFAF;
   overflow: hidden;
+  /* Force Webkit-based browsers to use GPU acceleration   */
+  -webkit-transform: scale3d(1,1,1);
 }
 .r-viewport-page > .p {
   overflow: hidden;

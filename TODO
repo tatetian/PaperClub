@@ -1,97 +1,22 @@
-Iteration 1
+  String.gsub
 
-  Sat. 1st, Sep
-
-* login: auto redirect, error message
-    15:50 -- 16:15  25min
-* logout
-    16:17 -- 17:10  50min
-    Time sucker: don't know how to use form_tag
-    Use ajax instead of form in the end
-* upload bugs
-    17:30 -- 18:45
-    dash file issue
-    original filename fallback
-    uploaded before
-
-    String.gsub
-
-    touch "-"
-    rm -r -- "-"
-* uploading features
-    19:50 -- 22:10  2h 20min 
-    progress, error message
-
-    Logic is complex
-
-
-  Sun. 2nd, Sep
-
-* uploading features
-    10:15 -- 11:50 1h 30min
-    multifile
-    concurrency
-
-* reading: display ==> visibility
-    15:10 -- 15:33 15min
-      display:none is better
-
-* pagenum with total # of pages
-    15:35 -- 15:50 15min
-    
-* new club: cancel, auto refresh
-    16:20 -- 17:00 40min 
-
-  Top goals: 
-  * signup: submit
-  * invite people after club creation
-    20:30 -- 20:55 stub 
-  * invitation accept/deny?
-      partially done
-      signup case not completed yet
+  touch "-"
+  rm -r -- "-"
  
-  Tuesday 4th, Sep
+  Invitation
 
-    Refactor upload
-    15:19 -- 16:12 60min
-
-    Solve issues caused by Ubuntu upgrade
-    16:12 -- 16:27 15min
-
-    Debug refactored upload
-    16:27 -- 16:33 Done
-
-    Demo Club
-    16:30 -- 19:00 2h30min
-      Place PDF files
-      Init demo papers
-      Create demo club after user creation
-
-  Bugs
-    uploader_id ==> news
-    15:57 -- 17:10  1h10min
-
-    "Log in" of homepage
-    
+  Bugs    
     Title
       extra space
       the line with biggest font size is not title
 
-    Uploaded but can't open
-    
-  launch
-
-  demo club that everyone has
   slogan refinement
 
+  缩略图
 
   papers: pagination, search
   avatar: picture, default
   smart float
-
-  bug fix
-
-  tonight
 
 Iteration 2
 
