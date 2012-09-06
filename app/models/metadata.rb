@@ -68,7 +68,7 @@ class Metadata < ActiveRecord::Base
     # Replace "-" with "+" because "-" has special meaning in shell command
     res.gsub!('-', '+')
 
-    res
+    res + "1"
   end
 
   def self.find_or_create_from pdf_path, options={}

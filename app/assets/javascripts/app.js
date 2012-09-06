@@ -779,20 +779,67 @@ $(function() {
       $(window).scrollTop($(window).scrollTop()*zoomFactor);
     },
     _loadCss: function() {
-      var allCssUrl = ["/api/fulltext", this.paper.id, "all.css"].join("/");
+      var that        = this,
+          allCssUrl   = ["/api/fulltext", this.paper.id, "all.css"].join("/"),
+          isReadyUrl  = ["/api/fulltext", this.paper.id, "ready"].join("/"),
+          tries       = 0,
+          MAX_TRIES   = 35,
+          timer       = null,
+          timeout     = 500,
+          timeDelta   = 250;
 
-      this._unloadCss();
+      that._unloadCss();
 
-      // Add the new one
-      $("<link id=\"fulltext-css\">").appendTo("head").attr({
-        rel: "stylesheet",
-        type: "text/css",
-        href: allCssUrl
-      });
+      function doLoadCss() {
+        if(tries >= 2)
+          $("#fulltext-css-"+(tries-2)).remove();
+
+        $("<link id=\"fulltext-css-" + tries + "\" class=\"fulltext-css\">").appendTo("head").attr({
+          rel: "stylesheet",
+          type: "text/css",
+          href: allCssUrl + "?tries=" + tries
+        });
+      };
+
+      function checkCssComplete() {
+        $.ajax({
+          url: isReadyUrl + "?tries=" + tries,
+          data: null, 
+          context: that,
+          dataType: "json"
+        })
+        .done(function(is_complete) {
+          if(!is_complete && tries < MAX_TRIES) {
+            timer = setTimeout(function() {
+              tries++;
+              checkCssComplete();
+              doLoadCss();
+            }, timeout);
+
+            if(timeout <= 2000)
+              timeout += timeDelta;
+          }
+          else {
+            if(tries > 1)
+              $("#fulltext-css-"+(tries-1)).remove();
+          }
+        })
+        .fail(function() {
+          timer = setTimeout(function() {
+            checkCssComplete();
+            doLoadCss();
+          }, 5000);
+        });
+      }
+
+      checkCssComplete();
+      doLoadCss();
+
+      this.on('hide', function() { if(timer) { clearTimer(timer); timer = null;} });
     },
     _unloadCss: function() {
       // Remove the all one(if exists)
-      $("#fulltext-css").remove();
+      $(".fulltext-css").remove();
     }
   });
 

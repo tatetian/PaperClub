@@ -1,30 +1,30 @@
-  String.gsub
-
-  touch "-"
-  rm -r -- "-"
- 
+Iteration 1 
   Invitation
 
-  Bugs    
+  detect incomplete all.css and *.pages
+
+  edit
+
+  papers: pagination, search
+
+  smart float
+
+  Bugs
+    IE Uploading
     Title
       extra space
       the line with biggest font size is not title
+    Paper 116
 
   slogan refinement
 
   缩略图
 
-  papers: pagination, search
   avatar: picture, default
-  smart float
 
 Iteration 2
-
-  detect incomplete all.css and *.pages
-
   signup
     js validate, error message 
-
 
   details
   notes
@@ -32,3 +32,9 @@ Iteration 2
   settings
 
   bug fix
+
+What I Learned
+  String.gsub
+
+  touch "-"
+  rm -r -- "-"

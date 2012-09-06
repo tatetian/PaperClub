@@ -1,4 +1,20 @@
 class Api::FulltextController < ApplicationController
+  # Check whether PDF to HTML processing is done
+  #
+  # URL     GET /api/fulltext/<paper_id>/ready?
+  # PARAM   paper_id
+  # ROLE    member
+  def ready?
+    # Find the paper
+    paper = Paper.find(params[:paper_id])
+    # Authenticate
+    can_access_club?(paper.club_id)
+
+    # Check existance of "done" file
+    done_path = Rails.root.join("uploads", paper.uuid, "all.css.done")
+    render :json => File.exists?(done_path)
+  end
+  
   # Get the css for the paper
   #
   # URL     GET /api/fulltext/<paper_id>/all.css
