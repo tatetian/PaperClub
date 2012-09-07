@@ -234,7 +234,10 @@ html, body{background-color:#afafaf; overflow: auto; }
   background-color: #AFAFAF;
   overflow: hidden;
   /* Force Webkit-based browsers to use GPU acceleration   */
-  -webkit-transform: scale3d(1,1,1);
+  /*-webkit-transform: scale3d(1,1,1);*/
+}
+.r-viewport-page.loading{
+  background: white url(loading.gif) center no-repeat;
 }
 .r-viewport-page > .p {
   overflow: hidden;

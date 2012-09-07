@@ -619,7 +619,7 @@ $(function() {
           h     = parseInt(paper.get("height")),
           numPages = this.numPages = paper.get("num_pages"),
           pages = this.pages = new Array(numPages),
-          W     = this.viewportWidth = 0.62 * $(window).width(),
+          W     = this.viewportWidth = 0.65 * $(window).width(),
           H     = W*h/w,
           z     = this.zoomFactor = 1; 
   
@@ -848,8 +848,11 @@ $(function() {
     className: "r-viewport-page shadow024",
     state: "blank",
     nowVisible: false,
+    tries: 0,
     states: {
       blank: {
+        transition: function() {
+        },
         onVisible: function() {
           this.setState("loading");
         }
@@ -867,16 +870,20 @@ $(function() {
                              'pages', 
                              this.pageNum].join("/");
           $.ajax({
-            url: pageHtmlUrl,
+            url: pageHtmlUrl + "?tries=" + (this.tries++),
             data: null, 
             context: that,
             dataType: "html"
           })
           .done(this.states.loading._onSuccess)
           .fail(this.states.loading._onFail);
+
+          this.$el.addClass('loading');
         },
         _onSuccess: function(pageContent) {
           this.pageContent = pageContent;
+
+          this.$el.removeClass('loading');
 
           if(this.nowVisible) 
             this.setState("viewable");
@@ -884,14 +891,17 @@ $(function() {
             this.setState("hidden");
         },
         _onFail: function() {
+          console.debug("Failed to load Page " + this.pageNum);
           if(this.nowVisible) {
             var that = this;
             setTimeout(function(){
-              that.states.loading._doLoading.apply(this);
+              that.states.loading._doLoading.apply(that);
             }, 1000);
           }
-          else
+          else {
+            this.$el.removeClass('loading');
             this.setState("blank");
+          }
         }
       },
       viewable: {

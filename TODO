@@ -1,7 +1,11 @@
 Iteration 1 
   Invitation
 
-  detect incomplete all.css and *.pages
+* detect incomplete all.css and auto refresh
+
+* loading
+    
+  stop loading or other window event when screen become hidden
 
   edit
 

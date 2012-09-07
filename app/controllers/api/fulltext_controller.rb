@@ -11,7 +11,7 @@ class Api::FulltextController < ApplicationController
     can_access_club?(paper.club_id)
 
     # Check existance of "done" file
-    done_path = Rails.root.join("uploads", paper.uuid, "all.css.done")
+    done_path = _get_done_path(paper)
     render :json => File.exists?(done_path)
   end
   
@@ -44,10 +44,13 @@ class Api::FulltextController < ApplicationController
     can_access_club?(paper.club_id)
 
     # Send file
-    if params[:page_num]
-      hex_page_num = params[:page_num].to_i.to_s(16)
-      html_path = Rails.root.join("uploads", paper.uuid, "#{hex_page_num}.page")
-      send_file html_path, :type=>"text/html", :disposition => 'inline', :x_sendfile=>true 
+    page_num = params[:page_num].to_i
+    if _page_ready?(paper, page_num)
+      page_path = _get_page_path(paper, page_num)
+      send_file page_path, :type => "text/html", :disposition => 'inline', 
+                           :x_sendfile => true 
+    else
+      head :bad_request
     end
   end
 
@@ -65,5 +68,25 @@ class Api::FulltextController < ApplicationController
     # Send file
     pdf_path = Rails.root.join("uploads", paper.uuid, "fulltext.pdf")
     send_file pdf_path, :type=>"application/pdf", :x_sendfile=>true 
+  end
+
+private
+  def _get_page_path(paper, page_num)
+    hex_page_num = page_num.to_s(16)
+    html_path = Rails.root.join("uploads", paper.uuid, "#{hex_page_num}.page")
+  end
+
+  def _get_done_path(paper)
+    Rails.root.join("uploads", paper.uuid, "all.css.done")
+  end
+
+  def _page_ready?(paper, page_num)
+    if page_num < paper.num_pages
+      File.exists?(_get_page_path(paper, page_num+1))
+    elsif page_num == paper.num_pages
+      File.exists?(_get_done_path(paper))
+    else
+      false
+    end
   end
 end
