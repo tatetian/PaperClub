@@ -153,4 +153,20 @@ class Metadata < ActiveRecord::Base
     # PDF -> HTML5
     %x[pdf2htmlEX --embed-base-font 0 --tmp-dir "#{tmp_dir}" --dest-dir "#{dest_dir.to_s}" "#{pdf_path.to_s}"]
   end
+
+  require 'fileutils'
+  def self.done_all
+    papers_dir = Rails.root.join("uploads")
+
+    Dir.foreach(papers_dir) do |uuid|
+      next if uuid == '.' or uuid == '..'
+
+      all_css_path = Rails.root.join('uploads', uuid, 'all.css')
+      if File.exists?(all_css_path)
+        done_all_path = Rails.root.join('uploads', uuid, 'all.css.done')
+        puts done_all_path
+        FileUtils.touch done_all_path
+      end
+    end
+  end
 end
