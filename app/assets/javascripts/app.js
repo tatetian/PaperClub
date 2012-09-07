@@ -332,7 +332,7 @@ $(function() {
     initialize: function() {
       var clubId = this.clubId = this.options.clubId;
       this.summaryView = new ClubScreenSummaryView({clubId: clubId});
-      this.paperListView = new PaperListView({clubId: clubId});
+      this.paperListView = new PaperListView({clubId: clubId, screen: this});
 
       this.uploader = new PaperUploader({clubId: this.clubId, screen: this});
 
@@ -355,7 +355,6 @@ $(function() {
       this.$el.find(".upload-btn-wrapper").append(this.uploader.render().$el);
               
       this.onResize();
-
       return this;      
     },
     onResize: function() {
@@ -385,6 +384,8 @@ $(function() {
     className: "p-paper-list",
     template: _.template($("#club-screen-paper-list").html()),
     initialize: function() {
+      this.screen = this.options.screen;
+
       this.$el.append(this.template());
 
       this.initEvents();
@@ -394,9 +395,58 @@ $(function() {
                  .on('reset', this.onAddAll, this);
     },
     initEvents: function() {
+      var that = this;
+
+      // Resize
+      $(window).resize(function() { that.resize() });
+
+      var lastKeywords = "";
+      // Init search events
+      function _doSearch(e) {
+        var keywords = $(this).val();
+        lastKeywords = keywords;
+        that.search(keywords);
+        console.debug('change');
+        e.preventDefault();
+      }
+      this.$(".paper-search").on("change", _doSearch);
+      // Listen clear event
+      this.$(".paper-search").on("keyup", function() {
+        var keywords = $(this).val();
+        if(keywords == "" && lastKeywords != "") {
+          lastKeywords = "";
+          that.search(); 
+        }
+      });
+    },
+    resize: function() {
+      this.$el.css('min-height', $(window).height() - 24*2);
+    },
+    search: function(keywords, tag, user_id) {
+      var that = this;
+
+      var data = {};
+      if(keywords) data.keywords = $.trim(keywords);
+      if(tag) data.tag = tag;
+      if(user_id) data.user_id = user_id;
+
+      this.$("ul").empty();
+      this.$el.addClass('loading');
+      setTimeout( function(){ that.papers.fetch({
+        data: data,
+        success: function() {
+          that.$el.removeClass('loading');
+        },
+        error: function() {
+          // TODO: show error message
+          that.$el.removeClass('loading');
+        }
+      })} , 1000);
     },
     render: function() {
-      this.papers.fetch();
+      this.resize();
+
+      this.search();
       return this; 
     },
     onAddOne: function(paper, that, options) {

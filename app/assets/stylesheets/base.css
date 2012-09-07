@@ -77,3 +77,14 @@ src:url(data:font/opentype;base64,d09GRgABAAAAAGZ8ABIAAAAAtpgAAAAAAAAAAAAAAAAAAA
 font-style:italic;
 font-weight:400;
 }
+
+input[type=search]::-webkit-search-decoration,
+input[type=search]::-webkit-search-results-button,
+input[type=search]::-webkit-search-results-decoration {
+  display: none;
+}
+input[type=search] {
+  -webkit-appearance: textfield;
+  -webkit-box-sizing: content-box;
+  outline:none; border:none;
+}
