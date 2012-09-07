@@ -432,7 +432,7 @@ $(function() {
 
       this.$("ul").empty();
       this.$el.addClass('loading');
-      setTimeout( function(){ that.papers.fetch({
+      this.papers.fetch({
         data: data,
         success: function() {
           that.$el.removeClass('loading');
@@ -441,7 +441,7 @@ $(function() {
           // TODO: show error message
           that.$el.removeClass('loading');
         }
-      })} , 1000);
+      });
     },
     render: function() {
       this.resize();
