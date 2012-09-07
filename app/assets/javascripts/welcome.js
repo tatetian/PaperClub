@@ -22,6 +22,7 @@ $(function( ){
     play: 3500,
     effect: 'fade, fade',
     pagination: true,
-    preload: true
+    preload: true,
+    preloadImage: "assets/loading.gif"
   });
 });

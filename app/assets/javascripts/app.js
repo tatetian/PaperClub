@@ -891,7 +891,6 @@ $(function() {
             this.setState("hidden");
         },
         _onFail: function() {
-          console.debug("Failed to load Page " + this.pageNum);
           if(this.nowVisible) {
             var that = this;
             setTimeout(function(){
