@@ -29,15 +29,19 @@ class Paper < ActiveRecord::Base
   }
 
   # Search papers in a club given keywords, tag and uploader
-  def self.search(club_id, params) 
+  def self.search(club_id, params={}) 
+    params.reverse_merge! :offset => 0, :limit => 5
+
     conditions = ["papers.club_id=#{club_id}"]
     conditions << "papers.title LIKE ('%#{params[:keywords]}%')" if params[:keywords]
     conditions << "papers.uploader_id=#{params[:user_id]}" if params[:user_id]
     if(params[:tag_id])
       where << "collections.tag_id=#{params[:tag_id]}"
       return Paper.joins(:collections).where(conditions.join(" AND "))
+                  .limit(params[:limit]).offset(params[:offset])
     else
       return Paper.where(conditions.join(" AND "))
+                  .limit(params[:limit]).offset(params[:offset])
     end
   end
 

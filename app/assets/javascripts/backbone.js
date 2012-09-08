@@ -757,6 +757,8 @@
       var collection = this;
       var success = options.success;
       options.success = function(resp, status, xhr) {
+        // beforeReset callback is added by Hongliang Tian
+        if (options.beforeReset) options.beforeReset(collection, resp);
         collection[options.add ? 'add' : 'reset'](collection.parse(resp, xhr), options);
         if (success) success(collection, resp);
       };

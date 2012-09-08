@@ -383,16 +383,36 @@ $(function() {
   var PaperListView = Backbone.View.extend({
     className: "p-paper-list",
     template: _.template($("#club-screen-paper-list").html()),
+    lastFetchParams: null,
+    /* States: init, loading, part_loaded, loading_more, all_loaded, error */
+    state: "init", 
+    PAGE_ITEMS: 10,
     initialize: function() {
       this.screen = this.options.screen;
 
       this.$el.append(this.template());
 
-      this.initEvents();
-
       this.papers = SharedData.getPapers();
-      this.papers.on('add', this.onAddOne, this)
-                 .on('reset', this.onAddAll, this);
+      this.papers.on('add', this._onAddOne, this)
+                 .on('reset', this._onAddAll, this);
+    
+      this.$more = $('<div class="mb15 cleanfloat loading" style="width: 100%;">' +
+                     '&nbsp;<br/>&nbsp;</div>');
+      this.tempPapers = new Papers(null, {clubId: this.options.clubId});
+      this.tempPapers.on('reset', this._loadData, this);
+      
+      this.initEvents();
+    },
+    _loadData: function() {
+      var items = this.tempPapers,
+          hasMore = false;
+
+      while(items.size() > this.PAGE_ITEMS) {
+        items.pop();
+        hasMore = true;
+      }
+      items.hasMore = hasMore;
+      this.papers.add(items.models);
     },
     initEvents: function() {
       var that = this;
@@ -406,7 +426,6 @@ $(function() {
         var keywords = $(this).val();
         lastKeywords = keywords;
         that.search(keywords);
-        console.debug('change');
         e.preventDefault();
       }
       this.$(".paper-search").on("change", _doSearch);
@@ -418,6 +437,16 @@ $(function() {
           that.search(); 
         }
       });
+      // Init more events
+      $(window).scroll(function() {
+        var h = $(window).height(),
+            t = $(window).scrollTop(),
+            H = $("body").height(),
+            b = H - h - t;
+        if(b < 50) {
+          that.more()
+        }
+      });
     },
     resize: function() {
       this.$el.css('min-height', $(window).height() - 24*2);
@@ -425,23 +454,66 @@ $(function() {
     search: function(keywords, tag, user_id) {
       var that = this;
 
-      var data = {};
+      this.state = "loading";
+
+      var data = {offset: 0, limit: this.PAGE_ITEMS+1};
       if(keywords) data.keywords = $.trim(keywords);
       if(tag) data.tag = tag;
       if(user_id) data.user_id = user_id;
 
-      this.$("ul").empty();
+      this.lastFetchParams = data;
+
+      this.papers.reset([]);
       this.$el.addClass('loading');
-      this.papers.fetch({
+
+      var items = this.tempPapers;
+      items.hasMore = true;
+      items.fetch({
         data: data,
         success: function() {
+          if(items.hasMore)
+            that.state = "part_loaded";
+          else
+            that.state = "all_loaded";
+
           that.$el.removeClass('loading');
         },
         error: function() {
+          that.state = "error";
           // TODO: show error message
           that.$el.removeClass('loading');
         }
       });
+    },
+    more: function() {
+      if(this.state != "part_loaded") return;
+
+      this.state = "loading_more";
+
+      // Show loading
+      this.$("ul").append(this.$more);
+
+      var items = this.tempPapers,
+          that  = this;
+
+      this.lastFetchParams.offset += this.PAGE_ITEMS;
+      setTimeout(function(){items.fetch({
+        data: that.lastFetchParams,
+        beforeReset: function() {
+          that.$more.detach();
+        },
+        success: function() {
+          if(items.hasMore)
+            that.state = "part_loaded";
+          else
+            that.state = "all_loaded";
+        },
+        error: function() {
+          that.state = "error";
+          // TODO: show error message
+          that.$more.detach();
+        }
+      })}, 1000);
     },
     render: function() {
       this.resize();
@@ -449,13 +521,13 @@ $(function() {
       this.search();
       return this; 
     },
-    onAddOne: function(paper, that, options) {
+    _onAddOne: function(paper, that, options) {
       var paperView = new PaperItemView({paper: paper});
       this.$("ul").append(paperView.render().$el)
     },
-    onAddAll: function() {
+    _onAddAll: function() {
       this.$("ul").empty();
-      this.papers.each(this.onAddOne, this);      
+      this.papers.each(this._onAddOne, this);      
     }
   });
 
