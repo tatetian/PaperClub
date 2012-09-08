@@ -126,7 +126,24 @@ $(function() {
       this.visible = false;
 
       this.trigger("hide");
-    } 
+    },
+    onWindowEvent: function(eventName, callback, shown) {
+      var that = this,
+          namespacedEvent = eventName + '.' + that.cid;
+          
+      this.on('show', function() {
+        $(window).bind(namespacedEvent, callback);
+
+        // Call resize's callback when showing
+        if(namespacedEvent.indexOf('resize')==0)
+          callback();
+      })  .on('hide', function() {
+        $(window).unbind(namespacedEvent);
+      });
+
+      if(shown) 
+        $(window).bind(namespacedEvent, callback);
+   }
   });
     
   Screen.extend = Backbone.View.extend;
@@ -138,6 +155,8 @@ $(function() {
     className: "p-page-content shadow024 bgwhite",
     initialize: function() {
       this.render();
+
+      this.newClubDialoge = new NewClubDialoge({screen: this});
 
       this.initEvents();
 
@@ -163,23 +182,18 @@ $(function() {
         });
         e.preventDefault();
       });
-      $(window).resize(function() { 
-        if(that.visible) that.onResize() 
+
+      this.onWindowEvent('resize', function() { 
+        // White area not too short
+			  that.$el.css('min-height', $(window).height() - 24*2);
       });
     },
     render: function() {
       this.$el.empty()
               .append(this.template()); 
-      this.onResize();
       return this;      
     },
-    onResize: function() {
-      // White area not too short
-			this.$el.css('min-height', $(window).height() - 24*2);
-    },
     onNewClub: function() {
-      if(!this.newClubDialoge)
-        this.newClubDialoge = new NewClubDialoge();
       this.newClubDialoge.show();
     },
     onAddOne: function(club, that, options) {
@@ -194,43 +208,34 @@ $(function() {
 
   var NewClubDialoge = Backbone.View.extend({
     className: "m-m-wrapper newclub",
-    template: _.template($("#new-club-dialoge-template").html()),
-    visible: false,
+    template: _.template($("#new-club-dialoge-data-template").html()),
     events: {
       "click .c-btn-creatclub": "onOK",
       "click .c-btn-cancelclub": "onCancel"
     },
     initialize: function() {
-      var that = this;
+      this.$el.append($($("#new-club-dialoge-template").html()));
 
-      $(window).size(function() {
-        if(that.visible)
-          that.onResize();
-      });
+      var that = this;
+      this.options.screen.onWindowEvent('resize', function() {
+        // Size of new club dialog
+        var whtml = $(window).width();
+        var wst_c = (whtml-48-255-18-36)*0.5;
+        that.$('.m-m-container').css({"width":wst_c+88,"height":276});
+      }); 
     },
     render: function() {
       return this;
     },
     show: function() {
       this.$el.appendTo($("body")).show();
-      this.visible = true;
 
       this.model = new Club();
 
-      this.$el.empty()
-              .append(this.template(this.model.toJSON()));
-
-      this.onResize();
+      this.$(".m-m-content").empty().prepend(this.template(this.model.toJSON()));
     },
     hide: function() {
       this.$el.detach().hide();
-      this.visible = false;
-    },
-    onResize: function() {
-      // Size of new club dialog
-      var whtml = $(window).width();
-			var wst_c = (whtml-48-255-18-36)*0.5;
-			this.$('.m-m-container').css({"width":wst_c+88,"height":276});
     },
     onOK: function(e) {
       this.model.set(this.retrieveValues())
@@ -343,8 +348,8 @@ $(function() {
     initEvents: function() {
       var that = this;
       
-      $(window).resize(function() { 
-        if(that.visible) that.onResize() 
+      this.onWindowEvent('resize', function() {
+			  that.$el.css('min-height', $(window).height() - 24*2);
       });
     },
     render: function() {
@@ -354,12 +359,7 @@ $(function() {
       this.$el.find(".p-sidebar").prepend(this.summaryView.render().$el);
       this.$el.find(".upload-btn-wrapper").append(this.uploader.render().$el);
               
-      this.onResize();
       return this;      
-    },
-    onResize: function() {
-      // White area shoudl not be too short
-			this.$el.css('min-height', $(window).height() - 24*2);
     }
   });
 
@@ -386,6 +386,7 @@ $(function() {
     lastFetchParams: null,
     /* States: init, loading, part_loaded, loading_more, all_loaded, error */
     state: "init", 
+    // TODO: set-to-1 bug
     PAGE_ITEMS: 10,
     initialize: function() {
       this.screen = this.options.screen;
@@ -418,7 +419,9 @@ $(function() {
       var that = this;
 
       // Resize
-      $(window).resize(function() { that.resize() });
+      this.screen.onWindowEvent('resize', function() {
+        that.$el.css('min-height', $(window).height() - 24*2 - 36);
+      });
 
       var lastKeywords = "";
       // Init search events
@@ -438,7 +441,7 @@ $(function() {
         }
       });
       // Init more events
-      $(window).scroll(function() {
+      this.screen.onWindowEvent('scroll', function() {
         var h = $(window).height(),
             t = $(window).scrollTop(),
             H = $("body").height(),
@@ -447,9 +450,6 @@ $(function() {
           that.more()
         }
       });
-    },
-    resize: function() {
-      this.$el.css('min-height', $(window).height() - 24*2);
     },
     search: function(keywords, tag, user_id) {
       var that = this;
@@ -516,8 +516,6 @@ $(function() {
       })}, 600);
     },
     render: function() {
-      this.resize();
-
       this.search();
       return this; 
     },
@@ -776,18 +774,14 @@ $(function() {
       }, 600);
 
       this.initScrollEvents();
-
-      this.screen.on("hide", function() {
-        $(window).unbind("scroll.viewport");
-      }, this);
-      this.screen.on("show", this.initScrollEvents, this);
     },
     initScrollEvents: function() {
       var that = this,
           scrolling = false, 
           lastScrollTime = Date.now(),
           scrollTimer = null;
-      $(window).on("scroll.viewport", function() {
+
+      this.screen.onWindowEvent('scroll', function() {
         // Start scrolling
         if(!scrolling) {
           scrolling = true;
@@ -815,7 +809,7 @@ $(function() {
             scrolling =  false;
           }
         }, 200);
-      });
+      }, true);
     },
     decidePageNum: function() {
       var pages = this.pages,
@@ -1140,8 +1134,7 @@ $(function() {
       // Monitor slideArea
       var l = 48, r = 48, h = 36,
           timer = null;
-      window.that =that;
-      $(window).mousemove(function(e) {
+      this.screen.onWindowEvent('mousemove', function(e) {
         var x = e.clientX,
             y = e.clientY;
         // Invisible => visible
@@ -1153,7 +1146,7 @@ $(function() {
         else{
           that.hide();
         }  
-      });
+      }, true);
     },
     show: function() {
       if(this.visible) return;
@@ -1262,7 +1255,6 @@ $(function() {
         };
     return _data;
   })();
-  window.SharedData = SharedData;
 
   $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");
