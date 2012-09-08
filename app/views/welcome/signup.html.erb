@@ -23,13 +23,19 @@
 
         <%= f.password_field :password, :class => "m-f-input column-62 input-red",
                                         :placeholder => "Password" %>
-        <span class="inblock fs13 ml30"></span>
+        <span class="inbliock fs13 ml30"></span>
         <p class="column-62">
           <%= f.submit :submit, 
             :class => " font-d asblock fr color-grey3 fw-bold inblock mt30 fs18 blue-hover",
             :style => "border:none; background-color: transparent;",
             :value => "Create account" %>
         </p>
+        <% if @invitation_token %>
+          <div style="margin:0;padding:0;display:inline;">
+            <input name="invitation_token" type="hidden" 
+                   value="<%= @invitation_token %>">
+          </div>
+        <% end %>
       <% end %>
     </div>
   </div>

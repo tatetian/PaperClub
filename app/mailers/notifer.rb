@@ -10,7 +10,8 @@ class Notifer < ActionMailer::Base
     @invitor    = User.find(invitation.invitor_id)
     @club       = Club.find(invitation.club_id)
     @invitation = invitation
-    @link       = "http://localhost:3000/invitations/#{invitation.token}"
+    domain      = Rails.env == "production" ? "www.paperclub.com" : "localhost:3000" 
+    @link       = "http://#{domain}/invitations/#{invitation.token}"
   
     mail  to: invitation.invitee_email,
           subject: "#{@invitor.fullname} invites you to join PaperClub"

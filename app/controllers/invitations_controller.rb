@@ -6,12 +6,12 @@ class InvitationsController < ApplicationController
 
     # If the email address is registered
     if user 
-      Club.join_member(invitation.club_id, user.id)
+      user.accept_invitation(invitation)
       if signed_in?
         if current_user.id == user.id 
           redirect_to "/app"
         else
-          sign_out  
+          sign_out
           redirect_to "/signin"
         end
       else

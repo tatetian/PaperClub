@@ -12,7 +12,6 @@ class WelcomeController < ApplicationController
 
   def signup
     # In case signup action is redirected from invitation action
-    puts ">>>>>>>>>>>>>>>>signup>>>>>>>>>>>>"
-    puts flash[:invitation]
+    @invitation_token = flash[:invitation]
   end
 end

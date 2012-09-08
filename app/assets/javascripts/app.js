@@ -513,7 +513,7 @@ $(function() {
           // TODO: show error message
           that.$more.detach();
         }
-      })}, 1000);
+      })}, 600);
     },
     render: function() {
       this.resize();

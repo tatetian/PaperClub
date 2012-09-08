@@ -12,15 +12,17 @@ class Api::UsersController < ApplicationController
   def create
     # Ignore password confirmation
     user = params[:user]
-    user[:password_confirmation] = user[:password]
-    
-    # In case signup action is redirected from invitation action
-    puts ">>>>>>>>>>>>>>>>create of user>>>>>>>>>>>>"
-    puts flash[:invitation]
+    user[:password_confirmation] = user[:password] 
 
-    @user = User.new(user)
-    if @user.save
-      sign_in @user
+    user = User.new(user)
+    if user.save
+      # In case signup action is redirected from invitation action
+      if params[:invitation_token]
+        invitation = Invitation.find_by_token(params[:invitation_token]) 
+        user.accept_invitation invitation
+      end
+
+      sign_in user
       redirect_to "/app"
     else
       flash.now[:error] = "Invalid user information"

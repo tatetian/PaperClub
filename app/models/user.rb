@@ -30,9 +30,11 @@ class User < ActiveRecord::Base
   end
 
   def join_club(club, role)
-    membership = Membership.create(:club_id => club.id, 
-                                   :user_id => self.id,
-                                   :role => role)
+    _join_club(club.id, role)
+  end
+
+  def accept_invitation(invitation)
+    _join_club(invitation.club_id, invitation.role)
   end
 
   def create_demo_club
@@ -57,5 +59,15 @@ private
     #
     # If remember_token doesn't exist before, assign it a secure random
     self.remember_token ||= SecureRandom.urlsafe_base64
+  end
+
+  # Join a club
+  def _join_club(club_id, role)
+    # Make sure the user is not a member
+    if Membership.find_by_user_id_and_club_id(self.id, club_id) == nil
+      membership = Membership.create( :club_id => club_id, 
+                                      :user_id => self.id,
+                                      :role => role )
+    end
   end
 end
