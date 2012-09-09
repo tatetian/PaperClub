@@ -43,7 +43,7 @@
 <script type="text/template" id="joined-club-template">
 <div class="header fs24 color-black fw-bold mb20 "><a href="#/clubs/<%%= id %>"><%%= name %></a></div>
 <div class="section cf ">
-  <div class="section-left fl column-50">
+  <div class="section-left fl column-62">
     <div class=" fs24 color-grey3 pl40 mb20"><%%= description %></div>
     <div class="left-footer pl40">
       <span class="fs-16 color-grey2 mr10"><em class=" fs42 color-grey1 font-icon">K</em><%%= num_papers %></span>
@@ -51,7 +51,7 @@
       <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
     </div>
   </div>
-  <div class="section-right fl column-50 mt-20 c-case-img">
+  <div class="section-right fl column-38 mt-20 c-case-img">
     <%% _.each(avatar_urls, function(url, index) { %>
       <img class="img48 mr15 mb15" src="<%%= url %>"/>
     <%% }); %>
