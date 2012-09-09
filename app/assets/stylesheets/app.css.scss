@@ -158,10 +158,14 @@ html, body{background-color:#afafaf; overflow: auto; }
 .p-page-content{ position:relative;  margin:24px; width:auto; overflow:hidden;}
 .p-sidebar{
 	position:absolute;
+  overflow: hidden;
 	width:255px;
 	color:#fff;
 	padding:36px 0px 0px 36px;
 	box-sizing:border-box; -moz-box-sizing:border-box; 
+}
+.p-sidebar > .main {
+  width: 219px;
 }
 .p-paper-list{
 	width:auto;
@@ -169,6 +173,7 @@ html, body{background-color:#afafaf; overflow: auto; }
 	position:relative;
 	box-sizing:border-box; -moz-box-sizing:border-box; 
 	padding:36px 36px 0px 18px;
+  overflow: hidden;
 }
 .r-footer-content{
 	width:auto;
@@ -180,7 +185,10 @@ html, body{background-color:#afafaf; overflow: auto; }
 }
 .p-paper-list a:hover{color:#2ea1dd;}
 .p-nav-menu dt:hover ,.p-nav-menu dd:hover{color:#2ea1dd;}
-.p-btn-back{position:fixed;bottom:30px;	}
+.p-btn-back{ 
+  position: fixed; 
+  bottom: 36px;	
+}
 .p-btn-back a:hover span{color:#2ea1dd;}
 .p-paper-list .fav {margin-top:4px;}
 .p-btn-fav:hover,.r-btn-fav:hover{color:#ffcc00;}

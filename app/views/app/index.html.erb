@@ -2,7 +2,7 @@
 
 <script type="text/template" id="clubs-screen-template">
   <div class="p-sidebar" id="p-sidebar-nav">
-    <div class="section ">
+    <div class="section main">
       <div class="header fs24 color-black fw-bold mb15 font-c">
         Clubs
       </div>
@@ -92,8 +92,8 @@
 
 <script type="text/template" id="club-screen-template">
 <div class="p-sidebar" id="p-sidebar-nav">
-  <!-- insert summary view here -->
-  <dl class="section p-nav-menu fs16 color-grey2 mt30 lh15 font-d">
+  <dl class="section main p-nav-menu fs16 color-grey2 lh15 font-d">
+    <!-- insert summary view here -->
     <dt class="menu-paper fs18 color-grey3 mt10"><a class="notYetImplemented" href="#">PAPERS</a></dt>
       <dd class="upload-btn-wrapper"><!-- insert upload btn here--></dd>
       <dd><a class="notYetImplemented" href="#">Find</a></dd>
@@ -107,7 +107,8 @@
     </a>
   </div>
 </div>
-<!-- insesrt paper list view here -->
+<div class="p-paper-list">
+</div>
 </script>
 
 <script type="text/template" id="paper-upload-btn-template">
@@ -215,3 +216,6 @@
   <a class="download font-icon fs36 mr15" href="<%%= download_url %>">D</a>
 </div>
 </script>
+
+<div id="uploaders-container">
+</div>

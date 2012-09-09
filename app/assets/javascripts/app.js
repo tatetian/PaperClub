@@ -135,7 +135,8 @@ $(function() {
         $(window).bind(namespacedEvent, callback);
 
         // Call resize's callback when showing
-        if(namespacedEvent.indexOf('resize')==0)
+        if(namespacedEvent.indexOf('resize')==0 || 
+           namespacedEvent.indexOf('scroll')==0)
           callback();
       })  .on('hide', function() {
         $(window).unbind(namespacedEvent);
@@ -148,10 +149,57 @@ $(function() {
     
   Screen.extend = Backbone.View.extend;
 
+  var TwoColumnScreen = function(options) {
+    Screen.apply(this, [options]);
+
+    var that = this;
+    // White area not too short
+    this.onWindowEvent('resize', function() { 
+      var H = $(window).height() - 24*2;
+
+      that.$el.css('min-height', H);
+
+      that.$(".p-sidebar")    .css('min-height', H);
+      that.$(".p-paper-list") .css('min-height', H);
+    }, true);
+    // Smart float
+    var $sidebarMain = that.$(".p-sidebar > .main"),
+        $backBtn     = that.$(".p-sidebar > .p-btn-back"),
+        margin       = 24,
+        threshold    = 36;
+    this.onWindowEvent('scroll', function() {
+      var $w  = $(window),
+          T   = $w.scrollTop(),
+          h   = $w.height(),
+          H   = $("body").height(),
+          b   = H - h - T,
+          L   = $w.scrollLeft();
+      // Adjust sidebar upper part
+      if( T > threshold ) {
+        $sidebarMain.css({
+          position: 'fixed',
+          top: margin
+        });
+      }
+      else {
+        $sidebarMain.css({'position': 'static'});
+      } 
+      // Adjust sidebar lower part
+      $backBtn.css({
+        bottom: (b < margin ? 60 - b : 36),
+        left: 60 - L 
+      });
+    }, true);
+  }
+
+  _.extend(TwoColumnScreen.prototype, Screen.prototype, {});
+
+  TwoColumnScreen.extend = Screen.extend;
+
   // ==========================================
   //    AllClubsScreen
   // ==========================================
-  var AllClubsScreen = PaperClub.AllClubsScreen = Screen.extend({
+  var AllClubsScreen = PaperClub.AllClubsScreen = TwoColumnScreen.extend({
     className: "p-page-content shadow024 bgwhite",
     initialize: function() {
       this.render();
@@ -182,11 +230,6 @@ $(function() {
         });
         e.preventDefault();
       });
-
-      this.onWindowEvent('resize', function() { 
-        // White area not too short
-			  that.$el.css('min-height', $(window).height() - 24*2);
-      });
     },
     render: function() {
       this.$el.empty()
@@ -202,7 +245,8 @@ $(function() {
     },
     onAddAll: function() {
       this.$("ul").empty();
-      this.clubs.each(this.onAddOne, this);      
+      this.clubs.each(this.onAddOne, this);
+      $(window).scroll()
     }
   });
 
@@ -331,32 +375,27 @@ $(function() {
   // ==========================================
   //    OneClubScreen
   // ==========================================
-  var OneClubScreen = PaperClub.OneClubScreen = Screen.extend({
+  var OneClubScreen = PaperClub.OneClubScreen = TwoColumnScreen.extend({
     className: "p-page-content shadow024 bgwhite",
     template: _.template($("#club-screen-template").html()),
     initialize: function() {
       var clubId = this.clubId = this.options.clubId;
-      this.summaryView = new ClubScreenSummaryView({clubId: clubId});
-      this.paperListView = new PaperListView({clubId: clubId, screen: this});
-
-      this.uploader = new PaperUploader({clubId: this.clubId, screen: this});
-
-      this.initEvents();
-
-      this.render(); 
-    },
-    initEvents: function() {
-      var that = this;
       
-      this.onWindowEvent('resize', function() {
-			  that.$el.css('min-height', $(window).height() - 24*2);
-      });
+      this.render(); 
     },
     render: function() {
       this.$el.empty()
-              .append(this.template())
-              .append(this.paperListView.render().$el);
-      this.$el.find(".p-sidebar").prepend(this.summaryView.render().$el);
+              .append(this.template());
+
+      this.summaryView = new ClubScreenSummaryView({clubId: this.clubId});
+      this.paperListView = new PaperListView({clubId: this.clubId,
+                                              screen: this,
+                                              el: this.$(".p-paper-list")});
+      this.paperListView.render();
+      this.uploader = new PaperUploader({clubId: this.clubId, screen: this});
+
+
+      this.$el.find(".p-sidebar > .main").prepend(this.summaryView.render().$el);
       this.$el.find(".upload-btn-wrapper").append(this.uploader.render().$el);
               
       return this;      
@@ -381,7 +420,6 @@ $(function() {
   });
 
   var PaperListView = Backbone.View.extend({
-    className: "p-paper-list",
     template: _.template($("#club-screen-paper-list").html()),
     lastFetchParams: null,
     /* States: init, loading, part_loaded, loading_more, all_loaded, error */
@@ -417,11 +455,6 @@ $(function() {
     },
     initEvents: function() {
       var that = this;
-
-      // Resize
-      this.screen.onWindowEvent('resize', function() {
-        that.$el.css('min-height', $(window).height() - 24*2 - 36);
-      });
 
       var lastKeywords = "";
       // Init search events
@@ -477,6 +510,7 @@ $(function() {
             that.state = "all_loaded";
 
           that.$el.removeClass('loading');
+          $(window).scroll();
         },
         error: function() {
           that.state = "error";
@@ -507,6 +541,7 @@ $(function() {
             that.state = "part_loaded";
           else
             that.state = "all_loaded";
+          $(window).scroll();
         },
         error: function() {
           that.state = "error";
@@ -587,6 +622,7 @@ $(function() {
         browse_button : 'paper-upload-btn',
         max_file_size : '10mb',
         url : '/api/clubs/' + clubId + '/papers',
+        container: 'uploaders-container',
         multipart_params: {
         },
         filters : [
