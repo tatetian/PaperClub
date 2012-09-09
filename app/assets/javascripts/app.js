@@ -766,21 +766,20 @@ $(function() {
         });
         that.$(".viewport-pages").append(pages[i].$el);
       });
-      setTimeout(function() {
-        var pages = that.pages;
-
-        if(pages.length > 0) pages[0].onVisible();
-        if(pages.length > 1) pages[1].onVisible();
-      }, 600);
+      
+      var pages = that.pages;
+      if(pages.length > 0) pages[0].onVisible();
+      if(pages.length > 1) pages[1].onVisible();
 
       this.initScrollEvents();
+      this.initKeyboardEvents();
     },
     initScrollEvents: function() {
       var that = this,
           scrolling = false, 
           lastScrollTime = Date.now(),
           scrollTimer = null;
-
+      
       this.screen.onWindowEvent('scroll', function() {
         // Start scrolling
         if(!scrolling) {
@@ -810,6 +809,49 @@ $(function() {
           }
         }, 200);
       }, true);
+    },
+    initKeyboardEvents: function() {
+      // Keyboard support:
+      //  + and =    --> Zoom in
+      //  -          --> Zoom out
+      //  (0-9)+g    --> Go to page
+      var that = this,
+          keySeq = '';
+      this.screen.onWindowEvent('keypress', function(e) {
+        // Won't respond if CTRL is pressed
+        if(e.ctrlKey) return;
+
+        var code = e.which;
+        switch(code) {
+        case 61:   // =
+          that.zoomIn();
+          break;
+        case 45:   // -
+          that.zoomOut();
+          break;
+        case 103:    // g
+          pageNum = parseInt(keySeq);
+          if(!isNaN(pageNum)) {
+            that.scrollToPage(pageNum); 
+          }
+          break;
+        case 48: case 49: case 50: case 51: case 52:  // 0-4
+        case 53: case 54: case 55: case 56: case 57:  // 5-9
+          keySeq += (code-48);
+          return;
+        }
+
+        keySeq = '';
+      }, true);
+    },
+    scrollToPage: function(pageNum) {
+      pageNum = Math.max(1, Math.min(pageNum, this.numPages));
+      // Step 1. Find the top of page pageNum
+      var pages = this.pages,
+          page  = pages[pageNum-1],
+          t     = page.$el.offset().top;
+      // step 2. Scroll to the page
+      $(window).scrollTop(t-13).scroll(); 
     },
     decidePageNum: function() {
       var pages = this.pages,

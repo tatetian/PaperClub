@@ -5,12 +5,12 @@ Iteration 1
 
 * loading
     
-  stop loading or other window event when screen become hidden
+* stop loading or other window event when screen become hidden
 
   edit
 
 * papers: search
-  papers: pagination
+* papers: pagination
   14:30 - 16:00  1h30min
 
 
@@ -20,9 +20,15 @@ Iteration 1
 * Limit window event
   23:20 - 1:00  1hr4min
 
-  Integration test
-
   smart float
+
+  Keyboards shortcuts for Reader
+
+  clubs loading
+
+  loading
+
+  Integration test
 
   Bugs
     IE Uploading
