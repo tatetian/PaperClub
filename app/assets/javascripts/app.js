@@ -161,6 +161,8 @@ $(function() {
 
       that.$(".p-sidebar")    .css('min-height', H);
       that.$(".p-paper-list") .css('min-height', H);
+
+      $(window).scroll();
     }, true);
     // Smart float
     var $sidebarMain = that.$(".p-sidebar > .main"),
@@ -206,12 +208,11 @@ $(function() {
 
       this.newClubDialoge = new NewClubDialoge({screen: this});
 
-      this.initEvents();
-
       this.clubs = SharedData.getClubs();
       this.clubs.on('add', this.onAddOne, this)
-                .on('reset', this.onAddAll, this)
-                .fetch();
+                .on('reset', this.onAddAll, this);
+
+      this.initEvents();
     },
     template: _.template($("#clubs-screen-template").html()),
     initEvents: function() {
@@ -230,6 +231,30 @@ $(function() {
         });
         e.preventDefault();
       });
+
+      this.on('show', function() {
+        that.load();
+      });
+    },
+    load: function(showLoading) {
+      var that = this;
+
+      // Show loading for the first time
+      if(this.clubs.size() == 0 || showLoading) {
+        this.$("ul").empty();
+        this.$el.addClass('loading');
+        $(window).scroll();
+      }
+      this.clubs.fetch({
+        success: function() {
+          that.$el.removeClass('loading');
+          $(window).scroll();
+        },
+        error: function() {
+          that.$el.removeClass('loading');
+          $(window).scroll();
+        }
+      });
     },
     render: function() {
       this.$el.empty()
@@ -246,7 +271,6 @@ $(function() {
     onAddAll: function() {
       this.$("ul").empty();
       this.clubs.each(this.onAddOne, this);
-      $(window).scroll()
     }
   });
 
@@ -260,8 +284,9 @@ $(function() {
     initialize: function() {
       this.$el.append($($("#new-club-dialoge-template").html()));
 
-      var that = this;
-      this.options.screen.onWindowEvent('resize', function() {
+      var that = this,
+          screen = this.screen = this.options.screen;
+      screen.onWindowEvent('resize', function() {
         // Size of new club dialog
         var whtml = $(window).width();
         var wst_c = (whtml-48-255-18-36)*0.5;
@@ -282,10 +307,11 @@ $(function() {
       this.$el.detach().hide();
     },
     onOK: function(e) {
+      var screen = this.screen;
       this.model.set(this.retrieveValues())
                 .save(null, {
                   success: function() {
-                    SharedData.getClubs().fetch();
+                    screen.load(true);
                   }
                 });  
       this.hide();
