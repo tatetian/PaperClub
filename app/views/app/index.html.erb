@@ -41,11 +41,11 @@
 </script>
 
 <script type="text/template" id="joined-club-template">
-<div class="header fs24 color-black fw-bold mb20 "><a href="#/clubs/<%%= id %>"><%%= name %></a></div>
-<div class="section cf ">
+<div class="header fs24 color-black fw-bold lh15"><a href="#/clubs/<%%= id %>"><%%= name %></a></div>
+<div class="section cf lh15">
   <div class="section-left fl column-62">
-    <div class=" fs24 color-grey3 pl40 mb20"><%%= description %></div>
-    <div class="left-footer pl40">
+    <div class=" fs22 color-grey2 pl40"><%%= description %></div>
+    <div class="left-footer pl40 lh12">
       <span class="fs-16 color-grey2 mr10"><em class=" fs42 color-grey1 font-icon">K</em><%%= num_papers %></span>
       <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">f</em><%%= num_members %></span>
       <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
@@ -75,10 +75,10 @@
 
 <script type="text/template" id="new-club-dialoge-data-template">
 <dl class=" " >
-  <dt id="new-club-name" class="m-f-input flv1 font-c color-grey2 fs20 color-black column-50" 
+  <dt id="new-club-name" class="m-f-input flv1 font-c color-grey2 fs20 color-black column-50 lh15" 
                                 style="white-space: nowrap;overflow: hidden;" 
                                 contenteditable="true"><%%= name %></dt>
-  <dd id="new-club-description" class="m-f-input font-c color-grey2 fs20  mt20 ml40"  
+  <dd id="new-club-description" class="m-f-input font-c color-grey2 fs22 ml40 lh15"  
                         style="white-space: nowrap;overflow: hidden;" 
                         contenteditable="true"><%%= description %></dd>
   <dt class="font-d fs-ita color-black mt30" style="line-height">Type emails to invite people — you can do this later, too.</dt>
@@ -176,7 +176,7 @@
       </div>
     <%% } %>
     <div class="footer fr" style="width: 100%; height: 34px;position: relative; overflow: visible; margin-top: 12px;">
-      <img class="img34" style="position: absolute; right: 0px; top: 0px; " src="" />
+      <img class="img34" style="position: absolute; right: 1px; top: 0px; " src="" />
       <div class="color-grey1 font-c fs-ita fs16 fw-bold" style="position: absolute; right: 42px; top: 0px; line-height: 1.2; height: 16px;"> 
         <%%= news.time %>
       </div>

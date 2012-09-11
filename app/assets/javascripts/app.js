@@ -290,7 +290,7 @@ $(function() {
         // Size of new club dialog
         var whtml = $(window).width();
         var wst_c = (whtml-48-255-18-36)*0.5;
-        that.$('.m-m-container').css({"width":wst_c+88,"height":276});
+        that.$('.m-m-container').css({"width":wst_c+88,"height":260});
       }); 
     },
     render: function() {
@@ -358,7 +358,7 @@ $(function() {
 
   var JoinedClubView = Backbone.View.extend({
     tagName: "li",
-    className: "font-c mb30 cf",
+    className: "font-c cf",
     template: _.template($("#joined-club-template").html()),
     initialize: function() {
       this.club = this.options.club;

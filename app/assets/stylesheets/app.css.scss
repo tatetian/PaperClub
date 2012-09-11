@@ -27,6 +27,7 @@
 .fs30{font-size:30px;}
 .fs26{font-size:26px;}
 .fs24{font-size:24px;}
+.fs22{font-size:22px;}
 .fs20{font-size:20px;}
 .fs18{font-size:18px;}
 .fs16{font-size:16px;}
@@ -82,6 +83,7 @@
 .mr20{margin-right:20px;}
 .mr30{margin-right:30px;}
 .mb10{margin-bottom:10px;}
+.mb9{margin-bottom:9px;}
 .mt5{margin-top:5px;}
 .mt10{margin-top:10px;}
 .mt25{margin-top:25px;}
@@ -144,7 +146,7 @@ input[type=search].m-f-input{
 .outline0{outline:none;}
 
 /*module-modal-css*/
-.m-m-wrapper,.m-m-overlay{position:absolute;width:100%;height:100%;left:0px; top:0px; }
+.m-m-wrapper,.m-m-overlay{position:fixed;width:100%;height:100%;left:0px; top:0px; }
 .m-m-wrapper{z-index:100;}
 .m-m-overlay{ z-index:101; background-color:rgba(0,0,0,0.5);}
 .m-m-container{z-index:102; position:absolute; left:0;right:0; top:0; bottom:0; margin:auto; background-color:#fff; padding:32px;}
