@@ -41,7 +41,7 @@
 </script>
 
 <script type="text/template" id="joined-club-template">
-<div class="header fs24 color-black fw-bold lh15"><a href="#/clubs/<%%= id %>"><%%= name %></a></div>
+<div class="header fs24 color-black fw-bold lh15 column-62 "><a href="#/clubs/<%%= id %>"><%%= name %></a></div>
 <div class="section cf lh15">
   <div class="section-left fl column-62">
     <div class=" fs22 color-grey2 pl40"><%%= description %></div>
@@ -51,13 +51,26 @@
       <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
     </div>
   </div>
-  <div class="section-right fl column-38 mt-20 c-case-img">
-    <%% _.each(avatar_urls, function(url, index) { %>
-      <img class="img48 mr15 mb15" src="<%%= url %>"/>
-    <%% }); %>
+  <div class="section-right fl column-38  c-case-img bs pl15  ">
+      <img class="circle img48 mr10 mb5" src="default_avatars/A1.png"/>
+      <img class="circle img48 mr10 mb5" src="default_avatars/A2.png"/>
+      <img class="circle img48 mr10 mb5" src="default_avatars/A3.png"/>
+      <img class="circle img48 mr10 mb5" src="default_avatars/A1.png"/>
+      <img class="circle img48 mr10 mb5" src="default_avatars/A2.png"/>
+      <img class="circle img48 mr10 mb5" src="default_avatars/A3.png"/>
+      <img class="circle img48 mr10 mb5" src="default_avatars/A2.png"/>
+      <img class="circle img48 mr10 mb5" src="default_avatars/A3.png"/>
   </div>
 </div>
 </script>
+
+<!--- 
+
+    <%% _.each(avatar_urls, function(url, index) { %>
+      <img class="img48 mr15 mb15" src="<%%= url %>"/>
+    <%% }); %>
+
+--->
 
 <script type="text/template" id="new-club-dialoge-template">
 <div class="m-m-overlay">

@@ -357,7 +357,7 @@ $(function() {
 
   var JoinedClubView = Backbone.View.extend({
     tagName: "li",
-    className: "font-c cf",
+    className: "font-c cf mb40 ",
     template: _.template($("#joined-club-template").html()),
     initialize: function() {
       this.club = this.options.club;

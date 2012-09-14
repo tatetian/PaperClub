@@ -12,6 +12,7 @@
 .pa{position:absolute;}
 .pf{position:fixed;}
 .of{overflow:hidden;}
+.bs{box-sizing:border-box;}
 
 /*font-css*/
 .font-c{font-family:chaparral-pro,sans-serif;}
@@ -43,6 +44,8 @@
 /*font-level-1-clubname*/
 .flv1{font-size:24px; font-weight:bold; color:#000;font-family:chaparral-pro,sans-serif;}
 
+/*hover--css*/
+.hover-b-blue:hover{background-color:rgba(46,161,221,0.05);}
 /*paragraph--css*/
 .textin2{text-indent:2em;}
 .huanhang{word-wrap:break-word;}
@@ -92,6 +95,8 @@
 .mb20{margin-bottom:20px;}
 .mt20{margin-top:20px;}
 .mb30{margin-bottom:30px;}
+.mb40{margin-bottom:40px;}
+.mb50{margin-bottom:50px;}
 .mt30{margin-top:30px;}
 .mt5{margin-top:5px;}
 .mt10{margin-top:10px;}
@@ -144,6 +149,8 @@ input[type=search].m-f-input{
 .bl1{border-left:1px solid #000;}
 .br1{border-right:1px solid #000;}
 .outline0{outline:none;}
+.b50{border-radius:50%;}
+.circle{border-radius:50%; border:2px solid rgba(0,0,0,0.1);}
 
 /*module-modal-css*/
 .m-m-wrapper,.m-m-overlay{position:fixed;width:100%;height:100%;left:0px; top:0px; }
@@ -272,7 +279,7 @@ html, body{background-color:#afafaf; overflow: auto; }
 .c-btn-join:hover,.c-btn-deny:hover{color:#2ea1dd;}
 .c-btn-creatclub:hover{color:#2ea1dd;}
 .section-right.case-invited{margin-top:0px;}
-.c-case-img{height:126px; overflow:hidden;}
+.c-case-img{height:100%; overflow:hidden; max-height:120px;}
 
 /* CSS animation */
 .transit-o {
