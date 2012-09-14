@@ -43,6 +43,7 @@ GEM
       xpath (~> 0.1.4)
     childprocess (0.3.4)
       ffi (~> 1.0, >= 1.0.6)
+    chinese_pinyin (0.4.1)
     coffee-rails (3.2.2)
       coffee-script (>= 2.2.0)
       railties (~> 3.2.0)
@@ -186,6 +187,7 @@ DEPENDENCIES
   annotate (= 2.5.0)
   bcrypt-ruby (~> 3.0.0)
   capybara (~> 1.1.2)
+  chinese_pinyin
   coffee-rails (~> 3.2.1)
   daemons
   database_cleaner (~> 0.7.2)

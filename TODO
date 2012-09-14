@@ -1,65 +1,78 @@
-Iteration 1 
+Default random avatar
 
-* detect incomplete all.css and auto refresh
-  ¿ controllers/
+Wen Xin
+  By person
+  By tag
+  People
 
-* loading
-    
-* stop loading or other window event when screen become hidden
+  Details
+  Comments
 
-* papers: search
-* papers: pagination
-  14:30 - 16:00  1h30min
+  Settings
+  Default random avatar
 
+  Upload 
+  Avatars
+  Homepage
 
-* Invitation
-  19:50 - 20:49  1hr
+Zongbao
+  Edit avatar
 
-* Limit window event
-  23:20 - 1:00  1hr4min
+Me
+  Details
+  Notes
+  Filters
 
-* Keyboards shortcuts for Reader
+Iteration 1: More about sharing
+  Details(me)
+    Edit title
+    Tags
+      List, add, delete
+    Delete paper
 
-* smart float
-  15:20 -- 17:15 2h
-  23:40 -- 00:40 1h 
+  Filters(wenxin->me)
+    By tag
+    By user
 
-* clubs loading
-  00:40 -- 01:10 30min
+  Highlight search keywords
 
-  loading
+Iteration 2: People meet here
+  Default random avatar(wenxin)
 
-  edit
+  People(wenxin->zongbao->me)
+    List members
+    Edit profile
+    Edit avatar
+    Invite more people
+
+  Settings(wenxin->zongbao->me)
+    Edit name & description
+    Delete club
+
+Iteration 3: Knowledge is shared
+  Notes(me)
+    Add, delete, edit and list
+  News
+
+Iteration 4: Sunrising
+  Slogan refinement
+  Homepage improvement:
+    Why -> How -> What
+    Make people believe what we believe
+    Tell people how to use it
+    Shwo statistics and comments
+
+  Signup: js validate, error message 
+
+  Refactor uploads directory structure as two-level instead of flat structure
 
   Integration test
 
-  IE bugs
-    uploading
-    search
+  All id start from 1000
 
-  Bugs
-    IE Uploading
-    Title
-      extra space
-      the line with biggest font size is not title
-    Paper 116
-
-  slogan refinement
-
-  缩略图
-
-  avatar: picture, default
-
-Iteration 2
-  signup
-    js validate, error message 
-
-  details
-  notes
-  people
-  settings
-
-  bug fix
+Bugs
+  Uploading in IE
+  Search in IE
 
 What I Learned
   String.gsub

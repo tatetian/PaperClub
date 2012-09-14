@@ -105,7 +105,6 @@ $(function() {
   //    functionality. Users use the app by switching between different Screen.
   // ==========================================
   var Screen = PaperClub.Screen = function(options) {
-
     Backbone.View.apply(this, [options]);
   }
 
@@ -774,6 +773,9 @@ $(function() {
 
           that.pageNumber = new PsPageNumber({screen: that});
           that.toolbar = new PsToolbar({screen: that});
+     
+   //       that.commentsPanel = new PsCommentsPanel({screen: that});
+   //       that.detailsPanel  = new PsDetailsPanel({screen: that});
 
           that.render();  
         }
@@ -784,6 +786,9 @@ $(function() {
               .append(this.pageNumber.render().$el)
               .append(this.toolbar.render().$el)
               .append(this.viewport.render().$el);
+        //      .append(this.commentsPanel.render().$el)
+//              .append(this.detailsPanel.render().$el);
+
       return this;      
     }
   });
@@ -869,7 +874,7 @@ $(function() {
             that.trigger("endScrolling");
             scrolling =  false;
           }
-        }, 200);
+        }, 300);
       }, true);
     },
     initKeyboardEvents: function() {
@@ -1127,11 +1132,12 @@ $(function() {
         transition: function(previousState) {
           if(!this.$pageContent) {
             var $pc = this.$pageContent = $(this.pageContent),
-                ow  = $pc.css('width'),
-                oh  = $pc.css('height');
+                $p  = $pc.find(".p"),
+                ow  = $p.css('width'),
+                oh  = $p.css('height');
             this.orignalWidth   = parseInt(ow.slice(0, ow.length-2));
             this.orignalHeight  = parseInt(oh.slice(0, oh.length-2));
-            $pc.css({scale: this.zoomFactor * this.width/this.orignalWidth})
+            $p.css({scale: this.zoomFactor * this.width/this.orignalWidth})
             this.$el.css('background-color', 'white');
             this.$el.append(this.$pageContent);
           }
@@ -1193,7 +1199,7 @@ $(function() {
       this.$el.width(this.width * this.zoomFactor)
               .height(this.height * this.zoomFactor);
       if(this.$pageContent)
-        this.$pageContent.css({scale: zoomFactor * this.width / this.orignalWidth});
+        this.$pageContent.find(".p").css({scale: zoomFactor * this.width / this.orignalWidth});
     },
     render: function() {
       this.$el.empty()
@@ -1207,9 +1213,12 @@ $(function() {
     className: "r-footer active bgwhite shadow0210 tc",
     template: _.template($("#paper-screen-toolbar-template").html()),
     events: {
-      "click a.zoomIn": "zoomIn",
-      "click a.zoomOut": "zoomOut"
+      "click a.zoomIn": "clickZoomIn",
+      "click a.zoomOut": "clickZoomOut",
+      "click a.comments": "clickComments",
+      "click a.details": "clickDetails"
     },
+    autoHide: false,
     visible: true,
     initialize: function() {
       this.screen = this.options.screen;
@@ -1218,11 +1227,21 @@ $(function() {
       this.paper.on('change', this.render, this);
 
       var that = this;
-      setTimeout(function() {
-        that.hide();
-      }, 1000);
 
-      this.initMouseEvents();
+      // Autohide
+      function onShow() {
+        that.autoHide = false;
+        that.show();
+        setTimeout(function() { 
+          that.autoHide = true;
+          that.hide() 
+        }, 3000);     
+      }
+      //this.screen.on('show', onShow);
+      //onShow();
+
+      //that.initMouseEvents();
+      //
     },
     initMouseEvents: function() {          
       var that = this;
@@ -1239,6 +1258,8 @@ $(function() {
       var l = 48, r = 48, h = 36,
           timer = null;
       this.screen.onWindowEvent('mousemove', function(e) {
+        if(!that.autoHide) return;
+
         var x = e.clientX,
             y = e.clientY;
         // Invisible => visible
@@ -1275,11 +1296,19 @@ $(function() {
                       }));
       return this;
     },
-    zoomIn: function() {
+    clickZoomIn: function() {
       this.screen.viewport.zoomIn();
     },
-    zoomOut: function() {
+    clickZoomOut: function() {
       this.screen.viewport.zoomOut();
+    },
+    clickComments: function(e) {
+      alert('click comments'); 
+      e.preventDefault();
+    },
+    clickDetails: function(e) {
+      alert('click details');
+      e.preventDefault();
     }
   });
 
@@ -1312,6 +1341,36 @@ $(function() {
       this.$el.hide();
     }
   }); 
+
+  var PsFloatPanel = function(options) {
+    Backbone.View.apply(this, [options]);
+  }
+
+  _.extend(PsFloatPanel.prototype, Backbone.View.prototype, {
+    className: "r-sidebar column-38 bgwhite shadow024 cf",
+    initialize: function() {
+      
+    },
+    render: function() {
+      return this;
+    },
+    show: function() {
+      this.$el.show();
+    },
+    hide: function() {
+      this.$el.hide();
+    }
+  });
+
+  PsFloatPanel.extend = Backbone.View.extend;
+
+  var PsDetailsPanel = PsFloatPanel.extend({
+  
+  });
+
+  var PsCommentsPanel = PsFloatPanel.extend({
+  
+  });
 
   // ==========================================
   //    SharedStore

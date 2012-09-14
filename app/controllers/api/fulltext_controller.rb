@@ -72,8 +72,7 @@ class Api::FulltextController < ApplicationController
 
 private
   def _get_page_path(paper, page_num)
-    hex_page_num = page_num.to_s(16)
-    html_path = Rails.root.join("uploads", paper.uuid, "#{hex_page_num}.page")
+    html_path = Rails.root.join("uploads", paper.uuid, "#{page_num}.page")
   end
 
   def _get_done_path(paper)

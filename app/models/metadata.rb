@@ -68,7 +68,7 @@ class Metadata < ActiveRecord::Base
     # Replace "-" with "+" because "-" has special meaning in shell command
     res.gsub!('-', '+')
 
-    res
+    res + '7'
   end
 
   def self.find_or_create_from pdf_path, options={}
@@ -101,7 +101,7 @@ class Metadata < ActiveRecord::Base
     pdf_path = File.absolute_path(pdf_path)
 
     # Extract metadata from PDF 
-    json_meta = %x[pdf2htmlEX --only-meta 1 "#{pdf_path}"] 
+    json_meta = %x[pdf2htmlEX --only-metadata 1 "#{pdf_path}"] 
     parsed_meta = ActiveSupport::JSON.decode json_meta
 
     title = parsed_meta["title"]
@@ -149,9 +149,8 @@ class Metadata < ActiveRecord::Base
   end
 
   def self.pdf2htmlEX(pdf_path, dest_dir)
-    tmp_dir = "/tmp/paperclub-" + $$.to_s + "-" + Time.now.to_i.to_s
     # PDF -> HTML5
-    %x[pdf2htmlEX --embed-base-font 0 --tmp-dir "#{tmp_dir}" --dest-dir "#{dest_dir.to_s}" "#{pdf_path.to_s}"]
+    %x[pdf2htmlEX --split-pages 1 --css-filename "all.css" --dest-dir "#{dest_dir.to_s}" "#{pdf_path.to_s}"]
   end
 
   require 'fileutils'

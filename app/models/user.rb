@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :avatar_url, :email, :fullname, 
+  attr_accessible :avatar_path, :email, :fullname, 
                   :password, :password_confirmation,
                   :remember_token
 
@@ -20,7 +20,10 @@ class User < ActiveRecord::Base
   before_save { |user| user.email = email.downcase }
   before_save :init_remember_token
 
-  after_create { |user| user.create_demo_club }
+  after_create { |user| 
+    user.init_avatar_url
+    user.init_demo_club 
+  }
 
   def as_json(options)
     { :id       => self.id,
@@ -37,7 +40,7 @@ class User < ActiveRecord::Base
     _join_club(invitation.club_id, invitation.role)
   end
 
-  def create_demo_club
+  def init_demo_club
     demo_club = Club.create(:name =>        "Explore PaperClub!", 
                             :description => "A demo club to help you discover PaperClub")
     self.join_club(demo_club, "admin")
@@ -49,6 +52,15 @@ class User < ActiveRecord::Base
     end
     
     demo_club
+  end
+
+  def init_avatar_url
+    dropcap = Pinyin.t(self.name)[0].upcase 
+    if 'A' <= dropcap <= 'Z'
+      '/avatars/a2z/' + dropcap + (0..5)
+    else
+       
+    end
   end
 private
   def init_remember_token

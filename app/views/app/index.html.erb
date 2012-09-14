@@ -121,7 +121,7 @@
 </script>
 
 <script type="text/template" id="club-screen-summary-template">
-<div class="header fs24 color-black fw-bold mb15 font-c">
+<div class="header fs24 color-black fw-bold mb16 font-c">
   <%%= name %>
 </div>
 <div class="content fs16 color-grey2 lh12 font-d">
@@ -139,7 +139,7 @@
     <a class="invite-btn notYetImplemented" href="#">Invite people to club</a>
   </div>
 </div>
-<ul style="width:100%;padding-top: 24px;">
+<ul style="width:100%;padding-top: 32px;">
   <!-- insert paper items here -->
 </ul>
 </script>
@@ -200,18 +200,17 @@
 </script>
 
 <script type="text/template" id="paper-screen-toolbar-template">
-<div class="r-paper-title fs26 font-c color-black fs-ita h100 mt-5" style="line-height: 44px;">
-   <a href="#" class="notYetImplemented r-btn-fav font-icon fs36  color-grey1 mr5" style="font-style: normal;">*</a>
+<div class="r-paper-title fs26 font-c color-black fs-ita h100 mt-5">
+   <a href="#" class="notYetImplemented r-btn-fav font-icon fs36  color-grey2 mr5" style="font-style: normal;">*</a>
    <%%= title %>
 </div>
-            
-<div class="r-footer-left pa fl" style="line-height: 44px;"> 
-  <a href="#/clubs/<%%= club_id %>" class="r-btn-back  ml10 mr10 fs18 font-d color-grey1 inblock h100 pt21"> <em class="font-icon lh100 fs24">-</em>papers</a>
-  <a href="#" class="notYetImplemented r-btn-notes ml5  tc pl5 pr5 font-d fs18  inblock color-grey2  h100 pt21">NOTES</a> <!-- btn-active -->
-  <a href="#" class="notYetImplemented r-btn-details tc pl5 pr5 font-d fs18  inblock  color-grey2 h100 pt21">DETAILS</a>
+<div class="r-footer-left pa fl h100 color-grey2" style="line-height: 44px;"> 
+  <a class="back font-icon fs36 ml15" href="#/clubs/<%%= club_id %>"><</a>
+  <a class="comments font-icon fs36 ml15">b</a>
+  <a class="details font-icon fs36 ml15">Z</a>
 </div>
-<div class="r-footer-right fr pa h100 color-grey1" sytle="line-height: 44px;">
-  <a class="zoomIn font-icon fs36 mr15" style="line-height: 44px;">y</a>
+<div class="r-footer-right fr pa h100 color-grey2" sytle="line-height: 44px;">
+  <a class="zoomIn font-icon fs36 mr15">y</a>
   <a class="zoomOut font-icon fs36 mr15">z</a>
   <a class="download font-icon fs36 mr15" href="<%%= download_url %>">D</a>
 </div>
