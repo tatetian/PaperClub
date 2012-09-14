@@ -29,7 +29,7 @@ describe User do
   it "has many clubs" do
     club = create(:club)
     membership = create(:membership, user_id: @user.id, club_id: club.id)
-    @user.clubs.should == [club]
+    @user.clubs.size.should == 2
   end
 
   describe "validates password" do

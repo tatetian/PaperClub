@@ -17,11 +17,14 @@ class User < ActiveRecord::Base
   validates :password_confirmation, 
                         presence: true, length: { minimum: 1 }
 
-  before_save { |user| user.email = email.downcase }
-  before_save :init_remember_token
+  before_save { |user| 
+    user.email = email.downcase 
+  }
+
+  before_create :init_remember_token
+  before_create :init_avatar_url
 
   after_create { |user| 
-    user.init_avatar_url
     user.init_demo_club 
   }
 
@@ -55,14 +58,12 @@ class User < ActiveRecord::Base
   end
 
   def init_avatar_url
-    dropcap = Pinyin.t(self.name)[0].upcase 
-    if 'A' <= dropcap <= 'Z'
-      '/avatars/a2z/' + dropcap + (0..5)
-    else
-       
-    end
+    dropcap = Pinyin.t(self.fullname)[0].upcase 
+    dropcap = [*'A'..'Z'].sample if dropcap < 'A' or dropcap > 'Z'
+    
+    avatar_name = dropcap + [*0..5].sample.to_s
   end
-private
+  
   def init_remember_token
     # SecureRandom.urlsafe_base64 returns a random string of length 16 
     # composed of the characters A–Z, a–z, 0–9, “-”, and “_”.  This means 
@@ -70,6 +71,7 @@ private
     #  1/64^16 = 2^{-96} ≈ 10^{-29}, which is negligible.
     #
     # If remember_token doesn't exist before, assign it a secure random
+    puts 'init'
     self.remember_token ||= SecureRandom.urlsafe_base64
   end
 
