@@ -43,9 +43,10 @@
 .ls1{letter-spacing:1px;}
 /*font-level-1-clubname*/
 .flv1{font-size:24px; font-weight:bold; color:#000;font-family:chaparral-pro,sans-serif;}
-
+.underline{text-decoration:underline;}
 /*hover--css*/
-.hover-b-blue:hover{background-color:rgba(46,161,221,0.05);}
+.hover-bg-blue:hover{background-color:rgba(46,161,221,0.05);}
+.hover-f-blue:hover{color:#2EA1DD;}
 /*paragraph--css*/
 .textin2{text-indent:2em;}
 .huanhang{word-wrap:break-word;}
@@ -151,6 +152,7 @@ input[type=search].m-f-input{
 .outline0{outline:none;}
 .b50{border-radius:50%;}
 .circle{border-radius:50%; border:2px solid rgba(0,0,0,0.1);}
+.circle1{border-radius:50%; border:1px solid rgba(0,0,0,0.1);}
 
 /*module-modal-css*/
 .m-m-wrapper,.m-m-overlay{position:fixed;width:100%;height:100%;left:0px; top:0px; }
@@ -159,8 +161,11 @@ input[type=search].m-f-input{
 .m-m-container{z-index:102; position:absolute; left:0;right:0; top:0; bottom:0; margin:auto; background-color:#fff; padding:32px;}
 
 
-
-
+.bg-logo {
+background: url(logo.png) no-repeat;
+background-size: cover;
+}
+.p-logo{height:50px; width:170px;}
 /*page-papers-css*/
 html , body { width:100%; background-color:#fff; color:#000; min-width:960px;}
 html, body{background-color:#afafaf; overflow: auto; }
@@ -176,9 +181,13 @@ html, body{background-color:#afafaf; overflow: auto; }
 	padding:36px 0px 0px 36px;
 	box-sizing:border-box; -moz-box-sizing:border-box; 
 }
+.p-find{
+  width:255px;
+}
 .p-sidebar > .main {
   width: 219px;
 }
+
 .p-paper-list{
 	width:auto;
 	margin-left:255px;
@@ -196,6 +205,7 @@ html, body{background-color:#afafaf; overflow: auto; }
 	padding:0px 36px 0px 18px;
 }
 .p-paper-list a:hover{color:#2ea1dd;}
+.p-paper-list a:hover em{color:#2ea1dd;}
 .p-nav-menu dt:hover ,.p-nav-menu dd:hover{color:#2ea1dd;}
 .p-btn-back{ 
   position: fixed; 

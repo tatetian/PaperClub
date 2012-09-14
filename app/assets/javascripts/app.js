@@ -419,7 +419,6 @@ $(function() {
       this.paperListView.render();
       this.uploader = new PaperUploader({clubId: this.clubId, screen: this});
 
-
       this.$el.find(".p-sidebar > .main").prepend(this.summaryView.render().$el);
       this.$el.find(".upload-btn-wrapper").append(this.uploader.render().$el);
               

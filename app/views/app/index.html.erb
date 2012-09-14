@@ -3,10 +3,13 @@
 <script type="text/template" id="clubs-screen-template">
   <div class="p-sidebar" id="p-sidebar-nav">
     <div class="section main">
-      <div class="header fs24 color-black fw-bold mb15 font-c">
-        Clubs
+      <div class="bg-logo p-logo"></div>
+      <div class="header fs18 color-grey3  mb15 font-d mt30">
+        <a href="#" class="asblock mb10 hover-f-blue">MY CLUBS</a>
+        <a href="#" class="asblock mb10 hover-f-blue">MY ACCOUNT</a>
       </div>
-      <a class="c-btn-newclub color-blue fs18 font-d" href="#">New Club</a>
+     
+      <!---<a class="c-btn-newclub color-blue fs18 font-d" href="#">New Club</a>--->
     </div>
     <div class="section p-btn-back font-d">
       <a href="#" id="signout-btn">
@@ -16,6 +19,7 @@
     </div>
   </div>
   <div class="p-paper-list cf">
+    <a href="#" class="hover-f-blue asblock font-d color-grey2 fs20 mb20 mt20 underline ">Creat a new club and invite friends</a>
     <ul class="mb30">
     </ul>
   </div> 
@@ -41,7 +45,7 @@
 </script>
 
 <script type="text/template" id="joined-club-template">
-<div class="header fs24 color-black fw-bold lh15 column-62 "><a href="#/clubs/<%%= id %>"><%%= name %></a></div>
+<div class="header fs24 color-black fw-bold lh15 column-62 "><a href="#/clubs/<%%= id %>"><em class=" fs30 color-grey1 font-icon">></em><%%= name %></a></div>
 <div class="section cf lh15">
   <div class="section-left fl column-62">
     <div class=" fs22 color-grey2 pl40"><%%= description %></div>
@@ -107,9 +111,11 @@
 <div class="p-sidebar" id="p-sidebar-nav">
   <dl class="section main p-nav-menu fs16 color-grey2 lh15 font-d">
     <!-- insert summary view here -->
-    <dt class="menu-paper fs18 color-grey3 mt10"><a class="notYetImplemented" href="#">PAPERS</a></dt>
+    <dt class="menu-paper fs18 color-grey3 mt30"><a class="notYetImplemented" href="#">PAPERS</a></dt>
+      <dd><a href="#">By person</a></dd>
+      <dd><a href="#">By tag</a></dd>
       <dd class="upload-btn-wrapper"><!-- insert upload btn here--></dd>
-      <dd><a class="notYetImplemented" href="#">Find</a></dd>
+      
     <dt class="menu-paper fs18 color-grey3 mt10"><a class="notYetImplemented" href="#">EVERYONE</a></dt>
     <dt class="menu-paper fs18 color-grey3 mt10"><a class="notYetImplemented" href="#">SETTINGS</a></dt>
   </dl>
@@ -134,7 +140,7 @@
 </script>
 
 <script type="text/template" id="club-screen-summary-template">
-<div class="header fs24 color-black fw-bold mb16 font-c">
+<div class="header fs24 color-black fw-bold mb10 font-c">
   <%%= name %>
 </div>
 <div class="content fs16 color-grey2 lh12 font-d">
@@ -188,8 +194,8 @@
         <%%= news.detail %>
       </div>
     <%% } %>
-    <div class="footer fr" style="width: 100%; height: 34px;position: relative; overflow: visible; margin-top: 12px;">
-      <img class="img34" style="position: absolute; right: 1px; top: 0px; " src="" />
+    <div class="footer fr bs pl15" style="width: 100%; height: 34px;position: relative; overflow: visible; margin-top: 12px;">
+      <img class="img34 circle1" style="position: absolute; right: 1px; top: 0px; " src="" />
       <div class="color-grey1 font-c fs-ita fs16 fw-bold" style="position: absolute; right: 42px; top: 0px; line-height: 1.2; height: 16px;"> 
         <%%= news.time %>
       </div>
