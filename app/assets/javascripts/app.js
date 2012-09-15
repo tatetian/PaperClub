@@ -364,8 +364,11 @@ $(function() {
     },
     render: function() {
       var json = this.club.toJSON();
-      json.avatar_urls = json.users.map(function(u) {
-                            return '/avatars/m/' + u.avatar_url + ".png";
+      json.avatars = json.users.map(function(u) {
+                            return {
+                              url: '/avatars/m/' + u.avatar_url + ".png",
+                              name: u.fullname
+                            };
                          });
       this.$el.append(this.template(json));
       /* {

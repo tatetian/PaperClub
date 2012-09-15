@@ -54,8 +54,8 @@
     </div>
   </div>
   <div class="section-right fl column-38  c-case-img bs pl15 bs">
-    <%% _.each(avatar_urls, function(url, index) { %>
-      <img class="circle img48 mr10 mb5" src="<%%= url %>"/>
+    <%% _.each(avatars, function(a, index) { %>
+        <img class="circle img48 mr10 mb5" src="<%%= a.url %>" title="<%%= a.name %>"/>
     <%% }); %>
   </div>
 </div>
