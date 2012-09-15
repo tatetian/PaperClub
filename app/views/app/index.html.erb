@@ -8,8 +8,6 @@
         <a href="#" class="asblock mb10 hover-f-blue">MY CLUBS</a>
         <a href="#" class="asblock mb10 hover-f-blue">MY ACCOUNT</a>
       </div>
-     
-      <!---<a class="c-btn-newclub color-blue fs18 font-d" href="#">New Club</a>--->
     </div>
     <div class="section p-btn-back font-d">
       <a href="#" id="signout-btn">
@@ -19,7 +17,7 @@
     </div>
   </div>
   <div class="p-paper-list cf">
-    <a href="#" class="hover-f-blue asblock font-d color-grey2 fs20 mb20 mt20 underline ">Creat a new club and invite friends</a>
+    <a href="#" class="c-btn-newclub hover-f-blue asblock font-d color-grey2 fs20 mb20 mt20 underline ">Creat a new club and invite friends</a>
     <ul class="mb30">
     </ul>
   </div> 
@@ -55,25 +53,17 @@
       <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
     </div>
   </div>
-  <div class="section-right fl column-38  c-case-img bs pl15  ">
-      <img class="circle img48 mr10 mb5" src="default_avatars/A1.png"/>
-      <img class="circle img48 mr10 mb5" src="default_avatars/A2.png"/>
-      <img class="circle img48 mr10 mb5" src="default_avatars/A3.png"/>
-      <img class="circle img48 mr10 mb5" src="default_avatars/A1.png"/>
-      <img class="circle img48 mr10 mb5" src="default_avatars/A2.png"/>
-      <img class="circle img48 mr10 mb5" src="default_avatars/A3.png"/>
-      <img class="circle img48 mr10 mb5" src="default_avatars/A2.png"/>
-      <img class="circle img48 mr10 mb5" src="default_avatars/A3.png"/>
+  <div class="section-right fl column-38  c-case-img bs pl15 bs">
+    <%% _.each(avatar_urls, function(url, index) { %>
+      <img class="circle img48 mr10 mb5" src="<%%= url %>"/>
+    <%% }); %>
   </div>
 </div>
 </script>
 
 <!--- 
 
-    <%% _.each(avatar_urls, function(url, index) { %>
-      <img class="img48 mr15 mb15" src="<%%= url %>"/>
-    <%% }); %>
-
+   
 --->
 
 <script type="text/template" id="new-club-dialoge-template">
@@ -182,7 +172,7 @@
     <%% } %>
   </div>
 </div>
-<div class="fl column-38" style="">
+<div class="fl column-38 pl15 bs" style="">
   <div style="margin-top: 15px; width: 100%;">
   </div>
   <%% if(news) { %>
@@ -195,7 +185,7 @@
       </div>
     <%% } %>
     <div class="footer fr bs pl15" style="width: 100%; height: 34px;position: relative; overflow: visible; margin-top: 12px;">
-      <img class="img34 circle1" style="position: absolute; right: 1px; top: 0px; " src="" />
+      <img class="img34 circle1" style="position: absolute; right: 1px; top: 0px; " src="/avatars/s/<%%= news.avatar_url %>.png" />
       <div class="color-grey1 font-c fs-ita fs16 fw-bold" style="position: absolute; right: 42px; top: 0px; line-height: 1.2; height: 16px;"> 
         <%%= news.time %>
       </div>

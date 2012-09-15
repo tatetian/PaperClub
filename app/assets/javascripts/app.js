@@ -365,7 +365,7 @@ $(function() {
     render: function() {
       var json = this.club.toJSON();
       json.avatar_urls = json.users.map(function(u) {
-                            return u.avatar_url || "";
+                            return '/avatars/m/' + u.avatar_url + ".png";
                          });
       this.$el.append(this.template(json));
       /* {

@@ -13,6 +13,7 @@ class News < ActiveRecord::Base
       :action => self.action,
       :detail => self.detail,
       :user   => u.fullname,
+      :avatar_url => u.avatar_url,
       :time => self.created_at
     }
   end

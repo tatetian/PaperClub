@@ -12,7 +12,7 @@
 .pa{position:absolute;}
 .pf{position:fixed;}
 .of{overflow:hidden;}
-.bs{box-sizing:border-box;}
+.bs{box-sizing:border-box;-moz-box-sizing:border-box;}
 
 /*font-css*/
 .font-c{font-family:chaparral-pro,sans-serif;}
@@ -151,8 +151,17 @@ input[type=search].m-f-input{
 .br1{border-right:1px solid #000;}
 .outline0{outline:none;}
 .b50{border-radius:50%;}
-.circle{border-radius:50%; border:2px solid rgba(0,0,0,0.1);}
-.circle1{border-radius:50%; border:1px solid rgba(0,0,0,0.1);}
+.circle{
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  border:2px solid rgba(0,0,0,0.1);}
+.circle1{
+  -moz-border-radius: 50%;
+  -webkit-border-radius: 50%;
+  border-radius: 50%;
+  border:1px solid rgba(0,0,0,0.1);
+}
 
 /*module-modal-css*/
 .m-m-wrapper,.m-m-overlay{position:fixed;width:100%;height:100%;left:0px; top:0px; }

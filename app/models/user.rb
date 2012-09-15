@@ -1,5 +1,5 @@
 class User < ActiveRecord::Base
-  attr_accessible :avatar_path, :email, :fullname, 
+  attr_accessible :avatar_url, :email, :fullname, 
                   :password, :password_confirmation,
                   :remember_token
 
@@ -61,7 +61,7 @@ class User < ActiveRecord::Base
     dropcap = Pinyin.t(self.fullname)[0].upcase 
     dropcap = [*'A'..'Z'].sample if dropcap < 'A' or dropcap > 'Z'
     
-    avatar_name = dropcap + [*0..5].sample.to_s
+    self.avatar_url = dropcap + [*0..5].sample.to_s
   end
   
   def init_remember_token
@@ -74,6 +74,16 @@ class User < ActiveRecord::Base
     puts 'init'
     self.remember_token ||= SecureRandom.urlsafe_base64
   end
+
+  def self.init_all_avatars
+    User.all.each { |u|
+      if u.avatar_url == nil or u.avatar_url.empty?
+        u.init_avatar_url
+        u.save(:validate => false)
+      end
+    }
+  end
+private
 
   # Join a club
   def _join_club(club_id, role)
