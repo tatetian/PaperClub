@@ -101,13 +101,13 @@
 <div class="p-sidebar" id="p-sidebar-nav">
   <dl class="section main p-nav-menu fs16 color-grey2 lh15 font-d">
     <!-- insert summary view here -->
-    <dt class="menu-paper fs18 color-grey3 mt30"><a class="notYetImplemented" href="#">PAPERS</a></dt>
-      <dd><a href="#">By person</a></dd>
-      <dd><a href="#">By tag</a></dd>
-      <dd class="upload-btn-wrapper"><!-- insert upload btn here--></dd>
+    <dt class="menu-paper fs18 color-grey3 mt30"><a class="papers-btn color-blue" href="#">PAPERS</a></dt>
+      <dd><a class="by-person-btn ml20" href="#">By person</a></dd>
+      <dd><a class="by-tag-btn ml20" href="#">By tag</a></dd>
+      <dd class="upload-btn-wrapper ml20"><!-- insert upload btn here--></dd>
       
-    <dt class="menu-paper fs18 color-grey3 mt10"><a class="notYetImplemented" href="#">EVERYONE</a></dt>
-    <dt class="menu-paper fs18 color-grey3 mt10"><a class="notYetImplemented" href="#">SETTINGS</a></dt>
+    <dt class="menu-paper fs18 color-grey3 mt10"><a class="everyone-btn" href="#">EVERYONE</a></dt>
+    <dt class="menu-paper fs18 color-grey3 mt10"><a class="settings-btn" href="#">SETTINGS</a></dt>
   </dl>
   <div class="section p-btn-back font-d">
     <a href="#" >
@@ -199,6 +199,28 @@
       </div>
     </div>
   <%% } %>
+</div>
+</script>
+
+<script type="text/template" id="everyone-view-template">
+<div class="">
+  <p class="mb50 ">
+  <em class="fs36 font-icon color-grey1 ">f</em>
+  <em contenteditable="true" class="inblock underline m-f-input column-38 font-d color-grey2" >Invite friends by Email</em></p>
+</div>
+<ul class="cf ">
+</ul>
+</script>
+
+<script type="text/template" id="everyone-view-person-template">
+<span class="asblcok fl"><img class="img96 circle" src="#" /></span>
+<div class="fl  ml15">
+  <span  class="font-c fw-bold hover-f-blue fs26"><%%= fullname %></span><br />
+  <span class="font-d color-grey2 inblock mt10 mb10"><%%= email %></span><br />
+  <span  class="inblock mt-10" >
+    <span class="color-grey2 font-d"><em class="fs36 font-icon color-grey1 ">K</em><%%= num_papers %></span>
+    <span class="color-grey2 font-d" ><em class="fs36 font-icon color-grey1 ">b</em><%%= num_comments %></span> 
+  </span>
 </div>
 </script>
 

@@ -406,10 +406,23 @@ $(function() {
   var OneClubScreen = PaperClub.OneClubScreen = TwoColumnScreen.extend({
     className: "p-page-content shadow024 bgwhite",
     template: _.template($("#club-screen-template").html()),
+    lastClickedBtn: 'papers-btn',
     initialize: function() {
       var clubId = this.clubId = this.options.clubId;
       
       this.render(); 
+
+      this.initEvents();
+    },
+    initEvents: function() {
+      var that = this,
+          btns = ['papers-btn', 'by-person-btn', 'by-tag-btn',
+                  'everyone-btn', 'settings-btn'];
+      btns.forEach(function(btnName) {
+        that.getBtn(btnName).click(function(e) {
+          that.clickNavBtn(btnName, e);
+        });
+      });
     },
     render: function() {
       this.$el.empty()
@@ -426,6 +439,18 @@ $(function() {
       this.$el.find(".upload-btn-wrapper").append(this.uploader.render().$el);
               
       return this;      
+    },
+    clickNavBtn: function(btnName, e) {
+      this.getBtn('papers-btn').removeClass('color-blue');
+      this.getBtn(this.lastClickedBtn).removeClass('color-blue');
+      this.getBtn(btnName).addClass('color-blue');
+      if(btnName.indexOf('by-')==0)
+        this.getBtn('papers-btn').addClass('color-blue');
+      this.lastClickedBtn = btnName;
+      e.preventDefault();
+    },
+    getBtn: function(btnName) {
+      return this.$(".p-sidebar ." + btnName);
     }
   });
 
@@ -443,6 +468,26 @@ $(function() {
       this.$el.empty()
               .append(this.template(this.club.toJSON()));
       return this; 
+    }
+  });
+
+  var EveryoneView = Backbone.View.extend({
+    template: _.template($("#everyone-view-template").html()),
+    initialize: function() {
+    
+    },
+    render: function() {
+      return this;
+    }
+  });
+
+  var EveryonePersonView = Backbone.View.extend({
+    template: _.template($("#everyone-view-person-template").html()),
+    initialize: function() {
+    
+    },
+    render: function() {
+      return this;
     }
   });
 
