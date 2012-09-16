@@ -214,6 +214,7 @@ $(function() {
       this.initEvents();
     },
     template: _.template($("#clubs-screen-template").html()),
+    lastClickedBtn: 'clubs-btn',
     initEvents: function() {
       var that = this;
       this.$(".c-btn-newclub").click(function(e) {
@@ -230,10 +231,25 @@ $(function() {
         });
         e.preventDefault();
       });
-
       this.on('show', function() {
         that.load();
       });
+      ['clubs-btn', 'account-btn'].forEach(function(btnName) {
+        that.getBtn(btnName).click(function(e) {
+          that.clickNavBtn(btnName, e);
+        });
+      });
+    },
+    getBtn: function(btnName) {
+      return this.$('.p-sidebar .' + btnName);
+    },
+    clickNavBtn: function(btnName, e) {
+      // Color blue if and only if button clicked
+      this.getBtn(this.lastClickedBtn).removeClass('color-blue');
+      this.getBtn(btnName).addClass('color-blue');
+      this.lastClickedBtn = btnName;
+
+      e.preventDefault();
     },
     load: function(showLoading) {
       var that = this;
@@ -441,12 +457,14 @@ $(function() {
       return this;      
     },
     clickNavBtn: function(btnName, e) {
+      // Color blue if and only if button clicked
       this.getBtn('papers-btn').removeClass('color-blue');
       this.getBtn(this.lastClickedBtn).removeClass('color-blue');
       this.getBtn(btnName).addClass('color-blue');
       if(btnName.indexOf('by-')==0)
         this.getBtn('papers-btn').addClass('color-blue');
       this.lastClickedBtn = btnName;
+
       e.preventDefault();
     },
     getBtn: function(btnName) {
