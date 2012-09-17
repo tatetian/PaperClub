@@ -38,7 +38,7 @@ class Paper < ActiveRecord::Base
     conditions << "papers.title LIKE ('%#{params[:keywords]}%')" if params[:keywords]
     conditions << "papers.uploader_id=#{params[:user_id]}" if params[:user_id]
     if(params[:tag_id])
-      where << "collections.tag_id=#{params[:tag_id]}"
+      conditions << "collections.tag_id=#{params[:tag_id]}"
       return Paper.joins(:collections).where(conditions.join(" AND "))
                   .limit(params[:limit]).offset(params[:offset])
     else

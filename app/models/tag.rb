@@ -14,9 +14,9 @@ class Tag < ActiveRecord::Base
 
   def as_json(options)
     if options[:include] and options[:include].include?(:num_papers)
-      { name: self.name, club_id: self.club_id, num_papers: self.papers.count}
+      { id: self.id, name: self.name, club_id: self.club_id, num_papers: self.papers.count}
     else
-      { name: self.name, club_id: self.club_id }
+      { id: self.id, name: self.name, club_id: self.club_id }
     end
   end
 end

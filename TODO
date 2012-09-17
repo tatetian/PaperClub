@@ -1,7 +1,7 @@
   Add all to by person and by tag
 * Hide news column when more
 * Why animation slow? --> Complete callback too many times
-  Add tag data to test
+* Add tag data to test
   Add events handlers
 
   min-height & boxing-sizing:border bug in FF

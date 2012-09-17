@@ -608,7 +608,6 @@ $(function() {
                      '&nbsp;<br/>&nbsp;</div>');
       this.tempPapers = new Papers(null, {clubId: this.clubId});
       this.tempPapers.on('reset', this._loadData, this);
-     
 
       this.initEvents();
     },
@@ -666,14 +665,14 @@ $(function() {
         that.$(".p-paper-list").css('min-height', H);
       }, true);
     },
-    search: function(keywords, tag, user_id) {
+    search: function(keywords, tag_id, user_id) {
       var that = this;
 
       this.state = "loading";
 
       var data = {offset: 0, limit: this.PAGE_ITEMS+1};
       if(keywords) data.keywords = $.trim(keywords);
-      if(tag) data.tag = tag;
+      if(tag_id) data.tag_id = tag_id;
       if(user_id) data.user_id = user_id;
 
       this.lastFetchParams = data;
@@ -795,8 +794,14 @@ $(function() {
       this.clubId         = this.options.clubId;
       this.paperListView  = this.options.paperListView;
 
-      this.byTagView      = new PaperFilterByTagView({el: this.$(".p-tag-filters")});
-      this.byPersonView   = new PaperFilterByPersonView({el: this.$(".p-person-filters")});
+      this.byTagView      = new PaperFilterByTagView({
+                              el: this.$(".p-tag-filters"), 
+                              paperListView: this.paperListView
+                            });
+      this.byPersonView   = new PaperFilterByPersonView({
+                              el: this.$(".p-person-filters"),
+                              paperListView: this.paperListView
+                            });
     },
     show: function(filterName) {
       if(this.visible == filterName) return;
@@ -844,7 +849,12 @@ console.debug(1);
 
   var PaperFilterByTagView = Backbone.View.extend({
     template: _.template($("#paper-filter-tag-item").html()),
+    events: {
+      'click a': '_clickTag'
+    },
     initialize: function() {
+      this.paperListView = this.options.paperListView;
+
       this.tags = SharedData.getTags();
 
       this.tags.on('add',    this._onAddOne, this)
@@ -867,11 +877,19 @@ console.debug(1);
     _onAddAll: function() {
       this.$("dd").remove();
       this.tags.each(this._onAddOne, this);      
-    } 
+    },
+    _clickTag: function(e) {
+      var tag_id = $(e.target).data("id");
+      this.paperListView.search(null, tag_id);
+      e.preventDefault();
+    }
   });
 
   var PaperFilterByPersonView = Backbone.View.extend({
     template: _.template($("#paper-filter-person-item").html()),
+    events: {
+      'click a': '_clickPerson'
+    },
     initialize: function() {
       this.members = SharedData.getMembers();
       this.members.on('add',    this._onAddOne, this)
@@ -897,7 +915,10 @@ console.debug(1);
     _onAddAll: function() {
       this.$("dd").remove();
       this.members.each(this._onAddOne, this);      
-    } 
+    },
+    _clickPerson: function(e) {
+      e.preventDefault();
+    }
   });
 
   var PaperUploader = Backbone.View.extend({
