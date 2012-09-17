@@ -11,6 +11,8 @@ class Paper < ActiveRecord::Base
   has_many :notes
   has_one  :news
 
+  belongs_to :user, :foreign_key => "uploader_id"
+
   validate :title, presence: true
   validate :club_id, presence: true
 
@@ -43,6 +45,17 @@ class Paper < ActiveRecord::Base
       return Paper.where(conditions.join(" AND "))
                   .limit(params[:limit]).offset(params[:offset])
     end
+  end
+
+  def add_tag tag_name
+    tag = Tag.find_or_create_by_name_and_club_id(tag_name, self.club_id)
+    col = Collection.find_or_create_by_paper_id_and_tag_id(self.id, tag.id)
+    tag
+  end
+
+  def del_tag tag_name
+    tag = self.tags.find_by_name(tag_name)
+    tag.destroy 
   end
 
   # Get who uploaded the paper

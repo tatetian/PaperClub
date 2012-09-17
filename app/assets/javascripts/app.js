@@ -812,25 +812,33 @@ $(function() {
       
       // Animation
       var pl = this.paperListView,
-          that = this;
+          that = this,
+          run = false;
       pl.$(".p-paper-list .fl.column-38").fadeOut(300,function(){
+        if(run) return; run = true;
+
         pl.$(".p-paper-list").animate({marginLeft:"255px"},300)
           .find(".fl.column-62").animate({width:"100%"},300);
         that.$el.fadeIn(300);
+        pl.$(".p-paper-list").addClass("hide-right-column");
       });
     },
     hide: function(disableAnimation) {
       if(!this.visible) return;
       this.visible = null;
-
+console.debug(1);
       // Animation
       var pl = this.paperListView,
-          that = this;
+          that = this,
+          run = false;
       that.$el.fadeOut(300);
+      pl.$(".p-paper-list").removeClass("hide-right-column");
       pl.$(".p-paper-list").animate({marginLeft:"0px"},300)
         .find(".fl.column-62").animate({width:"62%"},300,function(){
+          if(run) return; run = true;
           pl.$(".p-paper-list .fl.column-38").show(300);
       } );
+      console.debug(2);
     } 
   });
 
@@ -854,7 +862,7 @@ $(function() {
       return this;
     },
     _onAddOne: function(tag, that, options) {
-      this.$el.append(this.template(tags.toJSON()));
+      this.$el.append(this.template(tag.toJSON()));
     },
     _onAddAll: function() {
       this.$("dd").remove();
@@ -883,7 +891,6 @@ $(function() {
     _onAddOne: function(member, that, options) {
       var data = member.toJSON();
       data.avatar_url = "/avatars/m/" + data.avatar_url + ".png";
-      data.num_papers = 0;
       data.num_favs = 0; 
       this.$el.append(this.template(data));
     },

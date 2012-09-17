@@ -31,6 +31,15 @@ class Club < ActiveRecord::Base
                                    :role => role)
   end
 
+  def add_tag(name)
+    tag = Tag.find_or_create_by_name(name, self.id)
+  end
+
+  def del_tag(name)
+    tag = self.tags.find_by_name(name)
+    tag.destroy
+  end
+
   def self.join_member(club_id, user_id) 
     membership = Membership.create(:club_id => club_id, 
                                    :user_id => user_id,

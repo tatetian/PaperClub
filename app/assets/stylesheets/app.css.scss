@@ -213,6 +213,12 @@ html, body{background-color:#afafaf; overflow: auto; }
 .p-paper-list{
 	box-sizing:border-box; -moz-box-sizing:border-box; 
 }
+.hide-right-column .column-38{
+  display:none;
+}
+.hide-right-column .column-62{
+  width: 100%;
+}
 .r-footer-content{
 	width:auto;
 	min-height:100%;

@@ -13,9 +13,10 @@ class Tag < ActiveRecord::Base
   before_save { |t| t.name = t.name.downcase }
 
   def as_json(options)
-    {
-      name: self.name,
-      club_id: self.club_id
-    }
+    if options[:include] and options[:include].include?(:num_papers)
+      { name: self.name, club_id: self.club_id, num_papers: self.papers.count}
+    else
+      { name: self.name, club_id: self.club_id }
+    end
   end
 end

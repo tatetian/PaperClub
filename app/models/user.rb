@@ -7,6 +7,8 @@ class User < ActiveRecord::Base
   has_many :clubs, :through => :memberships
   has_many :memberships, :foreign_key => "user_id"
 
+  has_many :papers, :foreign_key => "uploader_id"
+
   has_secure_password 
 
   validates :fullname,  presence: true, length: { minimum: 1, maximum: 50 }  
@@ -32,7 +34,9 @@ class User < ActiveRecord::Base
     { :id       => self.id,
       :fullname => self.fullname, 
       :email    => self.email,
-      :avatar_url => self.avatar_url }
+      :avatar_url => self.avatar_url,
+      :num_papers => self.papers.count
+    }
   end
 
   def join_club(club, role)
