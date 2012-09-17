@@ -17,7 +17,7 @@
     </div>
   </div>
   <div class="p-main cf">
-    <a href="#" class="c-btn-newclub hover-f-blue asblock font-d color-grey2 fs20 mb20 mt20 underline ">Creat a new club and invite friends</a>
+    <a href="#" class="c-btn-newclub hover-f-blue asblock font-d color-grey2 fs20 mb23 mt23 underline ">Creat a new club and invite friends</a>
     <ul class="mb30">
     </ul>
   </div> 
@@ -60,11 +60,6 @@
   </div>
 </div>
 </script>
-
-<!--- 
-
-   
---->
 
 <script type="text/template" id="new-club-dialoge-template">
 <div class="m-m-overlay">
@@ -141,6 +136,14 @@
 
 <script type="text/template" id="club-screen-paper-list">
 <div class="p-paper-filter">
+  <div class="p-person-filters">
+    <dt class="font-d color-black fs18 mb20">Persons</dt>
+    <!-- insert persons here -->
+  </div>
+  <div class="p-tag-filters">
+    <dt class="font-d color-black fs18 mb20">Tags</dt>
+    <!-- insert tags here -->
+  </div>
 </div>
 <div class="p-paper-list">
   <div class="mb10 cleanfloat" style="width: 100%;">
@@ -207,6 +210,27 @@
 </div>
 </script>
 
+<script type="text/template" id="paper-filter-tag-item">
+<dd class="mb5">
+  <a href="#" class="font-c fs18 color-black" data-id="<%%= id %>"><em class="font-icon fs30 color-grey1 pr5">J</em><%%= name %></a>
+</dd>
+</script>
+
+<script type="text/template" id="paper-filter-person-item">
+<dd class="cf mb30">
+<a href="#" class="asblcok fl"><img class="img48 circle" src="<%%= avatar_url %>" /></a>
+  <div class="fl ml15">
+    <a href="#" class="font-c fw-bold hover-f-blue"><%%= fullname %><em class="fs24 font-icon color-grey1 inblock mt-15" >></em></a><br />
+    <span  class="inblock mt-10" >
+      <a href="#"><em class="fs36 font-icon color-grey1 ">K</em><%%= num_papers %></a>
+      <%% if(num_favs>0) { %>
+        <a href="#"><em class="fs36 font-icon color-grey1 p-btn-fav">*</em><%%= num_favs %></a> 
+      <%% } %>
+    </span>
+  </div>
+</dd>
+</script>
+
 <script type="text/template" id="everyone-view-template">
 <div class="">
   <p class="mb50 ">
@@ -254,3 +278,5 @@
 
 <div id="uploaders-container">
 </div>
+
+<!-------------------------- Content --------------------------------->

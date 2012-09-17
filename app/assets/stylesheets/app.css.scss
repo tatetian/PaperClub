@@ -95,6 +95,8 @@
 .mt15{margin-top:15px;}
 .mb20{margin-bottom:20px;}
 .mt20{margin-top:20px;}
+.mb23{margin-bottom:23px;}
+.mt23{margin-top:23px;}
 .mb30{margin-bottom:30px;}
 .mb40{margin-bottom:40px;}
 .mb50{margin-bottom:50px;}
@@ -188,7 +190,6 @@ html, body{background-color:#afafaf; overflow: auto; }
 	width:255px;
 	color:#fff;
 	padding:36px 0px 0px 36px;
-	box-sizing:border-box; -moz-box-sizing:border-box; 
 }
 .p-find{
   width:255px;
@@ -201,10 +202,16 @@ html, body{background-color:#afafaf; overflow: auto; }
 	margin-left:255px;
 	position:relative;
 	box-sizing:border-box; -moz-box-sizing:border-box; 
-	padding:36px 36px 0px 18px;
+	padding:34px 36px 0px 18px;
   overflow: hidden;
 }
+.p-papers-view {
+  position: relative;
+}
+.p-everyone-view {
+}
 .p-paper-list{
+	box-sizing:border-box; -moz-box-sizing:border-box; 
 }
 .r-footer-content{
 	width:auto;
@@ -303,8 +310,9 @@ html, body{background-color:#afafaf; overflow: auto; }
 
 .p-paper-filter{
   position:absolute;
-  left:255px;
-  top:36px;
+  left:0px;
+  top:0px;
+  width: 255px;
   box-sizing:border-box;
   -moz-box-sizing:border-box;
   padding: 0px 25px;

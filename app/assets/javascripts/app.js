@@ -160,8 +160,8 @@ $(function() {
 
       that.$el.css('min-height', H);
 
-      that.$(".p-sidebar")    .css('min-height', H);
-      that.$(".p-main") .css('min-height', H);
+      that.$(".p-sidebar").css('min-height', H);
+      that.$(".p-main")   .css('min-height', H);
 
       $(window).scroll();
     }, true);
@@ -399,7 +399,7 @@ $(function() {
       json.avatars = json.users.map(function(u) {
                             return {
                               url: '/avatars/m/' + u.avatar_url + ".png",
-                              name: u.fullname
+                              name: u.fullname + ", " + u.email
                             };
                          });
       this.$el.append(this.template(json));
@@ -468,10 +468,7 @@ $(function() {
                                             screen: this});
       this.addView('papers',    this.paperListView)
           .addView('everyone',  this.everyoneView);
-
-      this.filterView = new PaperFilterView({clubId: this.clubId, screen: this,
-                                             el: this.$(".p-filter")});
-
+ 
       this.uploader   = new PaperUploader({clubId: this.clubId, screen: this});
 
       this.$el.find(".p-sidebar > .main").prepend(this.summaryView.render().$el);
@@ -493,15 +490,6 @@ $(function() {
          (this.lastClickedBtn.indexOf('papers') < 0 && 
          btnName.indexOf('papers') >= 0) )
         this.getBtn('papers-sub-btns').slideToggle(300); 
-      // Toggle filter panel
-      if(btnName == 'papers-by-person-btn')
-        this.filterView.show('by-person');
-      else if(btnName == 'papers-by-tag-btn')
-        this.filterView.show('by-tag');
-      else if(btnName == 'papers-btn') 
-        this.filterView.hide();
-      else
-        this.filterView.hide(true); // disable animation
 
       // Remember which button is clicked
       this.lastClickedBtn = btnName;
@@ -512,6 +500,15 @@ $(function() {
       }
       else if(btnName.indexOf('papers') >= 0) {
         this.switchView('papers');
+
+        var filterView = this.paperListView.filterView;
+        // Toggle filter panel
+        if(btnName == 'papers-by-person-btn')
+          filterView.show('by-person');
+        else if(btnName == 'papers-by-tag-btn')
+          filterView.show('by-tag');
+        else if(btnName == 'papers-btn') 
+          filterView.hide();
       }
       e.preventDefault();
     },
@@ -538,14 +535,14 @@ $(function() {
   });
 
   var EveryoneView = Backbone.View.extend({
+    className: "p-everyone-view",
     template: _.template($("#everyone-view-template").html()),
     initialize: function() {
       this.clubId = this.options.clubId;
 
       this.$el.hide();
 
-      this.members = new Members(null, {clubId: this.clubId});
-      this.members.debug = true;
+      this.members = SharedData.getMembers();
       this.members.on('add',    this._onAddOne, this)
                   .on('reset',  this._onAddAll, this);
     },
@@ -587,6 +584,7 @@ $(function() {
   });
 
   var PaperListView = Backbone.View.extend({
+    className: "p-papers-view",
     template: _.template($("#club-screen-paper-list").html()),
     lastFetchParams: null,
     /* States: init, loading, part_loaded, loading_more, all_loaded, error */
@@ -594,9 +592,13 @@ $(function() {
     // TODO: set-to-1 bug
     PAGE_ITEMS: 10,
     initialize: function() {
+      this.clubId = this.options.clubId;
       this.screen = this.options.screen;
 
       this.$el.append(this.template());
+      this.filterView = new PaperFilterView({clubId: this.clubId, paperListView: this,
+                                             el: this.$(".p-paper-filter")});
+
 
       this.papers = SharedData.getPapers();
       this.papers.on('add', this._onAddOne, this)
@@ -604,9 +606,10 @@ $(function() {
     
       this.$more = $('<div class="mb15 cleanfloat loading" style="width: 100%;">' +
                      '&nbsp;<br/>&nbsp;</div>');
-      this.tempPapers = new Papers(null, {clubId: this.options.clubId});
+      this.tempPapers = new Papers(null, {clubId: this.clubId});
       this.tempPapers.on('reset', this._loadData, this);
-      
+     
+
       this.initEvents();
     },
     _loadData: function() {
@@ -656,6 +659,12 @@ $(function() {
           that.more()
         }
       });
+      // 
+      this.screen.onWindowEvent('resize', function() {
+        var H = $(window).height() - 24*2 - 74;
+
+        that.$(".p-paper-list").css('min-height', H);
+      }, true);
     },
     search: function(keywords, tag, user_id) {
       var that = this;
@@ -781,23 +790,106 @@ $(function() {
   });
 
   var PaperFilterView = Backbone.View.extend({
+    visible: null,
     initialize: function() {
-      this.screen = this.options.screen;
+      this.clubId         = this.options.clubId;
+      this.paperListView  = this.options.paperListView;
+
+      this.byTagView      = new PaperFilterByTagView({el: this.$(".p-tag-filters")});
+      this.byPersonView   = new PaperFilterByPersonView({el: this.$(".p-person-filters")});
     },
     show: function(filterName) {
-  //    var screen = this.screen;
-//          $paperList = screen.paperListView.$
-     /* $(".p-paper-list .fl.column-38").fadeOut(300,function(){
-        $(".p-paper-list").animate({marginLeft:"510px"},300)
+      if(this.visible == filterName) return;
+      this.visible = filterName;
+
+      // Show filter
+      var filters = {'by-person': this.byPersonView, 
+                     'by-tag':    this.byTagView };
+      _.each(filters, function(v, n) {
+        if(n != filterName) v.hide();
+      });
+      filters[filterName].show();
+      
+      // Animation
+      var pl = this.paperListView,
+          that = this;
+      pl.$(".p-paper-list .fl.column-38").fadeOut(300,function(){
+        pl.$(".p-paper-list").animate({marginLeft:"255px"},300)
           .find(".fl.column-62").animate({width:"100%"},300);
-        $(".p-filter").fadeIn(300);
-      });*/
+        that.$el.fadeIn(300);
+      });
     },
     hide: function(disableAnimation) {
-      alert('hide');
-      /*$(".p-filter").fadeOut(400);
-      $(".p-paper-list").animate({marginLeft:"255px"},400)
-        .find(".fl.column-62").animate({width:"62%"},400,function(){$(".p-paper-list .fl.column-38").show(400);} );*/
+      if(!this.visible) return;
+      this.visible = null;
+
+      // Animation
+      var pl = this.paperListView,
+          that = this;
+      that.$el.fadeOut(300);
+      pl.$(".p-paper-list").animate({marginLeft:"0px"},300)
+        .find(".fl.column-62").animate({width:"62%"},300,function(){
+          pl.$(".p-paper-list .fl.column-38").show(300);
+      } );
+    } 
+  });
+
+  var PaperFilterByTagView = Backbone.View.extend({
+    template: _.template($("#paper-filter-tag-item").html()),
+    initialize: function() {
+      this.tags = SharedData.getTags();
+
+      this.tags.on('add',    this._onAddOne, this)
+               .on('reset',  this._onAddAll, this);
+    },
+    show: function() {
+      this.tags.fetch();
+
+      this.$el.show();
+    },
+    hide: function() {
+      this.$el.hide();
+    },
+    render: function() {
+      return this;
+    },
+    _onAddOne: function(tag, that, options) {
+      this.$el.append(this.template(tags.toJSON()));
+    },
+    _onAddAll: function() {
+      this.$("dd").remove();
+      this.tags.each(this._onAddOne, this);      
+    } 
+  });
+
+  var PaperFilterByPersonView = Backbone.View.extend({
+    template: _.template($("#paper-filter-person-item").html()),
+    initialize: function() {
+      this.members = SharedData.getMembers();
+      this.members.on('add',    this._onAddOne, this)
+                  .on('reset',  this._onAddAll, this);
+    },
+    show: function() {
+      this.$el.show();
+
+      this.members.fetch();
+    },
+    hide: function() {
+      this.$el.hide();
+    },
+    render: function() {
+      return this;
+    },
+    _onAddOne: function(member, that, options) {
+      var data = member.toJSON();
+      data.avatar_url = "/avatars/m/" + data.avatar_url + ".png";
+      data.num_papers = 0;
+      data.num_favs = 0; 
+      this.$el.append(this.template(data));
+    },
+    _onAddAll: function() {
+      this.$("dd").remove();
+      this.members.each(this._onAddOne, this);      
     } 
   });
 
@@ -931,7 +1023,18 @@ $(function() {
   var Members = Backbone.Collection.extend({
     model: Member,
     url: function() {
-      return "/api/clubs/" + this.clubId + "/users"
+      return "/api/clubs/" + this.clubId + "/users";
+    },
+    initialize: function(models, options) {
+      this.clubId = options.clubId;
+    }
+  });
+
+  var Tag = Backbone.Model.extend({});
+  var Tags = Backbone.Collection.extend({
+    model: Tag,
+    url: function() {
+      return "/api/clubs/" + this.clubId + "/tags";
     },
     initialize: function(models, options) {
       this.clubId = options.clubId;
@@ -1563,6 +1666,8 @@ $(function() {
   var SharedData= PaperClub.SharedData = (function() {
     var _clubs = new Clubs(),
         _papersOfClub = {},
+        _membersOfClub = {},
+        _tagsOfClub = {},
         _data = {
           currentClubId: null,
           getClubs: function() {
@@ -1575,6 +1680,30 @@ $(function() {
               _clubs.add(club);
             }
             return club;
+          },
+          getMembers: function() {
+            var currentClubId = _data.currentClubId;
+            if(currentClubId != null) {
+              var members = _membersOfClub[currentClubId];
+              if(!members) {
+                members = _membersOfClub[currentClubId] 
+                        = new Members(null, {clubId: currentClubId});
+              }
+              return members;
+            }
+            return null;
+          },
+          getTags: function() {
+            var currentClubId = _data.currentClubId;
+            if(currentClubId != null) {
+              var tags = _tagsOfClub[currentClubId];
+              if(!tags) {
+                tags = _tagsOfClub[currentClubId] 
+                     = new Tags(null, {clubId: currentClubId});
+              }
+              return tags;
+            }
+            return null;
           },
           getPapers: function() {
             var currentClubId = _data.currentClubId;
