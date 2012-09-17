@@ -161,7 +161,7 @@ $(function() {
       that.$el.css('min-height', H);
 
       that.$(".p-sidebar")    .css('min-height', H);
-      that.$(".p-paper-list") .css('min-height', H);
+      that.$(".p-main") .css('min-height', H);
 
       $(window).scroll();
     }, true);
@@ -198,7 +198,7 @@ $(function() {
   _.extend(TwoColumnScreen.prototype, Screen.prototype, {
     addView: function(name, view) {
       this.views[name] = view;
-      this.$(".p-paper-list").append(view.render().$el);
+      this.$(".p-main").append(view.render().$el);
       return this;
     },
     switchView: function(name) {

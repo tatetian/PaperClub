@@ -196,14 +196,15 @@ html, body{background-color:#afafaf; overflow: auto; }
 .p-sidebar > .main {
   width: 219px;
 }
-
-.p-paper-list{
+.p-main {
 	width:auto;
 	margin-left:255px;
 	position:relative;
 	box-sizing:border-box; -moz-box-sizing:border-box; 
 	padding:36px 36px 0px 18px;
   overflow: hidden;
+}
+.p-paper-list{
 }
 .r-footer-content{
 	width:auto;
@@ -300,7 +301,7 @@ html, body{background-color:#afafaf; overflow: auto; }
 .section-right.case-invited{margin-top:0px;}
 .c-case-img{height:100%; overflow:hidden; max-height:120px;}
 
-.p-filter{
+.p-paper-filter{
   position:absolute;
   left:255px;
   top:36px;
