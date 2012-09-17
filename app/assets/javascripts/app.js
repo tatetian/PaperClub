@@ -460,16 +460,19 @@ $(function() {
       this.$el.empty()
               .append(this.template());
 
-      this.summaryView = new ClubScreenSummaryView({clubId: this.clubId});
+      this.summaryView    = new ClubScreenSummaryView({clubId: this.clubId});
 
-      this.paperListView = new PaperListView({clubId: this.clubId,
+      this.paperListView  = new PaperListView({clubId: this.clubId,
                                               screen: this});
-      this.everyoneView = new EveryoneView({clubId: this.clubId,
+      this.everyoneView   = new EveryoneView({clubId: this.clubId,
                                             screen: this});
       this.addView('papers',    this.paperListView)
           .addView('everyone',  this.everyoneView);
 
-      this.uploader = new PaperUploader({clubId: this.clubId, screen: this});
+      this.filterView = new PaperFilterView({clubId: this.clubId, screen: this,
+                                             el: this.$(".p-filter")});
+
+      this.uploader   = new PaperUploader({clubId: this.clubId, screen: this});
 
       this.$el.find(".p-sidebar > .main").prepend(this.summaryView.render().$el);
       this.$el.find(".upload-btn-wrapper").append(this.uploader.render().$el);
@@ -481,14 +484,26 @@ $(function() {
       this.getBtn('papers-btn').removeClass('color-blue');
       this.getBtn(this.lastClickedBtn).removeClass('color-blue');
       this.getBtn(btnName).addClass('color-blue');
-      if(btnName.indexOf('by-')>=0)
+      if(btnName.indexOf('by-')>=0) {
         this.getBtn('papers-btn').addClass('color-blue');
+      }
+      // Slide toogle papers button
       if((this.lastClickedBtn.indexOf('papers') >= 0 && 
          btnName.indexOf('papers') < 0) ||
          (this.lastClickedBtn.indexOf('papers') < 0 && 
          btnName.indexOf('papers') >= 0) )
         this.getBtn('papers-sub-btns').slideToggle(300); 
+      // Toggle filter panel
+      if(btnName == 'papers-by-person-btn')
+        this.filterView.show('by-person');
+      else if(btnName == 'papers-by-tag-btn')
+        this.filterView.show('by-tag');
+      else if(btnName == 'papers-btn') 
+        this.filterView.hide();
+      else
+        this.filterView.hide(true); // disable animation
 
+      // Remember which button is clicked
       this.lastClickedBtn = btnName;
 
       // Switch view
@@ -763,6 +778,27 @@ $(function() {
         return d.toDateString();
       }
     }
+  });
+
+  var PaperFilterView = Backbone.View.extend({
+    initialize: function() {
+      this.screen = this.options.screen;
+    },
+    show: function(filterName) {
+  //    var screen = this.screen;
+//          $paperList = screen.paperListView.$
+     /* $(".p-paper-list .fl.column-38").fadeOut(300,function(){
+        $(".p-paper-list").animate({marginLeft:"510px"},300)
+          .find(".fl.column-62").animate({width:"100%"},300);
+        $(".p-filter").fadeIn(300);
+      });*/
+    },
+    hide: function(disableAnimation) {
+      alert('hide');
+      /*$(".p-filter").fadeOut(400);
+      $(".p-paper-list").animate({marginLeft:"255px"},400)
+        .find(".fl.column-62").animate({width:"62%"},400,function(){$(".p-paper-list .fl.column-38").show(400);} );*/
+    } 
   });
 
   var PaperUploader = Backbone.View.extend({
