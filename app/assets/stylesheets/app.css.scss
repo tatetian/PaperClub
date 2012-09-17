@@ -300,6 +300,39 @@ html, body{background-color:#afafaf; overflow: auto; }
 .section-right.case-invited{margin-top:0px;}
 .c-case-img{height:100%; overflow:hidden; max-height:120px;}
 
+.p-filter{
+  position:absolute;
+  left:255px;
+  top:36px;
+  box-sizing:border-box;
+  -moz-box-sizing:border-box;
+  padding: 0px 25px;
+  display:none;
+}
+
+.img96{width:96px; height:96px;}
+.mr50{margin-right:50px;}
+.mb50{margin-bottom:50px;}
+.disnone{display:none;}
+.color-white{color:#fff;}
+.icon-triangle{
+  position:absolute;
+  margin:0 auto;
+  left:0px;
+  right:0px;
+  top:-20px;
+  width:15px;
+  height:15px;
+  color:#fff;
+  text-shadow:0px -2px 3px rgba(0,0,0,0.18);
+}
+.r-details-btn{top:0px; right:0px; }
+.r-d-title:hover .disnone{
+  display:block;
+}
+.r-d-tag:hover .disnone{
+  display:block;
+}
 /* CSS animation */
 .transit-o {
   transition: opacity 0.8s;

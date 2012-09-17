@@ -102,12 +102,13 @@
   <dl class="section main p-nav-menu fs16 color-grey2 lh15 font-d">
     <!-- insert summary view here -->
     <dt class="menu-paper fs18 color-grey3 mt30"><a class="papers-btn color-blue" href="#">PAPERS</a></dt>
-      <dd><a class="by-person-btn ml20" href="#">By person</a></dd>
-      <dd><a class="by-tag-btn ml20" href="#">By tag</a></dd>
+    <div class="papers-sub-btns">
+      <dd><a class="papers-by-person-btn ml20" href="#">By person</a></dd>
+      <dd><a class="papers-by-tag-btn ml20" href="#">By tag</a></dd>
       <dd class="upload-btn-wrapper ml20"><!-- insert upload btn here--></dd>
-      
+    </div>  
     <dt class="menu-paper fs18 color-grey3 mt10"><a class="everyone-btn" href="#">EVERYONE</a></dt>
-    <dt class="menu-paper fs18 color-grey3 mt10"><a class="settings-btn" href="#">SETTINGS</a></dt>
+    <dt class="menu-paper fs18 color-grey3 mt10"><a class="settings-btn disnone" href="#">SETTINGS</a></dt>
   </dl>
   <div class="section p-btn-back font-d">
     <a href="#" >
@@ -139,7 +140,7 @@
 </script>
 
 <script type="text/template" id="club-screen-paper-list">
-<div class="mb15 cleanfloat" style="width: 100%;">
+<div class="mb10 cleanfloat" style="width: 100%;">
   <div class="fl column-62">
     <input class="paper-search m-f-input column-62 font-d fs13" type="search"  
              placeholder="Search by title" />
@@ -213,7 +214,7 @@
 </script>
 
 <script type="text/template" id="everyone-view-person-template">
-<span class="asblcok fl"><img class="img96 circle" src="#" /></span>
+  <span class="asblcok fl"><img class="img96 circle" src="<%%= avatar_url %>" /></span>
 <div class="fl  ml15">
   <span  class="font-c fw-bold hover-f-blue fs26"><%%= fullname %></span><br />
   <span class="font-d color-grey2 inblock mt10 mb10"><%%= email %></span><br />

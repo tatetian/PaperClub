@@ -69,6 +69,10 @@ class Api::UsersController < ApplicationController
   # GET http://www.paperclub.com/club/<club_id>/users
   # ROLE    member
   def index
+    # Authenticate
+    club = can_access_club?(params[:club_id])
+
+    render :json => club.users
   end
 
   # Remove a user from a club

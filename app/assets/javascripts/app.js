@@ -149,9 +149,11 @@ $(function() {
   Screen.extend = Backbone.View.extend;
 
   var TwoColumnScreen = function(options) {
+    var that = this;
+    this.views={};
+
     Screen.apply(this, [options]);
 
-    var that = this;
     // White area not too short
     this.onWindowEvent('resize', function() { 
       var H = $(window).height() - 24*2;
@@ -193,7 +195,21 @@ $(function() {
     }, true);
   }
 
-  _.extend(TwoColumnScreen.prototype, Screen.prototype, {});
+  _.extend(TwoColumnScreen.prototype, Screen.prototype, {
+    addView: function(name, view) {
+      this.views[name] = view;
+      this.$(".p-paper-list").append(view.render().$el);
+      return this;
+    },
+    switchView: function(name) {
+      _.each(this.views, function(v, n) {
+        if(n != name)
+          v.hide();
+      });
+      this.views[name].show();
+      return this;
+    }
+  });
 
   TwoColumnScreen.extend = Screen.extend;
 
@@ -432,7 +448,7 @@ $(function() {
     },
     initEvents: function() {
       var that = this,
-          btns = ['papers-btn', 'by-person-btn', 'by-tag-btn',
+          btns = ['papers-btn', 'papers-by-person-btn', 'papers-by-tag-btn',
                   'everyone-btn', 'settings-btn'];
       btns.forEach(function(btnName) {
         that.getBtn(btnName).click(function(e) {
@@ -445,10 +461,14 @@ $(function() {
               .append(this.template());
 
       this.summaryView = new ClubScreenSummaryView({clubId: this.clubId});
+
       this.paperListView = new PaperListView({clubId: this.clubId,
-                                              screen: this,
-                                              el: this.$(".p-paper-list")});
-      this.paperListView.render();
+                                              screen: this});
+      this.everyoneView = new EveryoneView({clubId: this.clubId,
+                                            screen: this});
+      this.addView('papers',    this.paperListView)
+          .addView('everyone',  this.everyoneView);
+
       this.uploader = new PaperUploader({clubId: this.clubId, screen: this});
 
       this.$el.find(".p-sidebar > .main").prepend(this.summaryView.render().$el);
@@ -461,10 +481,23 @@ $(function() {
       this.getBtn('papers-btn').removeClass('color-blue');
       this.getBtn(this.lastClickedBtn).removeClass('color-blue');
       this.getBtn(btnName).addClass('color-blue');
-      if(btnName.indexOf('by-')==0)
+      if(btnName.indexOf('by-')>=0)
         this.getBtn('papers-btn').addClass('color-blue');
+      if((this.lastClickedBtn.indexOf('papers') >= 0 && 
+         btnName.indexOf('papers') < 0) ||
+         (this.lastClickedBtn.indexOf('papers') < 0 && 
+         btnName.indexOf('papers') >= 0) )
+        this.getBtn('papers-sub-btns').slideToggle(300); 
+
       this.lastClickedBtn = btnName;
 
+      // Switch view
+      if(btnName == 'everyone-btn') {
+        this.switchView('everyone');
+      }
+      else if(btnName.indexOf('papers') >= 0) {
+        this.switchView('papers');
+      }
       e.preventDefault();
     },
     getBtn: function(btnName) {
@@ -492,19 +525,48 @@ $(function() {
   var EveryoneView = Backbone.View.extend({
     template: _.template($("#everyone-view-template").html()),
     initialize: function() {
-    
+      this.clubId = this.options.clubId;
+
+      this.$el.hide();
+
+      this.members = new Members(null, {clubId: this.clubId});
+      this.members.debug = true;
+      this.members.on('add',    this._onAddOne, this)
+                  .on('reset',  this._onAddAll, this);
     },
     render: function() {
+      this.$el.append(this.template());
       return this;
+    },
+    show: function() {
+      this.members.fetch();
+      this.$el.show();
+    },
+    hide: function() {
+      this.$el.hide();
+    },
+    _onAddOne: function(member, that, options) {
+      var memberView = new EveryonePersonView({model: member});
+      this.$("ul").append(memberView.render().$el)
+    },
+    _onAddAll: function() {
+      this.$("ul").empty();
+      this.members.each(this._onAddOne, this);      
     }
   });
 
   var EveryonePersonView = Backbone.View.extend({
+    tagName: "li",
+    className: "cf mb30 fl mr50",
     template: _.template($("#everyone-view-person-template").html()),
     initialize: function() {
-    
     },
     render: function() {
+      var data = this.model.toJSON();
+      data.num_papers = 0;
+      data.num_comments = 0;
+      data.avatar_url = '/avatars/l/' + data.avatar_url + ".png"
+      this.$el.append(this.template(data));
       return this;
     }
   });
@@ -542,6 +604,12 @@ $(function() {
       }
       items.hasMore = hasMore;
       this.papers.add(items.models);
+    },
+    show: function() {
+      this.$el.show();
+    },
+    hide: function() {
+      this.$el.hide();
     },
     initEvents: function() {
       var that = this;
@@ -818,6 +886,19 @@ $(function() {
     },
     initialize: function(models, options) {
       this.clubId = options.clubId;            
+    }
+  });
+
+  var Member = Backbone.Model.extend({
+  });
+
+  var Members = Backbone.Collection.extend({
+    model: Member,
+    url: function() {
+      return "/api/clubs/" + this.clubId + "/users"
+    },
+    initialize: function(models, options) {
+      this.clubId = options.clubId;
     }
   });
 
