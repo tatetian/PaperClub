@@ -491,32 +491,35 @@ $(function() {
          btnName.indexOf('papers') >= 0) )
         this.getBtn('papers-sub-btns').slideToggle(300); 
 
+
+      var pl = this.paperListView,
+          filterView = pl.filterView;
       // Switch view
       if(btnName == 'everyone-btn') {
         this.switchView('everyone');
       }
-      else if(btnName.indexOf('papers') >= 0) {
+      else if(btnName == 'papers-btn') {
         this.switchView('papers');
 
-        var pl  = this.paperListView,
-            filterView = pl.filterView;
+        if(this.lastClickedBtn.indexOf('papers') >= 0)
+          filterView.hide();
+        
+        if( this.lastClickedBtn == 'papers-btn' || 
+            (this.lastClickedBtn.indexOf('papers') >= 0 &&
+             ( pl.lastFetchParams.tag_id || 
+               pl.lastFetchParams.user_id || 
+               pl.lastFetchParams.keywords)) ) {
+          pl.search(); 
+          this.$(".paper-search").val(""); 
+        }
+      }
+      else if(btnName.indexOf('papers') >= 0) {
         // Toggle filter panel
         if(btnName == 'papers-by-person-btn') {
           filterView.show('by-person');
         }
         else if(btnName == 'papers-by-tag-btn') {
           filterView.show('by-tag');
-        }
-        else if(btnName == 'papers-btn') {
-          filterView.hide();
-
-          if(this.lastClickedBtn != 'papers-btn' && 
-             ( pl.lastFetchParams.tag_id || 
-               pl.lastFetchParams.user_id || 
-               pl.lastFetchParams.keywords) ) {
-            pl.search(); 
-            this.$(".paper-search").val(""); 
-          }
         }
       }
 
