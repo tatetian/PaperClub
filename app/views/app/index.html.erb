@@ -211,17 +211,17 @@
 </script>
 
 <script type="text/template" id="paper-filter-tag-item">
-<dd class="mb5">
-<a href="#" class="font-c fs18 color-black" data-id=<%%= id %>><em class="font-icon fs30 color-grey1 pr5">J</em><%%= name %>(<%%= num_papers %>)</a>
+<dd class="mb5" data-id=<%%= id %>>
+<a href="#" class="font-c fs18 color-black"><em class="font-icon fs30 color-grey1 pr5">J</em><%%= name %>(<%%= num_papers %>)</a>
 </dd>
 </script>
 
 <script type="text/template" id="paper-filter-person-item">
-<dd class="cf mb30">
-<a href="#" data-id="<%%= id %>" class="asblcok fl"><img class="img48 circle" src="<%%= avatar_url %>" /></a>
+<dd class="cf mb30" data-id="<%%= id %>">
+<a href="#" class="asblcok fl"><img class="img48 circle" src="<%%= avatar_url %>" /></a>
 <div class="fl ml15">
-  <a href="#" class="font-c fw-bold hover-f-blue" data-id="<%%= id %>"><%%= fullname %><em class="fs24 font-icon color-grey1 inblock mt-15" >></em></a><br />
-  <span  class="inblock mt-10" >
+  <a href="#" class="font-c fw-bold hover-f-blue"><%%= fullname %><em class="fs24 font-icon color-grey1 inblock mt-15" >></em></a><br />
+  <span  class="inblock mt-10">
     <em class="fs36 font-icon color-grey1 ">K</em><%%= num_papers %>
     <%% if(num_favs>0) { %>
       <em class="fs36 font-icon color-grey1 p-btn-fav">*</em><%%= num_favs %>

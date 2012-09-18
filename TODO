@@ -1,16 +1,23 @@
 * Hide news column when more
 * Why animation slow? --> Complete callback too many times
 * Add tag data to test
-  Add events handlers
+* Add events handlers
 
-  min-height & boxing-sizing:border bug in FF
 
 * Default random avatar
 
-  Add all to tag filter panel
-  13:30
+* Add all to tag filter panel
 
   Remove unncessary club.users num_papers
+
+Tonight:
+  smart float for filters
+  clicked filter
+  search bar width
+
+Bugs:
+  IE no placeholder for search bar
+  min-height & boxing-sizing:border bug in FF
 
 Wen Xin
 * By person

@@ -348,6 +348,10 @@ html, body{background-color:#afafaf; overflow: auto; }
 .r-d-tag:hover .disnone{
   display:block;
 }
+
+.clicked, .clicked .color-black, .clicked .color-grey1, .clicked .color-grey2, .clicked .color-grey3{
+color: #2ea1dd;
+}
 /* CSS animation */
 .transit-o {
   transition: opacity 0.8s;

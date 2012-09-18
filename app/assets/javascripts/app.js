@@ -511,6 +511,7 @@ $(function() {
                pl.lastFetchParams.keywords)) ) {
           pl.search(); 
           this.$(".paper-search").val(""); 
+          pl.filterView.reset();
         }
       }
       else if(btnName.indexOf('papers') >= 0) {
@@ -819,6 +820,10 @@ $(function() {
                               paperListView: this.paperListView
                             });
     },
+    reset: function() {
+      this.$(".clicked").removeClass("clicked");
+      this.byTagView.clickedTagId = this.byPersonView.clickedUserId = null;
+    },
     show: function(filterName) {
       if(this.visible == filterName) return;
       this.visible = filterName;
@@ -854,7 +859,6 @@ $(function() {
     hide: function(disableAnimation) {
       if(!this.visible) return;
       this.visible = null;
-console.debug(1);
       // Animation
       var pl = this.paperListView,
           that = this,
@@ -866,7 +870,6 @@ console.debug(1);
           if(run) return; run = true;
           pl.$(".p-paper-list .fl.column-38").show(300);
       } );
-      console.debug(2);
     } 
   });
 
@@ -875,6 +878,7 @@ console.debug(1);
     events: {
       'click a': '_clickTag'
     },
+    clickedTagId: null,
     initialize: function() {
       this.paperListView = this.options.paperListView;
 
@@ -896,15 +900,26 @@ console.debug(1);
     },
     _onAddOne: function(tag, that, options) {
       var data = tag.toJSON();
-      if(data.name=='__all__') data.name='all';
-      this.$el.append(this.template(data));
+      if(data.name == '__all__') data.name='all';
+
+      var $dd = $(this.template(data));
+      if(data.id == this.clickedTagId) $dd.addClass('clicked');
+
+      this.$el.append($dd);
     },
     _onAddAll: function() {
       this.$("dd").remove();
-      this.tags.each(this._onAddOne, this);      
+      this.tags.each(this._onAddOne, this); 
     },
     _clickTag: function(e) {
-      var tag_id = $(e.target).closest("a").data("id");
+      var $dd = $(e.target).closest("dd"),
+          tag_id = $dd.data("id");
+
+      this.paperListView.filterView.reset();
+      $dd.addClass("clicked");
+
+      this.clickedTagId = tag_id;
+
       if(tag_id=="0") // The special "__all__" tag
         this.paperListView.search()
       else
@@ -918,6 +933,7 @@ console.debug(1);
     events: {
       'click a': '_clickPerson'
     },
+    clickedUserId: null,
     initialize: function() {
       this.paperListView = this.options.paperListView;
 
@@ -940,14 +956,24 @@ console.debug(1);
       var data = member.toJSON();
       data.avatar_url = "/avatars/m/" + data.avatar_url + ".png";
       data.num_favs = 0; 
-      this.$el.append(this.template(data));
+
+      var $dd = $(this.template(data));
+      if(data.id == this.clickedUserId) $dd.addClass("clicked");
+      this.$el.append($dd);
     },
     _onAddAll: function() {
       this.$("dd").remove();
-      this.members.each(this._onAddOne, this);      
+      this.members.each(this._onAddOne, this);
     },
     _clickPerson: function(e) {
-      var user_id = $(e.target).closest("a").data("id");
+      var $dd     = $(e.target).closest("dd"),
+          user_id = $dd.data("id");
+      
+      this.paperListView.filterView.reset();
+
+      $dd.addClass("clicked");
+      this.clickedUserId = user_id;
+
       this.paperListView.search(null, null, user_id);
 
       e.preventDefault();
