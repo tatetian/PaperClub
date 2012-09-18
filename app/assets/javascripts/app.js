@@ -498,18 +498,25 @@ $(function() {
       else if(btnName.indexOf('papers') >= 0) {
         this.switchView('papers');
 
-        var filterView = this.paperListView.filterView;
+        var pl  = this.paperListView,
+            filterView = pl.filterView;
         // Toggle filter panel
         if(btnName == 'papers-by-person-btn') {
           filterView.show('by-person');
         }
         else if(btnName == 'papers-by-tag-btn') {
           filterView.show('by-tag');
-  //        if(lastClickedBtn != 'papers-by-tag-bnt')
-//            this.paperListView.search
         }
         else if(btnName == 'papers-btn') {
           filterView.hide();
+
+          if(this.lastClickedBtn != 'papers-btn' && 
+             ( pl.lastFetchParams.tag_id || 
+               pl.lastFetchParams.user_id || 
+               pl.lastFetchParams.keywords) ) {
+            pl.search(); 
+            this.$(".paper-search").val(""); 
+          }
         }
       }
 
@@ -581,7 +588,7 @@ $(function() {
     },
     render: function() {
       var data = this.model.toJSON();
-      data.num_papers = 0;
+      //data.num_papers = 0;
       data.num_comments = 0;
       data.avatar_url = '/avatars/l/' + data.avatar_url + ".png"
       this.$el.append(this.template(data));
@@ -833,12 +840,12 @@ $(function() {
         that.$el.fadeIn(300);
         pl.$(".p-paper-list").addClass("hide-right-column");
 
-        if(filterName == 'by-person')
+      /*  if(filterName == 'by-person')
           pl.search(null, null, USER_ID);
         else if(filterName == 'by-tag' && 
                 (pl.lastFetchParams.tag_id || 
                  pl.lastFetchParams.user_id  ))
-          pl.search()
+          pl.search()*/
       });
     },
     hide: function(disableAnimation) {
@@ -894,7 +901,7 @@ console.debug(1);
       this.tags.each(this._onAddOne, this);      
     },
     _clickTag: function(e) {
-      var tag_id = $(e.target).data("id");
+      var tag_id = $(e.target).closest("a").data("id");
       if(tag_id=="0") // The special "__all__" tag
         this.paperListView.search()
       else
@@ -937,7 +944,7 @@ console.debug(1);
       this.members.each(this._onAddOne, this);      
     },
     _clickPerson: function(e) {
-      var user_id = $(e.target).data("id");
+      var user_id = $(e.target).closest("a").data("id");
       this.paperListView.search(null, null, user_id);
 
       e.preventDefault();
@@ -1073,6 +1080,13 @@ console.debug(1);
 
   var Members = Backbone.Collection.extend({
     model: Member,
+    comparator: function(member) {
+      // Make sure current user's name is at the first
+      if(member.get("id") == USER_ID) {
+        return "";
+      }
+      return member.get("fullname");
+    },
     url: function() {
       return "/api/clubs/" + this.clubId + "/users";
     },
