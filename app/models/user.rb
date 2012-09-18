@@ -31,12 +31,16 @@ class User < ActiveRecord::Base
   }
 
   def as_json(options)
-    { :id       => self.id,
-      :fullname => self.fullname, 
-      :email    => self.email,
-      :avatar_url => self.avatar_url,
-      :num_papers => self.papers.count
-    }
+    json = {  :id       => self.id,
+              :fullname => self.fullname, 
+              :email    => self.email,
+              :avatar_url => self.avatar_url }
+
+    if options[:club_id]
+      json[:num_papers] = Paper.where("uploader_id=#{self.id} AND club_id=#{options[:club_id]}").count
+    end
+    
+    json
   end
 
   def join_club(club, role)

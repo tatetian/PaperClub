@@ -72,7 +72,7 @@ class Api::UsersController < ApplicationController
     # Authenticate
     club = can_access_club?(params[:club_id])
 
-    render :json => club.users
+    render :json => club.users.as_json(:club_id => club.id)
   end
 
   # Remove a user from a club

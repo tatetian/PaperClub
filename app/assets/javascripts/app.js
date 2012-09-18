@@ -909,6 +909,8 @@ console.debug(1);
       'click a': '_clickPerson'
     },
     initialize: function() {
+      this.paperListView = this.options.paperListView;
+
       this.members = SharedData.getMembers();
       this.members.on('add',    this._onAddOne, this)
                   .on('reset',  this._onAddAll, this);
@@ -935,6 +937,9 @@ console.debug(1);
       this.members.each(this._onAddOne, this);      
     },
     _clickPerson: function(e) {
+      var user_id = $(e.target).data("id");
+      this.paperListView.search(null, null, user_id);
+
       e.preventDefault();
     }
   });

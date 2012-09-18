@@ -218,16 +218,16 @@
 
 <script type="text/template" id="paper-filter-person-item">
 <dd class="cf mb30">
-<a href="#" class="asblcok fl"><img class="img48 circle" src="<%%= avatar_url %>" /></a>
-  <div class="fl ml15">
-    <a href="#" class="font-c fw-bold hover-f-blue"><%%= fullname %><em class="fs24 font-icon color-grey1 inblock mt-15" >></em></a><br />
-    <span  class="inblock mt-10" >
-      <a href="#"><em class="fs36 font-icon color-grey1 ">K</em><%%= num_papers %></a>
-      <%% if(num_favs>0) { %>
-        <a href="#"><em class="fs36 font-icon color-grey1 p-btn-fav">*</em><%%= num_favs %></a> 
-      <%% } %>
-    </span>
-  </div>
+<a href="#" data-id="<%%= id %>" class="asblcok fl"><img class="img48 circle" src="<%%= avatar_url %>" /></a>
+<div class="fl ml15">
+  <a href="#" class="font-c fw-bold hover-f-blue" data-id="<%%= id %>"><%%= fullname %><em class="fs24 font-icon color-grey1 inblock mt-15" >></em></a><br />
+  <span  class="inblock mt-10" >
+    <em class="fs36 font-icon color-grey1 ">K</em><%%= num_papers %>
+    <%% if(num_favs>0) { %>
+      <em class="fs36 font-icon color-grey1 p-btn-fav">*</em><%%= num_favs %>
+    <%% } %>
+  </span>
+</div>
 </dd>
 </script>
 
