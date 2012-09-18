@@ -491,9 +491,6 @@ $(function() {
          btnName.indexOf('papers') >= 0) )
         this.getBtn('papers-sub-btns').slideToggle(300); 
 
-      // Remember which button is clicked
-      this.lastClickedBtn = btnName;
-
       // Switch view
       if(btnName == 'everyone-btn') {
         this.switchView('everyone');
@@ -503,13 +500,22 @@ $(function() {
 
         var filterView = this.paperListView.filterView;
         // Toggle filter panel
-        if(btnName == 'papers-by-person-btn')
+        if(btnName == 'papers-by-person-btn') {
           filterView.show('by-person');
-        else if(btnName == 'papers-by-tag-btn')
+        }
+        else if(btnName == 'papers-by-tag-btn') {
           filterView.show('by-tag');
-        else if(btnName == 'papers-btn') 
+  //        if(lastClickedBtn != 'papers-by-tag-bnt')
+//            this.paperListView.search
+        }
+        else if(btnName == 'papers-btn') {
           filterView.hide();
+        }
       }
+
+      // Remember which button is clicked
+      this.lastClickedBtn = btnName;
+
       e.preventDefault();
     },
     getBtn: function(btnName) {
@@ -826,6 +832,13 @@ $(function() {
           .find(".fl.column-62").animate({width:"100%"},300);
         that.$el.fadeIn(300);
         pl.$(".p-paper-list").addClass("hide-right-column");
+
+        if(filterName == 'by-person')
+          pl.search(null, null, USER_ID);
+        else if(filterName == 'by-tag' && 
+                (pl.lastFetchParams.tag_id || 
+                 pl.lastFetchParams.user_id  ))
+          pl.search()
       });
     },
     hide: function(disableAnimation) {
@@ -872,7 +885,9 @@ console.debug(1);
       return this;
     },
     _onAddOne: function(tag, that, options) {
-      this.$el.append(this.template(tag.toJSON()));
+      var data = tag.toJSON();
+      if(data.name=='__all__') data.name='all';
+      this.$el.append(this.template(data));
     },
     _onAddAll: function() {
       this.$("dd").remove();
@@ -880,7 +895,10 @@ console.debug(1);
     },
     _clickTag: function(e) {
       var tag_id = $(e.target).data("id");
-      this.paperListView.search(null, tag_id);
+      if(tag_id=="0") // The special "__all__" tag
+        this.paperListView.search()
+      else
+        this.paperListView.search(null, tag_id);
       e.preventDefault();
     }
   });

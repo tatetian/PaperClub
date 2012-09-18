@@ -15,7 +15,13 @@ class Api::TagsController < ApplicationController
         # Authenticate
         club = can_access_club?(params[:club_id])
         # List tags of a club
-        render :json => club.tags.as_json(:include => [:num_papers])
+        tags = club.tags.as_json(:include => [:num_papers])
+        all_tag = { id: 0, 
+                    name: "__all__", 
+                    club_id: club.id, 
+                    num_papers: club.papers.count
+                  } 
+        render :json => [all_tag] + tags 
       end
     rescue ActiveRecord::RecordNotFound
       error "Can't access the club or the paper"
