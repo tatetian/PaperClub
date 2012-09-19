@@ -1421,7 +1421,7 @@
 
   // Helper function to get a value from a Backbone object as a property
   // or as a function.
-  var getValue = function(object, prop) {
+  var getValue = _.getValue = function(object, prop) {
     if (!(object && object[prop])) return null;
     return _.isFunction(object[prop]) ? object[prop]() : object[prop];
   };

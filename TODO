@@ -11,13 +11,20 @@
   Remove unncessary club.users num_papers
 
 Tonight:
-  smart float for filters
+* smart float for filters
 * clicked filter
 * search bar width
+
+Today
+  refactor dialoge
+  19:50 -- 21:33 1h40min 
+  invitation
+  details
 
 Bugs:
   IE no placeholder for search bar
   min-height & boxing-sizing:border bug in FF
+  Filter smart float bottom too small
 
 Wen Xin
 * By person

@@ -305,37 +305,59 @@ $(function() {
     }
   });
 
-  var NewClubDialoge = Backbone.View.extend({
+  var Dialoge = function(options) {
+    Backbone.View.apply(this, [options]);
+  }
+
+  _.extend(Dialoge.prototype, Backbone.View.prototype, {
+    baseTemplate: _.template($("#dialoge-template").html()),
     className: "m-m-wrapper newclub",
-    template: _.template($("#new-club-dialoge-data-template").html()),
     events: {
-      "click .c-btn-creatclub": "onOK",
-      "click .c-btn-cancelclub": "onCancel"
+      "click .c-btn-ok": "onOK",
+      "click .c-btn-cancel": "onCancel"
     },
+    okBtn: "OK",
+    cancelBtn: "Cancel",
+    width: 400,
+    height: 300,
     initialize: function() {
-      this.$el.append($($("#new-club-dialoge-template").html()));
+      this.$el.append(this.baseTemplate({
+        ok_btn: this.okBtn, cancel_btn: this.cancelBtn
+      }));
 
       var that = this,
+          $container = this.$(".m-m-container"),
           screen = this.screen = this.options.screen;
       screen.onWindowEvent('resize', function() {
-        // Size of new club dialog
-        var whtml = $(window).width();
-        var wst_c = (whtml-48-255-18-36)*0.5;
-        that.$('.m-m-container').css({"width":wst_c+88,"height":260});
-      }); 
-    },
-    render: function() {
-      return this;
+        $container.css({
+          "width":  _.getValue(that, 'width'),
+          "height": _.getValue(that, 'height')
+        });
+      }, true); 
     },
     show: function() {
       this.$el.appendTo($("body")).show();
-
-      this.model = new Club();
-
-      this.$(".m-m-content").empty().prepend(this.template(this.model.toJSON()));
     },
     hide: function() {
       this.$el.detach().hide();
+    }
+  });
+
+  Dialoge.extend = Backbone.View.extend;
+
+  var NewClubDialoge = Dialoge.extend({
+    template: _.template($("#new-club-dialoge-data-template").html()),
+    okBtn: "Create the club",
+    cancelBtn: "Cancel",
+    width: function() {
+      return ($(window).width() - 48 - 255 - 18 - 36) * 0.5 + 88;
+    },
+    height: 260,
+    show: function() {
+      Dialoge.prototype.show.apply(this);
+    
+      this.model = new Club();
+      this.$(".m-m-content").empty().prepend(this.template(this.model.toJSON()));
     },
     onOK: function(e) {
       var screen = this.screen;
@@ -511,8 +533,9 @@ $(function() {
                pl.lastFetchParams.keywords)) ) {
           pl.search(); 
           this.$(".paper-search").val(""); 
-          pl.filterView.reset();
         }
+
+        pl.filterView.reset();
       }
       else if(btnName.indexOf('papers') >= 0) {
         // Toggle filter panel
