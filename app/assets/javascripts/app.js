@@ -819,6 +819,44 @@ $(function() {
                               el: this.$(".p-person-filters"),
                               paperListView: this.paperListView
                             });
+      
+      // Smart float
+      var $filter = this.$el;
+      this.paperListView.screen.onWindowEvent('scroll', function() {
+        var $w  = $(window),
+            T   = $w.scrollTop(),
+            h   = $w.height(),
+            H   = $filter.height(),
+            b   = H - h - T,
+            L   = $w.scrollLeft(),
+            margin  = 24,
+            threshold1 = 60 - margin,
+            threshold2 = H - h + margin,
+            css = null;
+        if( H > h && T > threshold2 ) {
+          css = {
+            position: 'fixed',
+            bottom: margin,
+            left: 297 - L
+          };
+        }
+        else if( H < h && T > threshold1 ) {
+          css = {
+            position: 'fixed',
+            top: margin,
+            left: 297 - L,
+          };
+        }
+        else {
+          css = {
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            bottom: ''
+          }
+        }
+        $filter.css(css);
+      }, true);
     },
     reset: function() {
       this.$(".clicked").removeClass("clicked");
