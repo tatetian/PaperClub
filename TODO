@@ -15,16 +15,18 @@ Tonight:
 * clicked filter
 * search bar width
 
+
+
 Today
-  refactor dialoge
-  19:50 -- 21:33 1h40min 
-  invitation
+* refactor dialoge
+* invitation
   details
 
 Bugs:
   IE no placeholder for search bar
   min-height & boxing-sizing:border bug in FF
   Filter smart float bottom too small
+  Filter not working for newly created club
 
 Wen Xin
 * By person

@@ -392,6 +392,62 @@ $(function() {
     }
   });
 
+  var InviteFriendsDialoge = Dialoge.extend({
+    template: _.template($("#invite-friends-dialoge-data-template").html()),
+    okBtn: "Send invitation",
+    cancelBtn: "Cancel",
+    width: function() {
+      return ($(window).width() - 48 - 255 - 18 - 36) * 0.5 + 88;
+    },
+    height: 190,
+    initialize: function() {
+      Dialoge.prototype.initialize.apply(this);
+
+      this.clubId = this.options.clubId;
+    },
+    show: function() {
+      Dialoge.prototype.show.apply(this);
+
+      $(window).resize();
+      
+      this.$(".m-m-content").empty().prepend(this.template({
+        invitation_emails: ["", "", ""]
+      }));
+    },
+    onOK: function(e) {
+      e.preventDefault();
+
+      this.hide();
+
+      var emails = this.retrieveValues();
+      window.emails = emails;
+      $.post(
+        "/api/clubs/" + this.clubId + "/invitation/",
+        { 'emails' : emails }
+      )
+      .done(function() {
+        alert(1);
+      })
+      .error(function() {
+        alert(0);
+      });
+    },
+    onCancel: function(e) {
+      this.hide();
+
+      e.preventDefault();      
+    },
+    retrieveValues: function() {
+      var emails = [], that = this;
+      _.forEach([0,1,2], function(i) { 
+        var email = $.trim( that.$("#invitation-email-"+i).text() );
+        if(email.length > 0)
+          emails.push(email);
+      });
+      return emails;
+    }
+  });
+
   var InvitedClubView = Backbone.View.extend({
     tagName: "li",
     className: "font-c mb30 cf",
@@ -579,15 +635,31 @@ $(function() {
     template: _.template($("#everyone-view-template").html()),
     initialize: function() {
       this.clubId = this.options.clubId;
+      this.screen = this.options.screen;
 
       this.$el.hide();
 
       this.members = SharedData.getMembers();
       this.members.on('add',    this._onAddOne, this)
-                  .on('reset',  this._onAddAll, this);
+                  .on('reset',  this._onAddAll, this); 
     },
     render: function() {
       this.$el.append(this.template());
+      
+      // Invite button
+      var that = this;
+      this.$(".invite-btn").click(function(e) {
+        var dialoge = that.screen.inviteFriendsDialoge;
+
+        if(!dialoge) {
+          var dialoge = that.screen.inviteFriendsDialoge
+                      = new InviteFriendsDialoge({screen: that.screen, clubId: that.clubId});
+        }
+        dialoge.show();
+
+        e.preventDefault();
+      });
+
       return this;
     },
     show: function() {
@@ -860,14 +932,14 @@ $(function() {
           css = {
             position: 'fixed',
             bottom: margin,
-            left: 297 - L
+            left: 315 - L
           };
         }
         else if( H < h && T > threshold1 ) {
           css = {
             position: 'fixed',
             top: margin,
-            left: 297 - L,
+            left: 315 - L,
           };
         }
         else {

@@ -71,8 +71,8 @@
       <!-- insert data here -->
     </div>
     <div class="m-m-footer">
-      <a href="#" class="c-btn-ok font-d asblock fr color-black fw-bold mt25" ><%%= ok_btn %></a>
-      <a href="#" class="c-btn-cancel font-d asblock fr color-grey3 mt25 mr20 fs16" style="line-height: 1.5;" ><%%= cancel_btn %></a>
+      <a href="#" class="c-btn-ok font-d asblock fr color-black fw-bold mt20" ><%%= ok_btn %></a>
+      <a href="#" class="c-btn-cancel font-d asblock fr color-grey3 mt20 mr20 fs16" style="line-height: 1.5;" ><%%= cancel_btn %></a>
     </div>
   </div>
 </div>
@@ -86,9 +86,18 @@
   <dd id="new-club-description" class="m-f-input font-c color-grey2 fs22 ml40 lh15"  
                         style="white-space: nowrap;overflow: hidden;" 
                         contenteditable="true"><%%= description %></dd>
-  <dt class="font-d fs-ita color-black mt30" style="line-height">Type emails to invite people — you can do this later, too.</dt>
+  <dt class="font-d fs-ita color-black mt15 mb10" style="line-height">Type emails to invite people — you can do this later, too.</dt>
   <%% _.each(invitation_emails, function(email, index) { %>
       <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5  ">f</span><p id="new-club-email-<%%= index %>" class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;<%%= email %></p></dd>
+  <%% }); %>
+</dl>
+</script>
+
+<script type="text/template" id="invite-friends-dialoge-data-template">
+<dl>
+  <dt class="font-d fs20 fs-ita color-black mt5 mb20" style="line-height">Type emails to invite people to join this club.</dt>
+  <%% _.each(invitation_emails, function(email, index) { %>
+      <dd class="ml25"><span class="font-icon fs30 color-grey1 mt5  ">f</span><p id="invitation-email-<%%= index %>" class=" m-f-input inblock column-50 pl10" contenteditable="true">&nbsp;<%%= email %></p></dd>
   <%% }); %>
 </dl>
 </script>
@@ -153,9 +162,6 @@
     <div class="fl column-62">
       <input class="paper-search m-f-input font-d fs13" type="search"  
                placeholder="Search by title" />
-    </div>
-    <div class="fl column-38 fw-bold color-grey2 font-d" style="text-align:right;">
-      <a class="invite-btn notYetImplemented" href="#">Invite people to club</a>
     </div>
   </div>
   <ul style="width:100%;padding-top: 32px;">
@@ -236,9 +242,9 @@
 
 <script type="text/template" id="everyone-view-template">
 <div class="">
-  <p class="mb50 ">
-  <em class="fs36 font-icon color-grey1 ">f</em>
-  <em contenteditable="true" class="inblock underline m-f-input column-38 font-d color-grey2" >Invite friends by Email</em></p>
+  <p class="mb40 mt10">
+  <a><em class="invite-btn hover-f-blue inblock fw-bold underline m-f-input column-38 font-d color-grey2" >Invite people to join the club</em></a>
+  </p>
 </div>
 <ul class="cf ">
 </ul>

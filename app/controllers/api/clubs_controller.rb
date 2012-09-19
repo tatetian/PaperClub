@@ -29,15 +29,8 @@ class Api::ClubsController < ApplicationController
     club = Club.create(params[:club])
     if club
       if Membership.create(club_id: club.id, user_id: current_user.id, role: "admin")
-        emails = params[:invitation_emails]
-        if emails
-          emails.each { |e| 
-            Invitation.create( invitor_id: current_user.id,
-                               invitee_email: e,
-                               club_id: club.id, 
-                               role: "member")
-          }
-        end
+        _send_invitations params[:invitation_emails], club.id
+
         render :json => club
       else
         club.destroy
@@ -86,5 +79,31 @@ class Api::ClubsController < ApplicationController
       end
     end
     error "Failed to quite or delete the club"
+  end
+
+  # Send invitation to people to join this club
+  # URL     POST /api/club/<id>/invitation
+  # ROLE    member
+  # PARAMS  emails
+  def invite
+    club = current_user.clubs.find_by_id(params[:id])
+    if club
+      _send_invitations params[:emails], club.id
+      render :json => {}
+      return
+    end
+    error "Failed to send"
+  end
+
+private
+  def _send_invitations(emails, club_id)
+    if emails
+      emails.each { |e| 
+        Invitation.create( invitor_id: current_user.id,
+                           invitee_email: e,
+                           club_id: club_id, 
+                           role: "member")
+      }
+    end
   end
 end

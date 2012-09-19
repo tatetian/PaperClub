@@ -13,6 +13,7 @@ PaperClub::Application.routes.draw do
 
   # Invitation
   match '/invitations/:token', to: 'invitations#accept', via: :get
+  match '/api/clubs/:id/invitation', to: 'api/clubs#invite', via: :post
   
   # All debug purpose only pages are prefixed "debug"
   # and the following line should be commented in deployment
