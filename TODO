@@ -10,17 +10,22 @@
 
   Remove unncessary club.users num_papers
 
-Tonight:
+  Two-level structure for uploads foler
+
+18th Sep
+* refactor dialoge
+* invitation
+
+19th Sep
 * smart float for filters
 * clicked filter
 * search bar width
 
-
-
-Today
-* refactor dialoge
-* invitation
-  details
+20th Sep
+  Use latest pdf2htmlEX
+  21:20 -- 
+    Expect within 20min
+  Details
 
 Bugs:
   IE no placeholder for search bar

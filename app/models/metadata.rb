@@ -68,7 +68,7 @@ class Metadata < ActiveRecord::Base
     # Replace "-" with "+" because "-" has special meaning in shell command
     res.gsub!('-', '+')
 
-    res + '7'
+    res
   end
 
   def self.find_or_create_from pdf_path, options={}
@@ -104,7 +104,7 @@ class Metadata < ActiveRecord::Base
     json_meta = %x[pdf2htmlEX --only-metadata 1 "#{pdf_path}"] 
     parsed_meta = ActiveSupport::JSON.decode json_meta
 
-    title = parsed_meta["title"]
+    title = parsed_meta["title"][0]
     # Too short
     if title.mb_chars.length < 5
       #title = 
@@ -166,6 +166,12 @@ class Metadata < ActiveRecord::Base
         puts done_all_path
         FileUtils.touch done_all_path
       end
+    end
+  end
+
+  def self.redo_all
+    Metadata.all.each do |metadata|
+      metadata.redo_pdf2html
     end
   end
 end
