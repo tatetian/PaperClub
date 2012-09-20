@@ -746,18 +746,25 @@ $(function() {
       var lastKeywords = "";
       // Init search events
       function _doSearch(e) {
-        var keywords = $(this).val();
+        var keywords = $(this).val(),
+            filters  = that.filterView.getFilters(),
+            tag_id   = filters.tag_id,
+            user_id  = filters.user_id;
         lastKeywords = keywords;
-        that.search(keywords);
+        that.search(keywords, tag_id, user_id);
         e.preventDefault();
       }
       this.$(".paper-search").on("change", _doSearch);
       // Listen clear event
       this.$(".paper-search").on("keyup", function() {
-        var keywords = $(this).val();
+        var keywords = $(this).val(),
+            filters  = that.filterView.getFilters(),
+            tag_id   = filters.tag_id,
+            user_id  = filters.user_id;
+
         if(keywords == "" && lastKeywords != "") {
           lastKeywords = "";
-          that.search(); 
+          that.search(null, tag_id, user_id); 
         }
       });
       // Init more events
@@ -953,6 +960,16 @@ $(function() {
         $filter.css(css);
       }, true);
     },
+    getFilters: function() {
+      var filters = {},
+          tag_id  = this.byTagView.clickedTagId,
+          user_id = this.byPersonView.clickedUserId;
+
+      if(tag_id && tag_id != "0") filters.tag_id = tag_id;
+      if(user_id) filters.user_id = user_id;
+      
+      return filters;
+    },
     reset: function() {
       this.$(".clicked").removeClass("clicked");
       this.byTagView.clickedTagId = this.byPersonView.clickedUserId = null;
@@ -1046,10 +1063,12 @@ $(function() {
     },
     _clickTag: function(e) {
       var $dd = $(e.target).closest("dd"),
-          tag_id = $dd.data("id");
+          tag_id = $dd.data("id"),
+          pl  = this.paperListView;
 
-      this.paperListView.filterView.reset();
+      pl.filterView.reset();
       $dd.addClass("clicked");
+      pl.$(".paper-search").val("");
 
       this.clickedTagId = tag_id;
 
@@ -1100,12 +1119,14 @@ $(function() {
     },
     _clickPerson: function(e) {
       var $dd     = $(e.target).closest("dd"),
-          user_id = $dd.data("id");
+          user_id = $dd.data("id"),
+          pl      = this.paperListView;
       
-      this.paperListView.filterView.reset();
+      pl.filterView.reset();
 
       $dd.addClass("clicked");
       this.clickedUserId = user_id;
+      pl.$(".paper-search").val("");
 
       this.paperListView.search(null, null, user_id);
 
