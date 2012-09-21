@@ -115,7 +115,7 @@
       <dd class="upload-btn-wrapper ml20"><!-- insert upload btn here--></dd>
     </div>  
     <dt class="menu-paper fs18 color-grey3 mt10"><a class="everyone-btn" href="#">EVERYONE</a></dt>
-    <dt class="menu-paper fs18 color-grey3 mt10"><a class="settings-btn disnone" href="#">SETTINGS</a></dt>
+    <dt class="menu-paper fs18 color-grey3 mt10"><a class="settings-btn" href="#">SETTINGS</a></dt>
   </dl>
   <div class="section p-btn-back font-d">
     <a href="#" >
@@ -263,33 +263,28 @@
 </script>
 
 <!------------------- PaperScreen's templates -------------->
-
-<script type="text/template" id="paper-screen-template">
- 
-</script>
-
 <script type="text/template" id="paper-screen-toolbar-template">
-<div class="r-paper-title fs26 font-c color-black fs-ita h100 mt-5">
-   <a href="#" class="notYetImplemented r-btn-fav font-icon fs36  color-grey2 mr5" style="font-style: normal;">*</a>
-   <%%= title %>
+<p class="r-paper-title fs26 font-c color-black fs-ita lh44">
+  <%%= title %>
+</p>
+<div class="r-footer-left pa fl color-grey2" style="height: 44px; width: 200px;"> 
+  <a class="back" href="#/clubs/<%%= club_id %>"><div class="btn"><</div></a>
+  <a class="comments"><div class="btn pr">b<span class="btn-tip">-</span></div></a>
+  <a class="details"><div class="btn pr">Z<span class="btn-tip">-</span></div></a>
 </div>
-<div class="r-footer-left pa fl h100 color-grey2" style="line-height: 44px;"> 
-  <a class="back font-icon fs36 ml15" href="#/clubs/<%%= club_id %>"><</a>
-  <a class="comments font-icon fs36 ml15">b</a>
-  <a class="details font-icon fs36 ml15">Z</a>
-</div>
-<div class="r-footer-right fr pa h100 color-grey2" sytle="line-height: 44px;">
-  <a class="zoomIn font-icon fs36 mr15">y</a>
-  <a class="zoomOut font-icon fs36 mr15">z</a>
-  <a class="download font-icon fs36 mr15" href="<%%= download_url %>">D</a>
+<div class="r-footer-right fr pa h100 color-grey2">
+  <a class="zoomIn"><div class="btn">y</div></a>
+  <a class="zoomOut"><div class="btn">z</div></a>
+  <a class="download" href="<%%= download_url %>"><div class="btn">D</div></a>
 </div>
 </script>
-
-<div id="uploaders-container">
-</div>
 
 <script type="text/javascript">
   var USER_ID = <%= current_user.id %>;
   var USER_NAME = "<%= current_user.fullname %>";
 </script>
+
+<div id="uploaders-container">
+</div>
+
 <!-------------------------- Content --------------------------------->

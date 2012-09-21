@@ -202,13 +202,15 @@ html, body{background-color:#afafaf;}
 .m-m-container.signup{
 	width:960px;
 	height:280px;
-	box-sizing:border-box;
+	box-sizing:border-box; -moz-box-sizing:border-box;
+
   padding: 24px;
 }
 .m-m-container.login{
 	width:320px;
 	height:560px;
-	box-sizing:border-box;
+	box-sizing:border-box;-moz-box-sizing:border-box;
+
 	padding: 42px;
 }
 .log-sign .m-m-overlay{

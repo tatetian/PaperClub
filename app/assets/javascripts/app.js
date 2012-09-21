@@ -426,10 +426,8 @@ $(function() {
         { 'emails' : emails }
       )
       .done(function() {
-        alert(1);
       })
       .error(function() {
-        alert(0);
       });
     },
     onCancel: function(e) {
@@ -681,7 +679,7 @@ $(function() {
 
   var EveryonePersonView = Backbone.View.extend({
     tagName: "li",
-    className: "cf mb30 fl mr50",
+    className: "cf mb30 fl mr60",
     template: _.template($("#everyone-view-person-template").html()),
     initialize: function() {
     },
