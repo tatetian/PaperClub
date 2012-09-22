@@ -222,6 +222,7 @@ $(function() {
       this.render();
 
       this.newClubDialoge = new NewClubDialoge({screen: this});
+      this.accountDialoge = new AccountDialoge({screen: this});
 
       this.clubs = SharedData.getClubs();
       this.clubs.on('add', this.onAddOne, this)
@@ -261,9 +262,12 @@ $(function() {
     },
     clickNavBtn: function(btnName, e) {
       // Color blue if and only if button clicked
-      this.getBtn(this.lastClickedBtn).removeClass('color-blue');
-      this.getBtn(btnName).addClass('color-blue');
-      this.lastClickedBtn = btnName;
+      //this.getBtn(this.lastClickedBtn).removeClass('color-blue');
+      //this.getBtn(btnName).addClass('color-blue');
+      //this.lastClickedBtn = btnName;
+      if(btnName == "account-btn") {
+        this.accountDialoge.show();
+      }
 
       e.preventDefault();
     },
@@ -443,6 +447,38 @@ $(function() {
           emails.push(email);
       });
       return emails;
+    }
+  });
+
+  var AccountDialoge = Dialoge.extend({
+    template: _.template($("#account-dialoge-data-template").html()),
+    okBtn: "Save changes",
+    cancelBtn: "Cancel",
+    width: function() {
+      return ($(window).width() - 48 - 255 - 18 - 36) * 0.5 + 88;
+    },
+    height: 190,
+    initialize: function() {
+      Dialoge.prototype.initialize.apply(this);
+
+      this.clubId = this.options.clubId;
+    },
+    show: function() {
+      Dialoge.prototype.show.apply(this);
+
+      $(window).resize();
+      
+      this.$(".m-m-content").empty().prepend(this.template({
+      }));
+    },
+    onOK: function(e) {
+      e.preventDefault();
+
+      this.hide();
+    },
+    onCancel: function(e) {
+      e.preventDefault();      
+      this.hide();
     }
   });
 
@@ -1945,41 +1981,80 @@ $(function() {
     initialize: function() {
       PsFloatPanel.prototype.initialize.apply(this);
 
-      this.screen = this.options.screen;
-      this.paper  = this.screen.paper;
+      var screen    = this.screen   = this.options.screen,
+          paper     = this.paper    = screen.paper,
+          comments  = this.comments = new Comments(null, {paperId: paper.id});
+
+      comments.on('add',   this._onAddOne, this)
+              .on('reset', this._onAddAll, this);
+      window.comments = comments;
     },
     render: function() {
       PsFloatPanel.prototype.render.apply(this);
-
       
       this.$el.append(this.template());
 
       return this;
-    }
+    },
+    show: function() {
+      PsFloatPanel.prototype.show.apply(this);
+
+      this.comments.fetch(); 
+    },
+    _onAddOne: function(comment) {
+      var commentView = new PsCommentView({comment: comment});
+      this.$("ul").append(commentView.render().$el)
+    },
+    _onAddAll: function() {
+      this.$("ul").empty();
+      this.comments.each(this._onAddOne, this);      
+    }   
   });
 
   var PsCommentView = Backbone.View.extend({
     className: "r-notes-topic cf",
-    template: $($("#ps-comment-template").html()),
+    template: _.template($("#ps-comment-template").html()),
     initialize: function() {
+      var comment = this.comment = this.options.comment,
+          replies = this.replies = comment.getReplies();
+      
+      replies.on('reset', this.render,  this)
+             .on('add',   this._onAddOneReply, this);
     },
     render: function() {
+      this.$el.empty()
+          .append(this.template(this.comment.toJSON()));
+      this.replies.each(this._onAddReply, this);
       return this;
-    }
+    },
+    _onAddReply: function(reply) {
+      var replyView = new PsReplyView({reply: reply});
+      this.$el.append(replyView.render().$el)
+    } 
   });
 
   var PsReplyView = Backbone.View.extend({
     tagName: "li",
     className: "mb20",
-    template: $($("#ps-reply-template").html()),
+    template: _.template($("#ps-reply-template").html()),
     initialize: function() {
+      var reply = this.reply = this.options.reply;
     },
     render: function() {
+      this.$el.empty().append(this.template(this.reply.toJSON()));
       return this;
     }
   });
 
   var Comment = Backbone.Model.extend({
+    parse: function(response) {
+      this.replies = new Replies(response.replies, {commentId: response.id});
+      delete response.replies;
+      return response;
+    },
+    getReplies: function() {
+      return this.replies;
+    } 
   });
 
   var Comments = Backbone.Collection.extend({
@@ -1989,6 +2064,18 @@ $(function() {
     },
     initialize: function(models, options) {
       this.paperId = options.paperId;            
+    }
+  });
+
+  var Reply = Backbone.Model.extend({
+  });
+  var Replies = Backbone.Collection.extend({
+    model: Reply,
+    url: function() {
+      return "/api/notes/" + this.commentId + "/replies"; 
+    },
+    initialize: function(models, options) {
+      this.commentId = options.commentId;
     }
   });
 

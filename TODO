@@ -1,3 +1,22 @@
+For zongbao
+  Features
+  * My account: edit user information
+  @ Edit club name & description 
+    Delete/quit a club
+    UI refinement for details
+  @   Contenteditable for Title
+      Contenteditable for 
+    UI refinement for comments
+    Icons: tags
+    Unselectable: icons
+
+  Bugs
+  @ IE no placeholder: search in title, signup/signin
+    Underline missing for emails in invitation form
+  @ Rounded-corner avatar in Chrome
+  
+
+
 * Hide news column when more
 * Why animation slow? --> Complete callback too many times
 * Add tag data to test

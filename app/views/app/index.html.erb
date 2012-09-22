@@ -102,6 +102,33 @@
 </dl>
 </script>
 
+<script type="text/template" id="account-dialoge-data-template">
+  <dl>
+     <dt class="font-c fw-bold fs24">Edit Your Personal Info</dt>
+     <dd class="cf mt20 ">
+        <img class="asblock fl img96 circle ml30" src="" />
+        <div class="fl cf ml10 ">
+            <p class="mt5">
+               <span class="inblock w120 tr font-d fs16 color-grey2">Fullname:</span>  
+               <input class="font-d fs16 pl10 pr15 hover-border border0" contenteditable=true type="text" value="hzbdesigner" />
+            </p>   
+            <!--p class="mt5">
+               <span class="inblock w120 tr font-d fs16 color-grey2">Email:</span>  
+               <span class="font-d fs16 pl10 pr15 hover-border" contenteditable=true >hzbdesigner@gmail.com</span>
+            </p-->  
+            <p class="mt15">
+               <span class="inblock w120 tr font-d fs16 color-grey2">Password:</span>  
+               <input class="font-d fs16 pl10 pr15 hover-border border0" contenteditable=true type="password" value="123456" />
+            </p> 
+            <p class="mt15">
+               <span class="inblock w120 tr font-d fs16 color-grey2">Confirmation:</span>  
+               <input class="font-d fs16 pl10 pr15 hover-border border0" contenteditable=true type="password" value="123456" />
+            </p>  
+        </div>
+    </dd>
+  </dl>
+</script>
+
 <!------------------- OneClubScreen's templates --------------->
 
 <script type="text/template" id="club-screen-template">
@@ -288,26 +315,24 @@
 <script type="text/template" id="ps-comment-template">
 <li class="mb20">
   <div class="header color-grey2 clearfloat">
-    <span class="fl fs14 font-c fw-bold fs-ita mt5">tody morning</span>
+    <span class="fl fs14 font-c fw-bold fs-ita mt5"><%%= date %></span>
     <span class="r-notes-btns fr" >
       <a href="#" class="r-btn-reply  fs24 ml10 font-icon">o</a>
       <a href="#" class="r-btn-edit  fs24 ml10 font-icon">r</a>
       <a href="#" class="r-btn-del  fs24 ml10 font-icon">X</a>
     </span>
   </div>
-  <p class="content cb fs16 font-c textin2 mt5">It is essential to the success of interaction design that designers find a way to understand the perceptions of users.
-  </p>
+  <p class="content cb fs16 font-c textin2 mt5"><%%= content %> </p>
   <div class="footer clearfloat">
-    <a href="#" class="r-btn-pin color-grey1 fl font-icon fs36 pb5">,</a>
-    <img class="img-header fr" src="header.png" />
-    <a href="#" class="r-notes-name fr fs16 mr5 mt15 fw-bold">用户名</a>
+    <img class="img-header fr" src="/avatars/m/<%%= user.avatar_url %>.png" />
+    <a href="#" class="r-notes-name fr fs16 mr5 mt15 fw-bold"><%%= user.fullname %></a>
   </div>
 </li>
 </script>
 
-<script type="text/template" id="ps-relpy-template">
+<script type="text/template" id="ps-reply-template">
 <div class="header color-grey2 clearfloat">
-  <span class="fl fs14 font-c fw-bold fs-ita mt5"><%%= date %></span>
+  <span class="fl fs14 font-c fw-bold fs-ita mt5"></span>
   <span class="r-notes-btns fr">
       <a href="#" class="r-btn-reply fs24 ml10 font-icon">o</a>
       <a href="#" class="r-btn-edit fs24 ml10 font-icon">r</a>
@@ -316,9 +341,8 @@
 </div>
 <p class="content cb fs16 font-c textin2 mt5"><%%= content %></p>
 <div class="footer clearfloat">
-  <a href="#" class="r-btn-pin color-grey1 fl font-icon fs36 pb5">,</a>
-  <img class="img-header fr" src="<%%= avatar_url %>" />
-  <a href="#" class="r-notes-name fr fs16 mr5 mt15 fw-bold"><%%= fullname %></a>
+  <img class="img-header fr" src="/avatars/s/<%%= user.avatar_url %>.png" />
+  <a href="#" class="r-notes-name fr fs16 mr5 mt15 fw-bold"><%%= user.fullname %></a>
 </div>
 </script>
 

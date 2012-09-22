@@ -15,6 +15,7 @@ class Note < ActiveRecord::Base
     user = User.find_by_id(self.user_id)
     {
       :id       => self.id,
+      :date     => self.updated_at,
       :content  => self.content,
       :paper_id => self.paper_id,
       :user     => user.as_json(options),
