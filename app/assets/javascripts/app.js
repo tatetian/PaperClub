@@ -909,7 +909,7 @@ $(function() {
     },
     render: function() {
       var news = this.paper.get('news');
-      if(news) news.time = this.formatDate(news.time);
+      if(news) news.time = formatDate(news.time);
 
       this.$el.empty()
               .append(this.template({
@@ -923,21 +923,6 @@ $(function() {
                         news: news
                       }));
       return this;       
-    },
-    formatDate: function(date) {
-      if(!date) return "";
-
-      var d = new Date(Date.parse(date)),
-          n = new Date();   // now
-
-      if( ( d.getDate()  == n.getDate()  ) &&
-          ( d.getMonth() == n.getMonth() ) && 
-          ( d.getYear()  == n.getYear()  ) ) {
-        return d.toLocaleTimeString();
-      }
-      else {
-        return d.toDateString();
-      }
     }
   });
 
@@ -2151,6 +2136,35 @@ $(function() {
         };
     return _data;
   })();
+
+  var formatDate = PaperClub.formatDate = (function() { 
+    var min1  = 60 * 1000,
+        min10 = 10 * min1,
+        hr1   =  6 * min10,
+        hr24  = 24 * hr1,
+        months = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"],
+        subfix = ["th", "st", "nd", "rd"];
+
+    return function(date) {
+      if(!date) return "";
+
+      var d = new Date(Date.parse(date)),
+          n = new Date(),   // now
+          l = n - d;
+
+      if( l <= min10 ) return "Just now";
+      else if( l <= hr1 ) return Math.round(l/min1) + " mins ago";
+      else if( l <= hr24 ) return Math.round(l/hr1) + " hours ago";
+
+      var dd  = d.getDate(),
+          ds  = subfix[dd % 10 > 3 ? 0 : (dd % 100 - dd % 10 != 10) * dd % 10],
+          yr  = d.getYear() != n.getYear() ? " " + d.getFullYear() : "",
+          res = months[d.getMonth()] + " " + dd + ds + yr;
+        
+      return res;
+    }
+  })();
+
 
   $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");
