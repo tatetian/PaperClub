@@ -1305,8 +1305,8 @@ $(function() {
           that.pageNumber = new PsPageNumber({screen: that});
           that.toolbar = new PsToolbar({screen: that});
      
-   //       that.commentsPanel = new PsCommentsPanel({screen: that});
-   //       that.detailsPanel  = new PsDetailsPanel({screen: that});
+          that.commentsPanel = new PsCommentsPanel({screen: that});
+          that.detailsPanel  = new PsDetailsPanel({screen: that});
 
           that.render();  
         }
@@ -1316,9 +1316,9 @@ $(function() {
       this.$el.empty()
               .append(this.pageNumber.render().$el)
               .append(this.toolbar.render().$el)
-              .append(this.viewport.render().$el);
-        //      .append(this.commentsPanel.render().$el)
-//              .append(this.detailsPanel.render().$el);
+              .append(this.viewport.render().$el)
+              .append(this.commentsPanel.render().$el)
+              .append(this.detailsPanel.render().$el);
 
       return this;      
     }
@@ -1742,7 +1742,7 @@ $(function() {
 
   var PsToolbar = Backbone.View.extend({
     className: "r-footer active bgwhite shadow0210 tc",
-    template: _.template($("#paper-screen-toolbar-template").html()),
+    template: _.template($("#ps-toolbar-template").html()),
     events: {
       "click a.zoomIn": "clickZoomIn",
       "click a.zoomOut": "clickZoomOut",
@@ -1751,6 +1751,7 @@ $(function() {
     },
     autoHide: false,
     visible: true,
+    currentPanel: null,
     initialize: function() {
       this.screen = this.options.screen;
       this.paper = this.screen.paper;
@@ -1834,12 +1835,38 @@ $(function() {
       this.screen.viewport.zoomOut();
     },
     clickComments: function(e) {
-      alert('click comments'); 
-      e.preventDefault();
+      this._togglePanel('comments', e);
     },
     clickDetails: function(e) {
-      alert('click details');
-      e.preventDefault();
+      this._togglePanel('details', e);
+    },
+    _togglePanel: function(name, e) {
+      var panels = {
+        details: this.screen.detailsPanel, 
+        comments: this.screen.commentsPanel
+          },  
+          that = this,
+          $btn = $(e.target).closest("a").find(".btn");
+
+      this.$(".clicked.btn").removeClass('clicked');
+
+      // Show/hide panels
+      _.each(panels, function(p, n) {
+        if (n == name) {
+          if ( that.currentPanel != p ) {
+            p.show();
+            $btn.addClass('clicked');
+            that.currentPanel = p;
+          }
+          else {
+            p.hide();
+            that.currentPanel = null;
+          }
+        }
+        else {
+          p.hide();
+        }
+      });
     }
   });
 
@@ -1879,10 +1906,11 @@ $(function() {
 
   _.extend(PsFloatPanel.prototype, Backbone.View.prototype, {
     className: "r-sidebar column-38 bgwhite shadow024 cf",
+    baseTemplate: _.template($("#ps-float-panel-template").html()),
     initialize: function() {
-      
     },
     render: function() {
+      this.$el.append(this.baseTemplate());
       return this;
     },
     show: function() {
@@ -1896,11 +1924,72 @@ $(function() {
   PsFloatPanel.extend = Backbone.View.extend;
 
   var PsDetailsPanel = PsFloatPanel.extend({
-  
+    template: _.template($("#ps-details-panel-template").html()),
+    initialize: function() {
+      PsFloatPanel.prototype.initialize.apply(this);
+
+      this.screen = this.options.screen;
+      this.paper  = this.screen.paper;
+    },
+    render: function() {
+      PsFloatPanel.prototype.render.apply(this);  
+
+      this.$el.append(this.template(this.paper.toJSON()));
+
+      return this;
+    }
   });
 
   var PsCommentsPanel = PsFloatPanel.extend({
-  
+    template: _.template($("#ps-comments-panel-template").html()),
+    initialize: function() {
+      PsFloatPanel.prototype.initialize.apply(this);
+
+      this.screen = this.options.screen;
+      this.paper  = this.screen.paper;
+    },
+    render: function() {
+      PsFloatPanel.prototype.render.apply(this);
+
+      
+      this.$el.append(this.template());
+
+      return this;
+    }
+  });
+
+  var PsCommentView = Backbone.View.extend({
+    className: "r-notes-topic cf",
+    template: $($("#ps-comment-template").html()),
+    initialize: function() {
+    },
+    render: function() {
+      return this;
+    }
+  });
+
+  var PsReplyView = Backbone.View.extend({
+    tagName: "li",
+    className: "mb20",
+    template: $($("#ps-reply-template").html()),
+    initialize: function() {
+    },
+    render: function() {
+      return this;
+    }
+  });
+
+  var Comment = Backbone.Model.extend({
+  });
+
+  var Comments = Backbone.Collection.extend({
+    model: Comment,
+    url: function() { 
+      return "/api/papers/" + this.paperId + "/notes";
+    },
+    initialize: function(models, options) {
+      this.paperId = options.paperId;            
+    }
   });
 
   // ==========================================

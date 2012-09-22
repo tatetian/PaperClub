@@ -5,8 +5,8 @@
     <div class="section main">
       <div class="bg-logo p-logo"></div>
       <div class="header fs18 color-grey3  mb15 font-d mt30">
-        <a href="#" class="asblock mb10 hover-f-blue color-blue clubs-btn">MY CLUBS</a>
-        <a href="#" class="asblock mb10 hover-f-blue account-btn">MY ACCOUNT</a>
+        <a class="asblock mb10 hover-f-blue color-blue clubs-btn">MY CLUBS</a>
+        <a class="asblock mb10 hover-f-blue account-btn">MY ACCOUNT</a>
       </div>
     </div>
     <div class="section p-btn-back font-d">
@@ -263,7 +263,7 @@
 </script>
 
 <!------------------- PaperScreen's templates -------------->
-<script type="text/template" id="paper-screen-toolbar-template">
+<script type="text/template" id="ps-toolbar-template">
 <p class="r-paper-title fs26 font-c color-black fs-ita lh44">
   <%%= title %>
 </p>
@@ -277,6 +277,72 @@
   <a class="zoomOut"><div class="btn">z</div></a>
   <a class="download" href="<%%= download_url %>"><div class="btn">D</div></a>
 </div>
+</script>
+
+<script type="text/template" id="ps-float-panel-template">
+  <div class="r-cover column-38">
+    <div class="r-cover-background"></div>
+  </div>
+</script>
+
+<script type="text/template" id="ps-comment-template">
+<li class="mb20">
+  <div class="header color-grey2 clearfloat">
+    <span class="fl fs14 font-c fw-bold fs-ita mt5">tody morning</span>
+    <span class="r-notes-btns fr" >
+      <a href="#" class="r-btn-reply  fs24 ml10 font-icon">o</a>
+      <a href="#" class="r-btn-edit  fs24 ml10 font-icon">r</a>
+      <a href="#" class="r-btn-del  fs24 ml10 font-icon">X</a>
+    </span>
+  </div>
+  <p class="content cb fs16 font-c textin2 mt5">It is essential to the success of interaction design that designers find a way to understand the perceptions of users.
+  </p>
+  <div class="footer clearfloat">
+    <a href="#" class="r-btn-pin color-grey1 fl font-icon fs36 pb5">,</a>
+    <img class="img-header fr" src="header.png" />
+    <a href="#" class="r-notes-name fr fs16 mr5 mt15 fw-bold">用户名</a>
+  </div>
+</li>
+</script>
+
+<script type="text/template" id="ps-relpy-template">
+<div class="header color-grey2 clearfloat">
+  <span class="fl fs14 font-c fw-bold fs-ita mt5"><%%= date %></span>
+  <span class="r-notes-btns fr">
+      <a href="#" class="r-btn-reply fs24 ml10 font-icon">o</a>
+      <a href="#" class="r-btn-edit fs24 ml10 font-icon">r</a>
+      <a href="#" class="r-btn-del fs24 ml10 font-icon">X</a>
+  </span>
+</div>
+<p class="content cb fs16 font-c textin2 mt5"><%%= content %></p>
+<div class="footer clearfloat">
+  <a href="#" class="r-btn-pin color-grey1 fl font-icon fs36 pb5">,</a>
+  <img class="img-header fr" src="<%%= avatar_url %>" />
+  <a href="#" class="r-notes-name fr fs16 mr5 mt15 fw-bold"><%%= fullname %></a>
+</div>
+</script>
+
+<script type="text/template" id="ps-comments-panel-template">
+<p class="font-d color-black fs18 mb15" >NOTES</p>
+<ul>
+  <!-- insert comments and replies here -->
+</ul>
+</script>
+
+<script type="text/template" id="ps-details-panel-template">
+<div class="pr r-d-title">
+  <span class="font-d color-grey3 fs24 ">Title</span>
+  <p class="mb20 font-c fs26 color-grey3 fs-ita mt20"><%%= title %></p>
+  <span class="pa r-details-btn"><a class="font-icon fs24 color-grey2 hover-f-blue disnone">r</a></span>
+</div>
+<dl class="pr mt20 r-d-tag">
+  <span class="font-d color-grey3 fs24">Tags</span>
+  <dt class="mb20 mt15 font-c fs20 color-grey2 m-f-input " contenteditable="true">+tags</dt>
+  <%% _.each(tags, function(tag) { %>
+    <dd class="font-c color-grey2 fs-ita fs24 mb20"><%%= tag.name %></dd>
+  <%% }); %>
+  <span class="pa r-details-btn"><a class="font-icon fs24 color-grey2 hover-f-blue disnone">r</a></span>
+</dl>
 </script>
 
 <script type="text/javascript">

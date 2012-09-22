@@ -9,5 +9,16 @@ class Note < ActiveRecord::Base
   belongs_to  :paper
   has_many    :replies
 
-  default_scope :order => 'notes.created_at DESC'
+  default_scope :order => 'notes.created_at ASC'
+
+  def as_json(options)
+    user = User.find_by_id(self.user_id)
+    {
+      :id       => self.id,
+      :content  => self.content,
+      :paper_id => self.paper_id,
+      :user     => user.as_json(options),
+      :replies  => self.replies.as_json(options)
+    }
+  end
 end

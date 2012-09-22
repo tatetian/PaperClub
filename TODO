@@ -28,11 +28,22 @@
   Details
   22:55 -- 
 
+21th Sep
+  Details
+
 Bugs:
   IE no placeholder for search bar
+  IE signup/login no text
+  Underline missing for emails in invitation form
+
   min-height & boxing-sizing:border bug in FF
+  
   Filter smart float bottom too small
   Filter not working for newly created club
+
+Feature requests
+  Lost password
+  Feedback
 
 Wen Xin
 * By person
