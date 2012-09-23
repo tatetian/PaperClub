@@ -192,6 +192,10 @@ background-size: cover;
 .p-logo{height:50px; width:170px;}
 /*page-papers-css*/
 html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; color:#000; min-width:960px; overflow: auto; }
+::selection {
+ background: rgba(46, 161, 221, 0.5)
+}
+
 .p-page-content{ 
   position:relative;  margin:24px; width:auto; overflow:hidden;
   background-color: white;
@@ -429,6 +433,9 @@ color: #2ea1dd;
   visibility: hidden;
   position:absolute;
   overflow:hidden;
+}
+.p ::selection {
+  background: #2ea1dd; 
 }
 .l {
   position:absolute;
