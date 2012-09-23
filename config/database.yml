@@ -13,7 +13,7 @@ development:
   database: PaperClub_development
   pool: 5
   username: root
-  password: '123456'
+  password: '25be7ad6c8'
   host: localhost
 
 # Warning: The database defined as "test" will be erased and
@@ -26,7 +26,7 @@ test:
   database: PaperClub_test
   pool: 5
   username: root
-  password: '123456'
+  password: '25be7ad6c8'
   host: localhost
 
 production:
@@ -36,5 +36,5 @@ production:
   database: PaperClub_production
   pool: 50
   username: root
-  password: '123456'
+  password: '25be7ad6c8'
   host: localhost
