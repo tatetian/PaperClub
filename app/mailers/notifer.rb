@@ -13,6 +13,6 @@ class Notifer < ActionMailer::Base
     @link       = "http://www.paperclub.com/invitations/#{invitation.token}"
   
     mail  to: invitation.invitee_email,
-          subject: "#{@invitor.fullname} invites you to join PaperClub"
+          subject: "#{@invitor.fullname}'s invitation is waiting for your response"
   end
 end
