@@ -165,8 +165,7 @@
 
 
 /*page-papers-css*/
-html , body { width:100%; background-color:#fff; color:#000; min-width:1024px;}
-html, body{background-color:#afafaf;}
+html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; color:#000; min-width:1024px;}
 .p-page-content{ position:relative;  margin:24px; width:auto; overflow:hidden;}
 .i-sidebar-left{
 	position:absolute;
@@ -214,7 +213,7 @@ html, body{background-color:#afafaf;}
 	padding: 42px;
 }
 .log-sign .m-m-overlay{
-	background-color:#afafaf;
+  background: #afafaf url(grey_bg.jpg) repeat fixed; 
 }
 #slides{
 	text-align:center;

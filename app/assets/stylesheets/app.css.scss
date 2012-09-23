@@ -186,13 +186,12 @@ input[type=search].m-f-input{
 
 
 .bg-logo {
-background: url(logo.png) no-repeat;
+background: url(logo_s.png) no-repeat;
 background-size: cover;
 }
 .p-logo{height:50px; width:170px;}
 /*page-papers-css*/
-html , body { width:100%; background-color:#fff; color:#000; min-width:960px;}
-html, body{background-color:#afafaf; overflow: auto; }
+html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; color:#000; min-width:960px; overflow: auto; }
 .p-page-content{ 
   position:relative;  margin:24px; width:auto; overflow:hidden;
   background-color: white;
