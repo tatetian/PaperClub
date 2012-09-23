@@ -12,7 +12,7 @@
     <div class="section p-btn-back font-d">
       <a href="#" id="signout-btn">
         <span class="asblock fs13 color-grey2 ">Sign out</span>
-        <span class="asblock fs16 color-grey3 "><%= @user.fullname %></span>
+        <span class="name asblock fs16 color-grey3 "><%= @user.fullname %></span>
       </a>
     </div>
   </div>
@@ -103,30 +103,26 @@
 </script>
 
 <script type="text/template" id="account-dialoge-data-template">
-  <dl>
-     <dt class="font-c fw-bold fs24">Edit Your Personal Info</dt>
-     <dd class="cf mt20 ">
-        <img class="asblock fl img96 circle ml30" src="" />
-        <div class="fl cf ml10 ">
-            <p class="mt5">
-               <span class="inblock w120 tr font-d fs16 color-grey2">Fullname:</span>  
-               <input class="font-d fs16 pl10 pr15 hover-border border0" contenteditable=true type="text" value="hzbdesigner" />
-            </p>   
-            <!--p class="mt5">
-               <span class="inblock w120 tr font-d fs16 color-grey2">Email:</span>  
-               <span class="font-d fs16 pl10 pr15 hover-border" contenteditable=true >hzbdesigner@gmail.com</span>
-            </p-->  
-            <p class="mt15">
-               <span class="inblock w120 tr font-d fs16 color-grey2">Password:</span>  
-               <input class="font-d fs16 pl10 pr15 hover-border border0" contenteditable=true type="password" value="123456" />
-            </p> 
-            <p class="mt15">
-               <span class="inblock w120 tr font-d fs16 color-grey2">Confirmation:</span>  
-               <input class="font-d fs16 pl10 pr15 hover-border border0" contenteditable=true type="password" value="123456" />
-            </p>  
-        </div>
-    </dd>
-  </dl>
+<dl>
+  <dt class="font-c fw-bold fs24">Edit your account</dt>
+  <dd class="cf mt20 mb5">
+    <img class="asblock fl img96 circle ml50" src="/avatars/l/<%%= avatar_url %>.png" />
+    <div class="fl cf ml10">
+      <p class="mt5">
+         <span class="inblock w120 tr font-d fs16 color-grey2">Full name:</span>  
+         <input id="account-fullname" class="font-d fs16 pl10 pr15 border1" type="text" value="<%%= fullname %>" />
+      </p>   
+      <p class="mt15">
+         <span class="inblock w120 tr font-d fs16 color-grey2">Password:</span>  
+         <input id="account-password" class="font-d fs16 pl10 pr15 border1" type="password" value="" />
+      </p> 
+      <p class="mt15">
+         <span class="inblock w120 tr font-d fs16 color-grey2">Confirmation:</span>  
+         <input id="account-confirmation" class="font-d fs16 pl10 pr15 border1" type="password" value="" />
+      </p>  
+    </div>
+  </dd>
+</dl>
 </script>
 
 <!------------------- OneClubScreen's templates --------------->
@@ -371,7 +367,8 @@
 
 <script type="text/javascript">
   var USER_ID = <%= current_user.id %>;
-  var USER_NAME = "<%= current_user.fullname %>";
+  var USER_FULLNAME = "<%= current_user.fullname %>";
+  var USER_AVATAR_URL = "<%= current_user.avatar_url %>";
 </script>
 
 <div id="uploaders-container">

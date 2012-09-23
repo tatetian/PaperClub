@@ -256,6 +256,10 @@ $(function() {
           that.clickNavBtn(btnName, e);
         });
       });
+      // Update name
+      Member.me.on('change', function() {
+        that.$("#signout-btn > .name").text(Member.me.get('fullname'));
+      });
     },
     getBtn: function(btnName) {
       return this.$('.p-sidebar .' + btnName);
@@ -454,31 +458,46 @@ $(function() {
     template: _.template($("#account-dialoge-data-template").html()),
     okBtn: "Save changes",
     cancelBtn: "Cancel",
-    width: function() {
-      return ($(window).width() - 48 - 255 - 18 - 36) * 0.5 + 88;
-    },
-    height: 190,
+    width: 560, 
+    height: 200,
     initialize: function() {
       Dialoge.prototype.initialize.apply(this);
-
-      this.clubId = this.options.clubId;
+      
+      this.me = Member.me;
+      this.me.on('change', this.render, this);
+    },
+    render: function() {
+      this.$(".m-m-content").empty().append(this.template(this.me.toJSON()));
+      return this;
     },
     show: function() {
       Dialoge.prototype.show.apply(this);
 
-      $(window).resize();
-      
-      this.$(".m-m-content").empty().prepend(this.template({
-      }));
+      this.render();
+      this.me.fetch();
     },
     onOK: function(e) {
       e.preventDefault();
 
+      var values = this.retrieveValues();
+      this.me.set(values);
+      this.me.save();
       this.hide();
     },
     onCancel: function(e) {
       e.preventDefault();      
       this.hide();
+    },
+    retrieveValues: function() {
+      var values = {
+        fullname: this.$("#account-fullname").val(),
+        password: this.$("#account-password").val(),
+        password_confirmation: this.$("#account-confirmation").val()
+      };
+      return values;
+    },
+    validate: function() {
+    
     }
   });
 
@@ -1277,7 +1296,17 @@ $(function() {
     }
   });
 
-  var Member = Backbone.Model.extend({
+  var Member = PaperClub.Member = Backbone.Model.extend({
+    urlRoot: "/api/users/",
+    defaults: {
+      fullname: "", avatar_url: ""
+    }
+  });
+
+  Member.me = new Member({
+    id: USER_ID, 
+    fullname: USER_FULLNAME,
+    avatar_url: USER_AVATAR_URL 
   });
 
   var Members = Backbone.Collection.extend({

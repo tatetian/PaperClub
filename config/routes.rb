@@ -30,7 +30,7 @@ PaperClub::Application.routes.draw do
   # All the url of Web services are prefixed "api"
   namespace :api do
     # Create a user and update user's profile
-    resources :users, only: [:create, :update] 
+    resources :users, only: [:create, :update, :show] 
 
     resources :clubs do
       # List users of the club

@@ -34,34 +34,33 @@ class Api::UsersController < ApplicationController
   #
   # PUT http://www.paperclub.com/user/<user_id>
   # PARAMS  fullname
-  #         email
+  #         password
+  #         password_confirmation
   # ROLE    self
   def update
-    @user = User.find(params[:id])
-#    unless signed_in?
-#      error "Must sign in first"
-#      return
-#    end
-#    unless @user.id == current_user.id
-#      error "Can't change other user's info"
-#      return
-#    end
-    unless @user.update_attributes(params[:user])
+    if params[:id].to_i == current_user.id 
+      attrs = {}
+      [:fullname, :password, :password_confirmation].each{ |key|
+        attrs[key] = params[key] if params[key]
+      }
+      current_user.update_attributes(attrs)
+
+      render :json => current_user
+    else
       error 'Failed to update'
-      return
     end
-    # OK
-    render :json => @user
   end
 
   # Show info of a user in a club
   #
-  # URL     GET http://www.paperclub.com/club/<club_id>/user/<user_id>
+  # URL     GET http://www.paperclub.com/user/<user_id>
   # ROLE    self, member
   def show
-  #  @user = User.find(params[:id])
-  #if current_user? @user  
-  #    render :json => @user
+    if params[:id].to_i == current_user.id
+      render :json => current_user
+    else
+      error "Access denied"
+    end
   end
 
   # List all users in a club

@@ -1,4 +1,4 @@
-For zongbao
+===For zongbao===
   Features
   * My account: edit user information
   @ Edit club name & description 
@@ -14,112 +14,52 @@ For zongbao
   @ IE no placeholder: search in title, signup/signin
     Underline missing for emails in invitation form
   @ Rounded-corner avatar in Chrome
-  
+    Button tip of toolbar of reader has no shadow in IE9
 
+===For me===
+Before launch todo
+  Edit profile
+  10: 40 -- 12: 10  1h30min
+   
+  Edit club's name & description
+  Delete club
 
-* Hide news column when more
-* Why animation slow? --> Complete callback too many times
-* Add tag data to test
-* Add events handlers
-
-
-* Default random avatar
-
-* Add all to tag filter panel
-
-  Remove unncessary club.users num_papers
-
-  Two-level structure for uploads foler
-
-18th Sep
-* refactor dialoge
-* invitation
-
-19th Sep
-* smart float for filters
-* clicked filter
-* search bar width
-
-20th Sep
-  Use latest pdf2htmlEX
-  21:20 --21:40 
-    Expect within 20min
-  Details
-  22:55 -- 
-
-21th Sep
-  Details
-
-Bugs:
-  IE no placeholder for search bar
-  IE signup/login no text
-  Underline missing for emails in invitation form
-
-  min-height & boxing-sizing:border bug in FF
-  
-  Filter smart float bottom too small
-  Filter not working for newly created club
-
-Feature requests
-  Lost password
-  Feedback
-
-Wen Xin
-* By person
-* By tag
-* People
-
-* Details
-* Comments
-
-  Settings
-* Default random avatar
-
-  Upload 
-  Avatars
-  Homepage
-
-Zongbao
-  Edit avatar
-
-Me
-  Details
-  Notes
-  Filters
-
-Iteration 1: More about sharing
   Details(me)
     Edit title
     Tags
       List, add, delete
     Delete paper
 
-  Filters(wenxin->me)
-    By tag
-    By user
+  Delete paper
 
-  Highlight search keywords
-
-Iteration 2: People meet here
-  Default random avatar(wenxin)
-
-  People(wenxin->zongbao->me)
-    List members
-    Edit profile
-    Edit avatar
-    Invite more people
-
-  Settings(wenxin->zongbao->me)
-    Edit name & description
-    Delete club
-
-Iteration 3: Knowledge is shared
   Notes(me)
     Add, delete, edit and list
   News
 
-Iteration 4: Sunrising
+  Fav count
+  Read count
+  Note count
+
+  Bugs:
+    Uploading in IE
+    Filter not working for newly created club
+
+  Two-level structure for uploads foler
+
   Slogan refinement
+
+After launch todos
+  Edit avatar
+
+  Lost password
+  Feedback
+ 
+  Remove unncessary club.users num_papers
+
+  min-height & boxing-sizing:border bug in FF
+  
+  Filter smart float bottom too small
+
   Homepage improvement:
     Why -> How -> What
     Make people believe what we believe
@@ -127,16 +67,6 @@ Iteration 4: Sunrising
     Shwo statistics and comments
 
   Signup: js validate, error message 
-
-  Refactor uploads directory structure as two-level instead of flat structure
-
-  Integration test
-
-  All id start from 1000
-
-Bugs
-  Uploading in IE
-  Search in IE
 
 What I Learned
   String.gsub
