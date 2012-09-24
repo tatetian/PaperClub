@@ -533,7 +533,7 @@ $(function() {
 
   var JoinedClubView = Backbone.View.extend({
     tagName: "li",
-    className: "font-c cf mb40 ",
+    className: "font-c cf mb40 pr",
     template: _.template($("#joined-club-template").html()),
     initialize: function() {
       this.club = this.options.club;
@@ -774,6 +774,7 @@ $(function() {
       this.screen = this.options.screen;
 
       this.$el.append(this.template());
+      this.$(".paper-search").placeholder();
       this.filterView = new PaperFilterView({clubId: this.clubId, paperListView: this,
                                              el: this.$(".p-paper-filter")});
 
