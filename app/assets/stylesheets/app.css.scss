@@ -341,6 +341,7 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 
 .r-viewport {
   width: 100%;
+  margin-bottom: 57px;
 }
 .r-viewport-page{
   margin: 13px auto;
@@ -433,9 +434,6 @@ color: #2ea1dd;
   visibility: hidden;
   position:absolute;
   overflow:hidden;
-}
-.p ::selection {
-  background: #2ea1dd; 
 }
 .l {
   position:absolute;

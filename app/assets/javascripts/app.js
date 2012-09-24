@@ -1194,13 +1194,14 @@ $(function() {
       
       this.screen = this.options.screen;
       this.papers = SharedData.getPapers();
-
+window.upload_btn = this.$el;
       var uploader = this.uploader = new plupload.Uploader({
-        runtimes : 'html5',
+        runtimes : 'html5, flash, html4',
         browse_button : 'paper-upload-btn',
         max_file_size : '10mb',
         url : '/api/clubs/' + clubId + '/papers',
         container: 'uploaders-container',
+        flash_swf_url: '/assets/javascripts/plupload.flash.swf',
         multipart_params: {
         },
         filters : [
@@ -1231,7 +1232,6 @@ $(function() {
           uploader = this.uploader,
           state    = this._state;
 
-        
       uploader.init();
       uploader.bind('FilesAdded', function(up, files) {
         //$.each(files, function(i, file) {
