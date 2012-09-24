@@ -87,5 +87,4 @@ input[type=search]::-webkit-search-results-decoration {
 input[type=search] {
   -webkit-appearance: textfield;
   -webkit-box-sizing: content-box;
-  outline:none; border:none;
 }

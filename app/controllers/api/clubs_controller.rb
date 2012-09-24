@@ -74,8 +74,7 @@ class Api::ClubsController < ApplicationController
         # Delete club (optional) if you're an admin
         club.destroy if params[:delete_club] and membership.role == "admin"
 
-        render :json => { id: club.id }
-        return
+        render :json => { id: club.id } and return
       end
     end
     error "Failed to quite or delete the club"

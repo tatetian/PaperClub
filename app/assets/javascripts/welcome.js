@@ -25,4 +25,6 @@ $(function( ){
     preload: true,
     preloadImage: "assets/loading.gif"
   });
+
+  $('input, textarea').placeholder();
 });

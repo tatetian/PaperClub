@@ -11,9 +11,9 @@
     Unselectable: icons
 
   Bugs
-  @ IE no placeholder: search in title, signup/signin
-    Underline missing for emails in invitation form
-  @ Rounded-corner avatar in Chrome
+  * IE no placeholder: search in title, signup/signin
+  * Underline missing for emails in invitation form
+  * Rounded-corner avatar in Chrome
     Button tip of toolbar of reader has no shadow in IE9
 
 ===For me===
