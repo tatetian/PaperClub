@@ -563,7 +563,7 @@ $(function() {
   var ConfirmDelPaperDialoge = Dialoge.extend({
     template: _.template($("#confirm-del-paper-template").html()),
     cancelBtn: "Cancel",
-    okBtn: "Delete club",
+    okBtn: "Delete paper",
     width: 550,
     height: 80,
     initialize: function() {
