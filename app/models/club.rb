@@ -10,6 +10,7 @@ class Club < ActiveRecord::Base
   validate :name, presence: true
 
   def as_json(options)
+    admins = []
     {
       :id           => self.id, 
       :name         => self.name,
@@ -18,8 +19,12 @@ class Club < ActiveRecord::Base
       :num_notes    => 0,
       :num_members  => self.users.count,
       :users        => self.users.map { |u|
+                          if u.memberships.find_by_club_id(self.id).role == 'admin'
+                            admins << u.id 
+                          end
                           u.as_json(options)
-                       }
+                       },
+      :admins       => admins
     }
   end
 

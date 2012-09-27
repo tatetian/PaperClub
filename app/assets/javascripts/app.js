@@ -332,17 +332,29 @@ $(function() {
   }
 
   _.extend(EditableView.prototype, Backbone.View.prototype, {
+    _disabled: false,
     _editting: false,
     _template: _.template($("#edit-mode-buttons").html()),
     initialize: function() {
+    },
+    disable: function() {
+      this._disabled = true;
+
+      this.$(".editable").removeAttr('contenteditable')
+                         .removeClass('hover-border');
+    },
+    enable: function() {
+      this._disabled = false;
+
+      this.$(".editable").attr('contenteditable', true)
+                         .addClass('hover-border');
     },
     initEvents: function() {
       var ok      = this.options.ok     || "Save change",
           cancel  = this.options.cancel || "Cancel";
 
       // Elements
-      this.$(".editable").attr('contenteditable', true)
-                         .addClass('hover-border');
+      this.enable();
       this.$el.append(this._template({ok: ok, cancel: cancel}));
 
       // Events
@@ -354,22 +366,20 @@ $(function() {
         e.preventDefault();
         that._finishEdit(true);
       });
-
       this.$(".cancel-btn").click(function(e) {
         e.preventDefault();
         that._finishEdit(false);
       });
-
     },
     _startEdit: function() {
-      if(this._editting) return;
+      if(this._editting || this._disabled) return;
 
       this._editting = true; 
       this.$el.addClass('editting'); 
       this.$(".edit-btns").slideFadeToggle(300);
     },
     _finishEdit: function(saveChanges) {
-      if(!this._editting) return;
+      if(!this._editting || this._disabled) return;
 
       this._editting = false;
       this.$el.removeClass('editting');
@@ -829,12 +839,19 @@ $(function() {
 
       this.club.on("change", this.render, this)
                .fetch();
+      this.disable();
     },
     render: function() {
       this.$el.empty()
               .append(this.template(this.club.toJSON()));
 
       this.initEvents();
+
+      var admins = this.club.get('admins');
+      if(admins && admins.indexOf(USER_ID) >= 0)
+        this.enable();
+      else
+        this.disable();
 
       this.on('ok',      this.onOk,          this)
           .on('cancel',  this.onCancel,      this);
