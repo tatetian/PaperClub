@@ -2,10 +2,10 @@ class Club < ActiveRecord::Base
   attr_accessible :description, :name
 
   has_many :users, :through => :memberships
-  has_many :memberships, :foreign_key => "club_id"
+  has_many :memberships, :foreign_key => "club_id", :dependent => :destroy
 
-  has_many :papers
-  has_many :tags
+  has_many :papers, :dependent => :destroy
+  has_many :tags,   :dependent => :destroy
 
   validate :name, presence: true
 

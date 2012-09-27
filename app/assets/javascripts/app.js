@@ -590,6 +590,9 @@ $(function() {
     tagName: "li",
     className: "font-c cf mb40 pr",
     template: _.template($("#joined-club-template").html()),
+    events: {
+      'click a.del-btn': '_delete'
+    },
     initialize: function() {
       this.club = this.options.club;
     },
@@ -611,6 +614,11 @@ $(function() {
         avatar_urls: []
       }*/
       return this;
+    },
+    _delete: function(e) {
+      this.club.destroy();
+      this.remove();
+      e.preventDefault();
     }
   });
 
@@ -1014,6 +1022,9 @@ $(function() {
     tagName: "li",
     className: "mb30 clearfloat",
     template: _.template($("#club-screen-paper-item").html()), 
+    events: {
+      'click a.del-btn': '_delete'
+    },
     initialize: function() {
       this.paper = this.options.paper;
 
@@ -1035,6 +1046,11 @@ $(function() {
                         news: news
                       }));
       return this;       
+    },
+    _delete: function(e) {
+      this.paper.destroy();
+      this.remove();
+      e.preventDefault();
     }
   });
 

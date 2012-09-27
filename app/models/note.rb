@@ -7,7 +7,7 @@ class Note < ActiveRecord::Base
   validate :user_id, presence: true
 
   belongs_to  :paper
-  has_many    :replies
+  has_many    :replies, :dependent => :destroy
 
   default_scope :order => 'notes.created_at ASC'
 

@@ -5,15 +5,15 @@ class Paper < ActiveRecord::Base
 
   belongs_to :club
 
-  has_many :collections, foreign_key: "paper_id"
+  has_many :collections, foreign_key: "paper_id", :dependent => :destroy
   has_many :tags, through: :collections
 
-  has_many :notes
-  has_one  :news
+  has_many :notes, :dependent => :destroy
+  has_one  :news,  :dependent => :destroy
 
   belongs_to :user, :foreign_key => "uploader_id"
 
-  validate :title, presence: true
+  validate :title,   presence: true
   validate :club_id, presence: true
 
   default_scope :order => 'papers.updated_at DESC'
