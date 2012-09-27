@@ -28,7 +28,7 @@ class Metadata < ActiveRecord::Base
   end
 
   def get_dir
-    Rails.root.join("public", "uploads", self.uuid) 
+    Rails.root.join("uploads", self.uuid) 
   end
 
   # Calculate the UUID of a file given its file path
