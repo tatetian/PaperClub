@@ -49,8 +49,13 @@
 /*hover--css*/
 .hover-bg-blue:hover{background-color:rgba(46,161,221,0.05);}
 .hover-f-blue:hover{color:#2EA1DD;}
-.hover-border:hover{border-bottom:1px dotted #999;}
-.focus-border{border-bottom:1px dotted #999;}
+/*.hover-border:hover{border-bottom:1px dotted #999;}*/
+
+.hover-border{border-bottom: 1px dotted transparent}
+div.editting > .hover-border{border-color:#999;}
+div:hover > .hover-border{border-color:#999;}
+div.editting > .edit-btns{display: block;}
+.edit-btns{display:none;}
 /*paragraph--css*/
 .textin2{text-indent:2em;}
 .huanhang{word-wrap:break-word;}
@@ -200,7 +205,6 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 ::selection {
  background: rgba(46, 161, 221, 0.5)
 }
-
 .p-page-content{ 
   position:relative;  margin:24px; width:auto; overflow:hidden;
   background-color: white;

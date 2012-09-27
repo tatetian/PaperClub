@@ -326,6 +326,53 @@ $(function() {
     }
   });
 
+  var EditableView = Backbone.View.extend({
+    editting: false,
+    template: _.template($("#edit-mode-buttons").html()),
+    initialize: function() {
+      var ok      = this.options.ok     || "Save change",
+          cancel  = this.options.cancel || "Cancel";
+
+      // Elements
+      this.$(".editable").attr('contenteditable', true)
+                         .addClass('hover-border');
+      this.$el.append(this.template({ok: ok, cancel: cancel}));
+
+      // Events
+      var that = this;
+      this.$(".editable").focus(function() {
+        that.startEdit();
+      });
+      this.$(".ok-btn").click(function(e) {
+        e.preventDefault();
+        that.finishEdit(true);
+      });
+
+      this.$(".cancel-btn").click(function(e) {
+        e.preventDefault();
+        that.finishEdit(false);
+      });
+    },
+    startEdit: function() {
+      if(this.editting) return;
+
+      this.editting = true; 
+      this.$el.addClass('editting'); 
+//      this.$(".edit-mode-btns").slideDown();
+    },
+    finishEdit: function(saveChanges) {
+      if(!this.editting) return;
+
+      this.editting = false;
+      this.$el.removeClass('editting');
+
+      if(saveChanges) save();
+    },
+    save: function() {
+      return;
+    }
+  });
+
   var Dialoge = function(options) {
     Backbone.View.apply(this, [options]);
   }
@@ -692,6 +739,7 @@ $(function() {
     render: function() {
       this.$el.empty()
               .append(this.template(this.club.toJSON()));
+      this.editable = new EditableView({el: this.$el});
       return this; 
     }
   });
@@ -1999,6 +2047,8 @@ window.upload_btn = this.$el;
       PsFloatPanel.prototype.render.apply(this);  
 
       this.$el.append(this.template(this.paper.toJSON()));
+
+      this.editTitle = new EditableView({el: this.$(".r-d-title")});
 
       return this;
     }

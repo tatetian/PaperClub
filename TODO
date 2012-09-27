@@ -1,35 +1,21 @@
-===For zongbao===
+===Design===
   Features
-  * My account: edit user information
-  @ Edit club name & description 
-    Delete/quit a club
-    UI refinement for details
-  @   Contenteditable for Title
-      Contenteditable for 
-    UI refinement for comments
-    Icons: tags
-    Unselectable: icons
-
+*   New comments and details design
+    Browser requirements
   Bugs
-  * IE no placeholder: search in title, signup/signin
-  * Underline missing for emails in invitation form
-  * Rounded-corner avatar in Chrome
     Button tip of toolbar of reader has no shadow in IE9
+    Use better icons
+  Small improvement
+    Add title to all tags; title is tip that explains the link
 
-===For me===
+===Implementation===
 Before launch todo
-  Edit profile
-  10: 40 -- 12: 10  1h30min
-   
   Edit club's name & description
   Delete club
 
-  Details(me)
-    Edit title
-    Tags
-      List, add, delete
-    Delete paper
-
+  Edit title of paper
+  Tags
+    List, add, delete
   Delete paper
 
   Notes(me)
@@ -44,9 +30,14 @@ Before launch todo
     Uploading in IE
     Filter not working for newly created club
 
-  Two-level structure for uploads foler
-
   Slogan refinement
+
+==For Runchen==
+  Edit avatar
+  Signup: js validate, error message 
+  Two-level structure for uploads folder
+  Apache/Nynx deployment
+  Email server
 
 After launch todos
   Hide loading bar after all.css is loaded
@@ -67,8 +58,6 @@ After launch todos
     Make people believe what we believe
     Tell people how to use it
     Shwo statistics and comments
-
-  Signup: js validate, error message 
 
 What I Learned
   String.gsub
