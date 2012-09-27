@@ -326,6 +326,61 @@ $(function() {
     }
   });
 
+  var EditableView = function(options) {
+    Backbone.View.apply(this, [options]);
+  }
+
+  _.extend(EditableView.prototype, Backbone.View.prototype, {
+    _editting: false,
+    _template: _.template($("#edit-mode-buttons").html()),
+    initialize: function() {
+    },
+    initEvents: function() {
+      var ok      = this.options.ok     || "Save change",
+          cancel  = this.options.cancel || "Cancel";
+
+      // Elements
+      this.$(".editable").attr('contenteditable', true)
+                         .addClass('hover-border');
+      this.$el.append(this._template({ok: ok, cancel: cancel}));
+
+      // Events
+      var that = this;
+      this.$(".editable").focus(function() {
+        that._startEdit();
+      });
+      this.$(".ok-btn").click(function(e) {
+        e.preventDefault();
+        that._finishEdit(true);
+      });
+
+      this.$(".cancel-btn").click(function(e) {
+        e.preventDefault();
+        that._finishEdit(false);
+      });
+
+    },
+    _startEdit: function() {
+      if(this._editting) return;
+
+      this._editting = true; 
+      this.$el.addClass('editting'); 
+      this.$(".edit-btns").slideFadeToggle(300);
+    },
+    _finishEdit: function(saveChanges) {
+      if(!this._editting) return;
+
+      this._editting = false;
+      this.$el.removeClass('editting');
+      this.$(".edit-btns").slideFadeToggle(300);
+
+      if(saveChanges) this.trigger("ok");
+      else this.trigger("cancel");
+    }
+  });
+
+  EditableView.extend = Backbone.View.extend;
+
   var Dialoge = function(options) {
     Backbone.View.apply(this, [options]);
   }
@@ -679,10 +734,12 @@ $(function() {
     }
   });
 
-  var ClubScreenSummaryView = Backbone.View.extend({
+  var ClubScreenSummaryView = EditableView.extend({
     className: "section",
     template: _.template($("#club-screen-summary-template").html()),
     initialize: function() {
+      EditableView.prototype.initialize.apply(this);
+
       this.clubId = this.options.clubId;
       this.club = SharedData.getClub(this.clubId); 
 
@@ -692,7 +749,29 @@ $(function() {
     render: function() {
       this.$el.empty()
               .append(this.template(this.club.toJSON()));
+
+      this.initEvents();
+
+      this.on('ok',      this.onOk,          this)
+          .on('cancel',  this.onCancel,      this);
       return this; 
+    },
+    onOk: function() {
+      this.club.set(this.retrieveValues()).save(); 
+    },
+    onCancel: function() {
+      this.setValues(this.club.toJSON());
+    },
+    retrieveValues: function() {
+      var values = {
+        name: this.$(".header").text(),
+        description: this.$(".content").text()  
+      }
+      return values;
+    },
+    setValues: function(values) {
+      if(values.name) this.$(".header").text(values.name);
+      if(values.description) this.$(".content").text(values.description);
     }
   });
 
@@ -2000,9 +2079,36 @@ window.upload_btn = this.$el;
 
       this.$el.append(this.template(this.paper.toJSON()));
 
+      this.titleView = new PsPaperTitleView({
+                              el:    this.$(".r-d-title"),
+                              paper: this.paper
+                           });
+      this.titleView.render();
       return this;
     }
   });
+
+  var PsPaperTitleView = EditableView.extend({
+    template: _.template($("#ps-details-title-template").html()),
+    initialize: function() {
+      this.paper = this.options.paper;
+    },
+    render: function() {
+      this.$el.empty().append(this.template(this.paper.toJSON()));
+      this.initEvents();
+      this.on('ok',     this._onSave,    this)
+          .on('cancel', this._onCancel,  this);
+
+      return this;
+    },
+    _onSave: function() {
+      this.paper.set({title: this.$(".editable").text()}).save();
+    },
+    _onCancel: function() {
+      this.$(".editable").text(this.paper.get('title'));
+    }
+  });
+  
 
   var PsCommentsPanel = PsFloatPanel.extend({
     template: _.template($("#ps-comments-panel-template").html()),
@@ -2208,7 +2314,10 @@ window.upload_btn = this.$el;
     }
   })();
 
-
+  $.fn.slideFadeToggle  = function(speed, easing, callback) {
+    return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
+  };
+  
   $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");
     e.preventDefault();

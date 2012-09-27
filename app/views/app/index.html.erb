@@ -165,13 +165,19 @@
 </script>
 
 <script type="text/template" id="club-screen-summary-template">
-<div class="header fs24 color-black fw-bold mb10 font-c hover-border " contenteditable="true">
+<div class="header fs24 color-black lh10 fw-bold mt5 mb10 font-c editable">
   <%%= name %>
 </div>
-<div class="content fs16 color-grey2 lh12 font-d hover-border " contenteditable="true" >
+<div class="content fs16 color-grey2 lh10 font-d editable">
   <%%= description %>
 </div>
-<!--<div class="color-grey3 cf mt10 pb5  pt5" style="background-color:rgba(46,161,221,0.05);"><a href="#" class="fs16 fr asblock btn-pri mr5">Save changes</a><a href="#" class="fs16 fr asblock mr15" >Cancle</a></div>-->
+</script>
+
+<script type="text/templatye" id="edit-mode-buttons">
+<div class="edit-btns color-grey3 font-d cf mt10 pb5 pt5 lh15">
+  <a style="background-color:rgba(46,161,221,0.3);" href="#" class="ok-btn fs16 fr asblock btn-pri mr5"><%%= ok %></a>
+  <a href="#" class="cancel-btn fs16 fr asblock mr15" style="line-height:26px;"><%%= cancel %></a>
+</div>
 </script>
 
 <script type="text/template" id="club-screen-paper-list">
@@ -358,10 +364,7 @@
 </script>
 
 <script type="text/template" id="ps-details-panel-template">
-<div class="pr r-d-title">
-  <span class="font-d color-grey3 fs24 ">Title</span>
-  <p class="mb20 font-c fs26 color-grey3 fs-ita mt20 hover-border" contenteditable="true"><%%= title %></p>
-  
+<div class="pr r-d-title mb-20">
 </div>
 <dl class="pr mt20 r-d-tag">
   <span class="font-d color-grey3 fs24">Tags</span>
@@ -371,6 +374,11 @@
   <%% }); %>
   <span class="pa r-details-btn"><a class="font-icon fs24 color-grey2 hover-f-blue disnone">r</a></span>
 </dl>
+</script>
+
+<script type="text/template" id="ps-details-title-template">
+<span class="font-d color-grey3 fs24">Title</span>
+<div class="editable font-c fs26 color-grey3 fs-ita mt20"><%%= title %></div>
 </script>
 
 <script type="text/javascript">
