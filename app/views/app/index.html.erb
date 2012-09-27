@@ -64,26 +64,29 @@
 </div>
 </script>
 
-<script type="text/template" id="new-club-dialoge-template">
-</script>
-
 <script type="text/template" id="dialoge-template">
 <div class="m-m-overlay">
   <div class="m-m-container shadow4lv1 fs18">
     <div class="m-m-content">
       <!-- insert data here -->
     </div>
+    <div class="m-m-footer color-black font-d cf mt20 lh15 fr">
+      <a style="background-color:rgba(46,161,221,0.3);" href="#" class="c-btn-ok fs16 fr asblock btn-pri mr5"><%%= ok_btn %></a>
+      <a href="#" class="c-btn-cancel fs16 fr asblock mr15" style="line-height:26px;"><%%= cancel_btn %></a>
+    </div>
+<!--
     <div class="m-m-footer">
       <a href="#" class="c-btn-ok font-d asblock fr color-black fw-bold mt20" ><%%= ok_btn %></a>
       <a href="#" class="c-btn-cancel font-d asblock fr color-grey3 mt20 mr20 fs16" style="line-height: 1.5;" ><%%= cancel_btn %></a>
     </div>
+-->
   </div>
 </div>
 </script>
 
-<script type="text/template" id="new-club-dialoge-data-template">
+<script type="text/template" id="new-club-dialoge-template">
 <dl class=" " >
-  <dt id="new-club-name" class="m-f-input flv1 font-c color-grey2 fs20 color-black column-50 pt15 input-b-dotted" 
+  <dt id="new-club-name" class="m-f-input flv1 font-c color-grey2 fs20 color-black column-50 input-b-dotted" 
                                 style="white-space: nowrap;overflow: hidden;" 
                                 contenteditable="true"><%%= name %></dt>
   <dd id="new-club-description" class="m-f-input font-c color-grey2 fs22 ml40 pt15 input-b-dotted"  
@@ -96,7 +99,7 @@
 </dl>
 </script>
 
-<script type="text/template" id="invite-friends-dialoge-data-template">
+<script type="text/template" id="invite-friends-dialoge-template">
 <dl>
   <dt class="font-d fs20 fs-ita color-black mt5 mb20" style="line-height">Type emails to invite people to join this club.</dt>
   <%% _.each(invitation_emails, function(email, index) { %>
@@ -126,6 +129,17 @@
     </div>
   </dd>
 </dl>
+</script>
+
+<script type="text/template" id="confirm-del-club-template">
+<div class="font-c lh15">
+  <p class="fw-bold fs24 mb10">Are you sure to quit this club?</p>
+  <p class="color-grey3">If you are the last one in this club, then this club will be deleted permanently.</p>
+</div>
+</script>
+
+<script type="text/template" id="confirm-del-paper-template">
+<p class="font-c fs24 lh15">Are you sure to delete this paper from the club?</p>
 </script>
 
 <!------------------- OneClubScreen's templates --------------->

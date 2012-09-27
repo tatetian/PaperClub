@@ -7,16 +7,17 @@
     Use better icons
   Small improvement
     Add title to all tags; title is tip that explains the link
+    Placeholder should be white in IE
 
 ===Implementation===
 Before launch todo
-  Edit club's name & description
-  Delete club
+* Edit club's name & description
+* Delete club
 
-  Edit title of paper
+* Edit title of paper
   Tags
     List, add, delete
-  Delete paper
+* Delete paper
 
   Notes(me)
     Add, delete, edit and list

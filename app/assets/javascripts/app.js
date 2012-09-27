@@ -236,6 +236,7 @@ $(function() {
 
       this.newClubDialoge = new NewClubDialoge({screen: this});
       this.accountDialoge = new AccountDialoge({screen: this});
+      this.confirmDelClubDialoge = new ConfirmDelClubDialoge({screen: this});
 
       this.clubs = SharedData.getClubs();
       this.clubs.on('add', this.onAddOne, this)
@@ -317,7 +318,7 @@ $(function() {
       this.newClubDialoge.show();
     },
     onAddOne: function(club, that, options) {
-      var clubView = new JoinedClubView({club: club});
+      var clubView = new JoinedClubView({club: club, screen: this});
       this.$("ul").append(clubView.render().$el)
     },
     onAddAll: function() {
@@ -404,12 +405,20 @@ $(function() {
       var that = this,
           $container = this.$(".m-m-container"),
           screen = this.screen = this.options.screen;
-      screen.onWindowEvent('resize', function() {
+      if(screen) {
+        screen.onWindowEvent('resize', function() {
+          $container.css({
+            "width":  _.getValue(that, 'width'),
+            "height": _.getValue(that, 'height')
+          });
+        }, true); 
+      }
+      else {
         $container.css({
           "width":  _.getValue(that, 'width'),
           "height": _.getValue(that, 'height')
         });
-      }, true); 
+      }
     },
     show: function() {
       this.$el.appendTo($("body")).show();
@@ -422,13 +431,13 @@ $(function() {
   Dialoge.extend = Backbone.View.extend;
 
   var NewClubDialoge = Dialoge.extend({
-    template: _.template($("#new-club-dialoge-data-template").html()),
+    template: _.template($("#new-club-dialoge-template").html()),
     okBtn: "Create the club",
     cancelBtn: "Cancel",
     width: function() {
       return ($(window).width() - 48 - 255 - 18 - 36) * 0.5 + 88;
     },
-    height: 260,
+    height: 265,
     show: function() {
       Dialoge.prototype.show.apply(this);
     
@@ -469,7 +478,7 @@ $(function() {
   });
 
   var InviteFriendsDialoge = Dialoge.extend({
-    template: _.template($("#invite-friends-dialoge-data-template").html()),
+    template: _.template($("#invite-friends-dialoge-template").html()),
     okBtn: "Send invitation",
     cancelBtn: "Cancel",
     width: function() {
@@ -521,6 +530,73 @@ $(function() {
       return emails;
     }
   });
+
+  var ConfirmDelClubDialoge = Dialoge.extend({
+    template: _.template($("#confirm-del-club-template").html()),
+    okBtn: "Quit the club",
+    cancelBtn: "Cancel",
+    width: 450,
+    height: 140,
+    initialize: function() {
+      Dialoge.prototype.initialize.apply(this);
+
+      this.$(".m-m-content").empty().prepend(this.template({}));
+    },
+    show: function(clubView) {
+      Dialoge.prototype.show.apply(this);      
+      this.clubView = clubView;
+    },
+    onOK: function(e) {
+      this.hide();
+      if(this.clubView) {
+        this.clubView.club.destroy();
+        this.clubView.remove();
+      }
+      e.preventDefault();
+    },
+    onCancel: function(e) {
+      this.hide(); 
+      e.preventDefault();      
+    }
+  });
+
+  var ConfirmDelPaperDialoge = Dialoge.extend({
+    template: _.template($("#confirm-del-paper-template").html()),
+    cancelBtn: "Cancel",
+    okBtn: "Delete club",
+    width: 550,
+    height: 80,
+    initialize: function() {
+      Dialoge.prototype.initialize.apply(this);
+
+      this.$(".m-m-content").empty().prepend(this.template({}));
+    },
+    show: function(paperView) {
+      Dialoge.prototype.show.apply(this);      
+      this.paperView = paperView;
+    },
+    onOK: function(e) {
+      this.hide();
+      if(this.paperView) {
+        this.paperView.paper.destroy();
+        this.paperView.remove();
+      }
+      e.preventDefault();
+    },
+    onCancel: function(e) {
+      this.hide(); 
+      e.preventDefault();      
+    }
+  });
+
+  // This dialoge is singleton
+  ConfirmDelPaperDialoge.getInstance = (function() {
+    var instance = null;
+    return function() {
+      if(!instance) instance = new ConfirmDelPaperDialoge();
+      return instance;
+    }  
+  })();
 
   var AccountDialoge = Dialoge.extend({
     template: _.template($("#account-dialoge-data-template").html()),
@@ -594,6 +670,7 @@ $(function() {
       'click a.del-btn': '_delete'
     },
     initialize: function() {
+      this.screen = this.options.screen;
       this.club = this.options.club;
     },
     render: function() {
@@ -616,9 +693,8 @@ $(function() {
       return this;
     },
     _delete: function(e) {
-      this.club.destroy();
-      this.remove();
       e.preventDefault();
+      this.screen.confirmDelClubDialoge.show(this);
     }
   });
 
@@ -1048,9 +1124,8 @@ $(function() {
       return this;       
     },
     _delete: function(e) {
-      this.paper.destroy();
-      this.remove();
       e.preventDefault();
+      ConfirmDelPaperDialoge.getInstance().show(this);
     }
   });
 
