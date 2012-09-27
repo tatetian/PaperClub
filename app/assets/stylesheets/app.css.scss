@@ -38,6 +38,7 @@
 .fs12{font-size:12px;}
 .fw-bold{font-weight:bold;}
 .fs-ita{font-style:italic;}
+.lh10{line-height:1.0;}
 .lh12{line-height:1.2;}
 .lh15{line-height:1.5;}
 .lh44{line-height: 44px;}
@@ -54,8 +55,7 @@
 .hover-border{border-bottom: 1px dotted transparent}
 div.editting > .hover-border{border-color:#999;}
 div:hover > .hover-border{border-color:#999;}
-div.editting > .edit-btns{display: block;}
-.edit-btns{display:none;}
+.edit-btns{overflow: hidden; display:none;}
 /*paragraph--css*/
 .textin2{text-indent:2em;}
 .huanhang{word-wrap:break-word;}
