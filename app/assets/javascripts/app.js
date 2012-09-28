@@ -1228,22 +1228,22 @@ $(function() {
       // Animation
       var pl = this.paperListView,
           that = this,
-          run = false;
-      pl.$(".p-paper-list .fl.column-38").fadeOut(300,function(){
-        if(run) return; run = true;
+          run = false,
+          $col38 = pl.$(".p-paper-list .fl.column-38");
+      if($col38.length > 0) {
+        $col38.fadeOut(300,function(){
+          if(run) return; run = true;
 
-        pl.$(".p-paper-list").animate({marginLeft:"255px"},300)
-          .find(".fl.column-62").animate({width:"100%"},300);
+          pl.$(".p-paper-list").animate({marginLeft:"255px"},300)
+            .find(".fl.column-62").animate({width:"100%"},300);
+          that.$el.fadeIn(300);
+          pl.$(".p-paper-list").addClass("hide-right-column");
+        });
+      }
+      else {  // If the paper list is empty
+        pl.$(".p-paper-list").animate({marginLeft:"255px"},300);
         that.$el.fadeIn(300);
-        pl.$(".p-paper-list").addClass("hide-right-column");
-
-      /*  if(filterName == 'by-person')
-          pl.search(null, null, USER_ID);
-        else if(filterName == 'by-tag' && 
-                (pl.lastFetchParams.tag_id || 
-                 pl.lastFetchParams.user_id  ))
-          pl.search()*/
-      });
+      }
     },
     hide: function(disableAnimation) {
       if(!this.visible) return;
