@@ -2024,7 +2024,9 @@ window.upload_btn = this.$el;
       //onShow();
 
       //that.initMouseEvents();
-      //
+     
+      // Stop trigger window.click 
+      this.$el.click(function(e) { e.stopPropagation(); });
     },
     initMouseEvents: function() {          
       var that = this;
@@ -2158,17 +2160,59 @@ window.upload_btn = this.$el;
   _.extend(PsFloatPanel.prototype, Backbone.View.prototype, {
     className: "r-sidebar column-38 bgwhite shadow024 cf",
     baseTemplate: _.template($("#ps-float-panel-template").html()),
+    _shown: false,
     initialize: function() {
+      this.screen   = this.options.screen;
+
+      this.autoHide();
     },
     render: function() {
       this.$el.append(this.baseTemplate());
       return this;
     },
     show: function() {
+      if(this._shown) return;
+      this._shown = true;
+
       this.$el.show();
     },
     hide: function() {
+      if(!this._shown) return;
+      this._shown = false;
+
       this.$el.hide();
+    },
+    autoHide: function() {
+      // Won't trigger window.click
+      this.$el.click(function(e) {
+        e.stopPropagation();
+      });
+
+      var that = this;
+      function hide() { 
+        that.hide();
+        that.screen.toolbar.$(".clicked.btn").removeClass('clicked');
+      }
+      $(window).click(hide);
+      this.screen.on('hide', hide); 
+    },
+    onWindowEvent: function(eventName, callback, shown) {
+      var that = this,
+          namespacedEvent = eventName + '.' + that.cid;
+          
+      this.on('show', function() {
+        $(window).bind(namespacedEvent, callback);
+
+        // Call resize's callback when showing
+        if(namespacedEvent.indexOf('resize')==0 || 
+           namespacedEvent.indexOf('scroll')==0)
+          callback();
+      })  .on('hide', function() {
+        $(window).unbind(namespacedEvent);
+      });
+
+      if(shown) 
+        $(window).bind(namespacedEvent, callback);
     }
   });
 
@@ -2179,7 +2223,6 @@ window.upload_btn = this.$el;
     initialize: function() {
       PsFloatPanel.prototype.initialize.apply(this);
 
-      this.screen = this.options.screen;
       this.paper  = this.screen.paper;
     },
     render: function() {
@@ -2223,13 +2266,11 @@ window.upload_btn = this.$el;
     initialize: function() {
       PsFloatPanel.prototype.initialize.apply(this);
 
-      var screen    = this.screen   = this.options.screen,
-          paper     = this.paper    = screen.paper,
+      var paper     = this.paper    = this.screen.paper,
           comments  = this.comments = new Comments(null, {paperId: paper.id});
 
       comments.on('add',   this._onAddOne, this)
               .on('reset', this._onAddAll, this);
-      window.comments = comments;
     },
     render: function() {
       PsFloatPanel.prototype.render.apply(this);
