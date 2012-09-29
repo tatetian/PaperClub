@@ -1,3 +1,6 @@
+12:30 --
+  Refine new UI of details
+
 ===Design===
   Features
 *   New comments and details design
@@ -11,6 +14,9 @@
   Small improvement
     Add title to all tags; title is tip that explains the link
     Placeholder should be grey in IE
+    Remove yellow border of edittable element in Chrome
+    Delete btn ==> RED
+    Double click for delete btn of tags in details float panel
 
 ===Implementation===
 Before launch todo

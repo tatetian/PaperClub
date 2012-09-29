@@ -1992,7 +1992,7 @@ window.upload_btn = this.$el;
   });
 
   var PsToolbar = Backbone.View.extend({
-    className: "r-footer active bgwhite shadow0210 tc",
+    className: "r-footer active bgwhite shadow0210 tac",
     template: _.template($("#ps-toolbar-template").html()),
     events: {
       "click a.zoomIn": "clickZoomIn",
@@ -2126,7 +2126,7 @@ window.upload_btn = this.$el;
   var PsPageNumber = Backbone.View.extend({
     numPages: 0,
     pageNum: 1,
-    className: "r-pagination bgwhite shadow024 tc fs20 fw-bold color-blue font-c",
+    className: "r-pagination bgwhite shadow024 tac fs20 fw-bold color-blue font-c",
     initialize: function() {
       this.screen = this.options.screen;
 
@@ -2295,7 +2295,7 @@ window.upload_btn = this.$el;
   });
 
   var PsCommentView = Backbone.View.extend({
-    className: "r-notes-topic cf",
+    className: "r-notes-topic",
     template: _.template($("#ps-comment-template").html()),
     initialize: function() {
       var comment = this.comment = this.options.comment,
@@ -2318,7 +2318,7 @@ window.upload_btn = this.$el;
 
   var PsReplyView = Backbone.View.extend({
     tagName: "li",
-    className: "mb20",
+    className: "note-reply mt10",
     template: _.template($("#ps-reply-template").html()),
     initialize: function() {
       var reply = this.reply = this.options.reply;
