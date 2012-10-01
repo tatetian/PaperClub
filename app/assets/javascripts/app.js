@@ -2098,22 +2098,22 @@ window.upload_btn = this.$el;
     clickZoomOut: function() {
       this.screen.viewport.zoomOut();
     },
-    clickComments: function(e) {
-      this._togglePanel('comments', e);
+    clickComments: function() {
+      this._togglePanel('comments');
     },
-    clickDetails: function(e) {
-      this._togglePanel('details', e);
+    clickDetails: function() {
+      this._togglePanel('details');
     },
-    _togglePanel: function(name, e) {
+    _togglePanel: function(name) {
       var panels = {
             details: this.screen.detailsPanel, 
             comments: this.screen.commentsPanel
           },  
           that = this;
-          $btn = $(e.target).closest(".btn");
+          $btn = this.$("a." + name + " div.btn");
 
       this.$(".clicked.btn").removeClass('clicked');
-
+console.debug("given name=" + name);
       // Show/hide panels
       _.each(panels, function(p, n) {
         if (n == name) {
@@ -2121,14 +2121,20 @@ window.upload_btn = this.$el;
             p.show();
             $btn.addClass('clicked');
             this.currentPanel = p;
+
+            console.debug(n+" panel show");
           }
           else {
             p.hide();
             this.currentPanel = null;
+
+            console.debug(n+" panel hides 1");
           }
         }
         else {
           p.hide();
+
+          console.debug(n+" panel hides 2");
         }
       });
     }
@@ -2206,8 +2212,8 @@ window.upload_btn = this.$el;
 
       var that = this;
       function hide() { 
-        that.hide();
-        that.screen.toolbar.$(".clicked.btn").removeClass('clicked');
+        if(that._shown) 
+          that.screen.toolbar._togglePanel(that.panelName);
       }
       $(window).click(hide);
       this.screen.on('hide', hide); 
@@ -2220,7 +2226,7 @@ window.upload_btn = this.$el;
         $el.css("opacity", 1.0);
       });
       $viewport.mouseover(function() {
-        if(that._shown) $el.css("opacity", .2);
+        if(that._shown) $el.css("opacity", .25);
       });
     }
   });
@@ -2228,6 +2234,7 @@ window.upload_btn = this.$el;
   PsFloatPanel.extend = Backbone.View.extend;
 
   var PsDetailsPanel = PsFloatPanel.extend({
+    panelName: "details",
     template: _.template($("#ps-details-panel-template").html()),
     initialize: function() {
       PsFloatPanel.prototype.initialize.apply(this);
@@ -2342,6 +2349,7 @@ window.upload_btn = this.$el;
   }); 
 
   var PsCommentsPanel = PsFloatPanel.extend({
+    panelName: "comments", 
     template: _.template($("#ps-comments-panel-template").html()),
     initialize: function() {
       PsFloatPanel.prototype.initialize.apply(this);
