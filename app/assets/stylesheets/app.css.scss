@@ -207,7 +207,7 @@ background-size: cover;
 }
 .p-logo{height:50px; width:170px;}
 /*page-papers-css*/
-html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; color:#000; min-width:1024px; overflow: auto; }
+html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; color:#000; min-width:960px; overflow: auto; }
 ::selection {
  background: rgba(46, 161, 221, 0.5)
 }
@@ -327,7 +327,7 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 .r-notes-name:hover{color:#2ea1dd;}
 .r-notes-topic{
   border-bottom:1px dashed #999; 
-  margin-bottom:15px;
+  margin-bottom:20px;
   padding-bottom: 5px;
 }
 .r-notes-topic > li {
@@ -460,11 +460,11 @@ color: #2ea1dd;
   -webkit-transition: opacity 0.8s; /* Safari and Chrome */
   -o-transition: opacity 0.8s; /* Opera */
 }
-.transit-o {
-  transition: opacity 0.8s;
-  -moz-transition: opacity 0.8s; /* Firefox 4 */
-  -webkit-transition: opacity 0.8s; /* Safari and Chrome */
-  -o-transition: opacity 0.8s; /* Opera */
+.transit-o4 {
+  transition: opacity 0.4s;
+  -moz-transition: opacity 0.4s; /* Firefox 4 */
+  -webkit-transition: opacity 0.4s; /* Safari and Chrome */
+  -o-transition: opacity 0.4s; /* Opera */
 }
 
 .b {

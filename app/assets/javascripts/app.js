@@ -1588,7 +1588,7 @@ window.upload_btn = this.$el;
           h     = parseInt(paper.get("height")),
           numPages = this.numPages = paper.get("num_pages"),
           pages = this.pages = new Array(numPages),
-          W     = this.viewportWidth = 0.65 * $(window).width(),
+          W     = this.viewportWidth = 0.75 * $(window).width(),
           H     = W*h/w,
           z     = this.zoomFactor = 1; 
   
@@ -2095,25 +2095,25 @@ window.upload_btn = this.$el;
     },
     _togglePanel: function(name, e) {
       var panels = {
-        details: this.screen.detailsPanel, 
-        comments: this.screen.commentsPanel
+            details: this.screen.detailsPanel, 
+            comments: this.screen.commentsPanel
           },  
-          that = this,
-          $btn = $(e.target).closest("a").find(".btn");
+          that = this;
+          $btn = $(e.target).closest(".btn");
 
       this.$(".clicked.btn").removeClass('clicked');
 
       // Show/hide panels
       _.each(panels, function(p, n) {
         if (n == name) {
-          if ( that.currentPanel != p ) {
+          if ( this.currentPanel != p ) {
             p.show();
             $btn.addClass('clicked');
-            that.currentPanel = p;
+            this.currentPanel = p;
           }
           else {
             p.hide();
-            that.currentPanel = null;
+            this.currentPanel = null;
           }
         }
         else {
@@ -2158,31 +2158,36 @@ window.upload_btn = this.$el;
   }
 
   _.extend(PsFloatPanel.prototype, Backbone.View.prototype, {
-    className: "r-sidebar column-38 bgwhite shadow024 cf",
+    className: "r-sidebar column-38 bgwhite shadow024 cf transit-o4",
     baseTemplate: _.template($("#ps-float-panel-template").html()),
     _shown: false,
     initialize: function() {
       this.screen   = this.options.screen;
 
-      this.autoHide();
+      this._loseFocusHide();
     },
     render: function() {
       this.$el.append(this.baseTemplate());
+
+      this._autoFade()
       return this;
     },
     show: function() {
       if(this._shown) return;
       this._shown = true;
 
-      this.$el.show();
+      this.$el.css('opacity', 1.0)
+              .show()
+              .focus();
     },
     hide: function() {
       if(!this._shown) return;
       this._shown = false;
 
       this.$el.hide();
+      $(window).focus();
     },
-    autoHide: function() {
+    _loseFocusHide: function() {
       // Won't trigger window.click
       this.$el.click(function(e) {
         e.stopPropagation();
@@ -2196,23 +2201,16 @@ window.upload_btn = this.$el;
       $(window).click(hide);
       this.screen.on('hide', hide); 
     },
-    onWindowEvent: function(eventName, callback, shown) {
+    _autoFade: function() {
       var that = this,
-          namespacedEvent = eventName + '.' + that.cid;
-          
-      this.on('show', function() {
-        $(window).bind(namespacedEvent, callback);
-
-        // Call resize's callback when showing
-        if(namespacedEvent.indexOf('resize')==0 || 
-           namespacedEvent.indexOf('scroll')==0)
-          callback();
-      })  .on('hide', function() {
-        $(window).unbind(namespacedEvent);
+          $el  = this.$el,
+          $viewport = this.screen.viewport.$el;
+      $el.mouseover(function() {
+        $el.css("opacity", 1.0);
       });
-
-      if(shown) 
-        $(window).bind(namespacedEvent, callback);
+      $viewport.mouseover(function() {
+        if(that._shown) $el.css("opacity", .2);
+      });
     }
   });
 
