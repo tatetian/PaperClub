@@ -350,8 +350,8 @@ $(function() {
                          .addClass('hover-border');
     },
     initEvents: function() {
-      var ok      = this.options.ok     || "Save change",
-          cancel  = this.options.cancel || "Cancel";
+      var ok      = this.okBtn     || "Save change",
+          cancel  = this.cancelBtn || "Cancel";
 
       // Elements
       this.enable();
@@ -377,6 +377,8 @@ $(function() {
       this._editting = true; 
       this.$el.addClass('editting'); 
       this.$(".edit-btns").slideFadeToggle(300);
+
+      this.trigger("editing");
     },
     _finishEdit: function(saveChanges) {
       if(!this._editting || this._disabled) return;
@@ -1484,7 +1486,14 @@ window.upload_btn = this.$el;
   });
 
   var Paper = PaperClub.Paper = Backbone.Model.extend({
-    urlRoot: "/api/papers"
+    urlRoot: "/api/papers",
+    parse: function(response) {
+      this.tags = new Tags(response.tags, {paperId: response.id});
+      return response;
+    },
+    getTags: function() {
+      return this.tags;
+    }
   });
 
   var Papers = PaperClub.Papers = Backbone.Collection.extend({
@@ -1531,10 +1540,12 @@ window.upload_btn = this.$el;
   var Tags = Backbone.Collection.extend({
     model: Tag,
     url: function() {
-      return "/api/clubs/" + this.clubId + "/tags";
+      if(this.clubId)  return "/api/clubs/"  + this.clubId  + "/tags";
+      if(this.paperId) return "/api/papers/" + this.paperId + "/tags";
     },
     initialize: function(models, options) {
-      this.clubId = options.clubId;
+      if(options.clubId)  this.clubId  = options.clubId;
+      if(options.paperId) this.paperId = options.paperId;
     }
   });
 
@@ -2226,13 +2237,19 @@ window.upload_btn = this.$el;
     render: function() {
       PsFloatPanel.prototype.render.apply(this);  
 
-      this.$el.append(this.template(this.paper.toJSON()));
+      this.$el.append(this.template());
 
       this.titleView = new PsPaperTitleView({
                               el:    this.$(".r-d-title"),
                               paper: this.paper
                            });
       this.titleView.render();
+
+      this.tagsView = new PsPaperTagsView({
+                              el:   this.$(".r-d-tag"),
+                              paper: this.paper
+                          });
+      this.tagsView.render();
       return this;
     }
   });
@@ -2258,6 +2275,71 @@ window.upload_btn = this.$el;
     }
   });
   
+  var PsPaperTagsView = Backbone.View.extend({
+    template: _.template($("#ps-tags-view-template").html()),
+    initialize: function() {
+      var paper = this.paper = this.options.paper;
+          tags  = this.tags  = paper.tags;
+
+      tags.on('add',   this._onAddOne, this)
+          .on('reset', this._onAddAll, this);
+    },
+    render: function() {
+      this.$el.empty()
+              .append(this.template({}));
+      
+      this._initEvents();
+
+      this._onAddAll();  
+    },
+    _initEvents: function() {
+      var that = this;
+      this.$("input").on("keypress", function(e) {
+        if(e.keyCode == 13) { // Enter
+          that._addTag($(this).val());
+          $(this).val("");
+        }
+      });
+    },
+    _addTag: function(tagName) {
+      this.tags.create({name: tagName, paper_id:this.paper.id});
+    },
+    _onAddOne: function(tag) {
+      var tagView = new PsPaperTagView({tag: tag, tagsView: this});
+      this.$("ul").append(tagView.render().$el)
+    },
+    _onAddAll: function() {
+      this.$("ul").empty();
+      this.tags.each(this._onAddOne, this);      
+    }
+  });
+
+  var PsPaperTagView = Backbone.View.extend({
+    tagName: "li" ,
+    className: "r-details-tag mb10 pr",
+    template: _.template($("#ps-tag-view-template").html()) ,
+    okBtn: "Rename tag",
+    initialize: function() {
+      this.tag = this.options.tag;
+      this.tagsView = this.options.tagsView;
+    },
+    render: function() {
+      this.$el.append(this.template(this.tag.toJSON()));
+
+      this.initEvents();
+      return this;
+    },
+    initEvents: function() {
+      // Delete btn
+      var that = this;
+      this.$(".del-btn").click(function(e) {
+        e.preventDefault();
+
+        that.tag.destroy();
+        that.remove();  
+      });
+    }
+  }); 
 
   var PsCommentsPanel = PsFloatPanel.extend({
     template: _.template($("#ps-comments-panel-template").html()),

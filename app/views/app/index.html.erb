@@ -43,7 +43,7 @@
 </script>
 
 <script type="text/template" id="joined-club-template">
-<div class="c-edit pa fr color-grey2 mr10 disnone " style="right:0px;top:0px;">
+<div class="c-edit pa fr color-grey2 mr10" style="right:0px;top:0px;">
     <a href="" class="del-btn" title="delete club "><span class="font-icon fs20 ">I</span></a>
 </div>
 <div class="header fs24 color-black fw-bold lh15 column-62 "><a href="#/clubs/<%%= id %>"><em class=" fs30 color-grey1 font-icon">></em><%%= name %></a></div>
@@ -238,7 +238,7 @@
   </div>
 </div>
 <div class="fl column-38 pl15 bs pr" style="">
-  <div class="p-edit pa fr color-grey2 mr10 disnone" style="right:0px;top:0px;">
+  <div class="p-edit pa fr color-grey2 mr10" style="right:0px;top:0px;">
       <a class="del-btn" href="" title="delete paper"><span class="font-icon fs20 ">I</span></a>
   </div>
   <div style="margin-top: 15px; width: 100%;">
@@ -403,19 +403,22 @@
 <script type="text/template" id="ps-details-panel-template">
 <div class="r-d-title mb-20">
 </div>
-<div class="mt20 r-d-tag">
-  <div class="font-d color-grey3 fs23">Tags</div>
-  <input class="mb15 mt15 font-c fs20 color-grey3 m-f-input input-b-dotted" style="width:100%;" id="addtag" placeholder="Add a new tag">
-  <ul>
-    <%% _.each(tags, function(tag) { %>
-    <li class="r-details-tag mb10 pr" >
-      <span class="font-icon fs26 color-grey1 pa00l mt-5">J</span>
-      <span contenteditable="true" class="hover-border asblock font-c color-grey3 fs18 ml25 mr25"><%%= tag.name %></span>
-      <a class="btn-tag-del font-icon fr color-grey1 fs24 hover-f-blue pa00r">I</a>
-    </li>
-    <%% }); %>
-  </ul>
+<div class="r-d-tag mt20">
 </div>
+</script>
+
+<script type="text/template" id="ps-tags-view-template">
+<div class="font-d color-grey3 fs23">Tags</div>
+<input class="mb15 mt15 font-c fs20 color-grey3 m-f-input input-b-dotted" style="width:100%;" id="addtag" placeholder="Add a new tag">
+<ul>
+  <!-- insert tags here -->
+</ul>
+</script>
+
+<script type="text/template" id="ps-tag-view-template">
+<span class="font-icon fs26 color-grey1 pa00l mt-5">J</span>
+<span class="editable asblock font-c color-grey3 fs18 ml25 mr25"><%%= name %></span>
+<a class="del-btn font-icon pr color-grey1 fs24 hover-f-blue pa00r">I</a>
 </script>
 
 <script type="text/template" id="ps-details-title-template">
