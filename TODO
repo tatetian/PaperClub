@@ -52,6 +52,8 @@ Before launch todo
   Apache/Nynx deployment
   Email server
 
+  Test $.getPreText() more!
+
 After launch todos
   Hide loading bar after all.css is loaded
 

@@ -336,6 +336,7 @@ $(function() {
     _editting: false,
     _template: _.template($("#edit-mode-buttons").html()),
     initialize: function() {
+      this.alwaysEditing = this.options.alwaysEditing;
     },
     disable: function() {
       this._disabled = true;
@@ -350,12 +351,20 @@ $(function() {
                          .addClass('hover-border');
     },
     initEvents: function() {
-      var ok      = this.okBtn     || "Save change",
-          cancel  = this.cancelBtn || "Cancel";
+      var ok      = this.options.okBtn || 
+                    this.okBtn         || "Save change",
+          cancel  = this.options.cancelBtn  || 
+                    this.cancelBtn     || "Cancel";
 
       // Elements
       this.enable();
       this.$el.append(this._template({ok: ok, cancel: cancel}));
+
+      if(this.alwaysEditing) {
+        this.$el.addClass("editting");
+        this.$(".edit-btns").show();
+        this._editting = true;
+      }
 
       // Events
       var that = this;
@@ -370,23 +379,27 @@ $(function() {
         e.preventDefault();
         that._finishEdit(false);
       });
+
+      return this;
     },
     _startEdit: function() {
       if(this._editting || this._disabled) return;
 
-      this._editting = true; 
-      this.$el.addClass('editting'); 
-      this.$(".edit-btns").slideFadeToggle(300);
-
+      if(!this.alwaysEditing) {
+        this._editting = true; 
+        this.$el.addClass('editting'); 
+        this.$(".edit-btns").slideFadeToggle(300);
+      }
       this.trigger("editing");
     },
     _finishEdit: function(saveChanges) {
       if(!this._editting || this._disabled) return;
 
-      this._editting = false;
-      this.$el.removeClass('editting');
-      this.$(".edit-btns").slideFadeToggle(300);
-
+      if(!this.alwaysEditing) {
+        this._editting = false;
+        this.$el.removeClass('editting');
+        this.$(".edit-btns").slideFadeToggle(300);
+      }
       if(saveChanges) this.trigger("ok");
       else this.trigger("cancel");
     }
@@ -2113,7 +2126,7 @@ window.upload_btn = this.$el;
           $btn = this.$("a." + name + " div.btn");
 
       this.$(".clicked.btn").removeClass('clicked');
-console.debug("given name=" + name);
+
       // Show/hide panels
       _.each(panels, function(p, n) {
         if (n == name) {
@@ -2121,20 +2134,14 @@ console.debug("given name=" + name);
             p.show();
             $btn.addClass('clicked');
             this.currentPanel = p;
-
-            console.debug(n+" panel show");
           }
           else {
             p.hide();
             this.currentPanel = null;
-
-            console.debug(n+" panel hides 1");
           }
         }
         else {
           p.hide();
-
-          console.debug(n+" panel hides 2");
         }
       });
     }
@@ -2365,12 +2372,21 @@ console.debug("given name=" + name);
       
       this.$el.append(this.template());
 
+      this._addNewComment();
+
       return this;
     },
     show: function() {
       PsFloatPanel.prototype.show.apply(this);
 
-      this.comments.fetch(); 
+      // TODO: New mechanism for updating data
+      //
+      // we can't fetch every time showing the float panel
+      // 1) Not necessary
+      // 2) Lost unsaved reply
+      //
+      if(this.comments.size() == 0)
+        this.comments.fetch(); 
     },
     _onAddOne: function(comment) {
       var commentView = new PsCommentView({comment: comment});
@@ -2379,6 +2395,10 @@ console.debug("given name=" + name);
     _onAddAll: function() {
       this.$("ul").empty();
       this.comments.each(this._onAddOne, this);      
+    },
+    _addNewComment: function() {
+      var newCommentView = new PsNewCommentView({commentsPanel: this});
+      this.$el.append(newCommentView.render().$el);
     }   
   });
 
@@ -2393,42 +2413,232 @@ console.debug("given name=" + name);
              .on('add',   this._onAddOneReply, this);
     },
     render: function() {
+      var that = this;
+    
       this.$el.empty()
           .append(this.template(this.comment.toJSON()));
-      this.replies.each(this._onAddReply, this);
+
+      // Reply btn
+      this.$(".r-btn-reply").click(function(e) {
+        e.preventDefault();
+        
+        if(!that.newReplyView) {
+          that.newReplyView = new PsNewReplyView({
+                                commentView: that
+                              });
+          that.$el.append(that.newReplyView.render().$el);
+        }
+      });
+
+      // Edit btn and Del btn (enabled only when you are the author)
+      var author_id = this.comment.get("user").id;
+      if(author_id == USER_ID) {
+        this.$(".r-btn-edit").css("display", "inline").click(function(e) {
+          e.preventDefault();
+          alert("edit");
+        });
+        this.$(".r-btn-del").css("display", "inline").click(function(e) {
+          e.preventDefault();
+          alert("delete");
+        });
+      }
+     
+      // Add replies
+      if(this.replies)
+        this.replies.each(this._onAddOneReply, this);
+
       return this;
     },
-    _onAddReply: function(reply) {
-      var replyView = new PsReplyView({reply: reply});
+    _onAddOneReply: function(reply) {
+      var replyView = new PsReplyView({
+                        reply: reply,
+                        commentView: this
+                      });
       this.$el.append(replyView.render().$el)
-    } 
+    }
   });
 
-  var PsReplyView = Backbone.View.extend({
-    tagName: "li",
-    className: "note-reply mt10",
-    template: _.template($("#ps-reply-template").html()),
+  var PsNewCommentView = PsCommentView.extend({
+    id: "new-comment",
+    className: "r-notes-topic new",
     initialize: function() {
-      var reply = this.reply = this.options.reply;
+      var panel   = this.panel   = this.options.commentsPanel,
+          paper   = this.paper   = panel.paper,
+          comment = this.comment = new Comment({
+        content:  "",
+        paper_id: paper.id,
+        date: null,
+        user: Member.me.toJSON()
+      });
     },
     render: function() {
-      this.$el.empty().append(this.template(this.reply.toJSON()));
+      PsCommentView.prototype.render.apply(this);
+
+      // Content is editable
+      var editableView = this.editableView 
+                       = new EditableView({
+                          el: this.$("li"),
+                          okBtn: "New comment",
+                          cancelBtn: "Reset",
+                          alwaysEditing: true
+                         });
+      this.editableView.initEvents();
+
+      // Placeholder
+      var $content    = this.$(".content"),
+          edited      = false,
+          placeholder = "Add a comment, share a note or start a discussion";
+      $content.focus(function() {
+        if(!edited) {
+          $content.empty()
+                  .css("color", "black");
+        }
+      }).blur(function() {
+        if(!$content.text()) {
+          $content.text(placeholder)
+                  .css("color", "#999");
+        }
+      }).keyup(function() {
+        edited = true;
+      }).blur();
+
+      // Create a new comment
+      var that = this;
+      this.editableView.on("ok", function() {
+        if(!edited) return;
+
+        var content = $content.getPreText(),
+            hash    = that.comment.toJSON();
+        hash.content= content;
+        hash.date   = new Date().toString();
+        that.panel.comments.create(hash);
+
+        $content.empty().blur();
+        edited = false;
+      }).on("cancel", function() {
+        edited = false;
+        $content.empty().blur();
+      });
+
       return this;
     }
   });
 
-  var Comment = Backbone.Model.extend({
+  var PsReplyView = Backbone.View.extend({
+    tagName: "li",
+    className: "r-note-reply mt10",
+    template: _.template($("#ps-reply-template").html()),
+    initialize: function() {
+      this.reply = this.options.reply;
+      this.commentView = this.options.commentView;
+    },
+    render: function() {
+      this.$el.empty().append(this.template(this.reply.toJSON()));
+
+      // Reply btn
+      // TODO: Reply cannot be replied?
+      this.$(".r-btn-reply").hide();
+
+      // Edit btn and Del btn (enabled only when you are the author)
+      var author_id = this.reply.get("user").id;
+      if(author_id == USER_ID) {
+        this.$(".r-btn-edit").css("display", "inline").click(function(e) {
+          e.preventDefault();
+          alert("edit");
+        });
+        this.$(".r-btn-del").css("display", "inline").click(function(e) {
+          e.preventDefault();
+          alert("delete");
+        });
+      }
+
+      return this;
+    }
+  });
+
+  var PsNewReplyView = PsReplyView.extend({
+    className: "r-note-reply mt10 new",
+    initialize: function() {
+      var commentView = this.commentView = this.options.commentView,
+          comment = this.comment = commentView.comment,
+          reply   = this.reply   = new Reply({
+                                     content:  "",
+                                     comment_id: comment.id,
+                                     date: null,
+                                     user: Member.me.toJSON()
+                                   });
+    },
+    render: function() {
+      PsReplyView.prototype.render.apply(this);
+
+      // Content is editable
+      var editableView = this.editableView 
+                       = new EditableView({
+                          alwaysEditing: true,
+                          el: this.$el,
+                          okBtn: "New reply"
+                         });
+      this.editableView.initEvents()._startEdit();
+
+      // Placeholder
+      var $content    = this.$(".content"),
+          edited      = false,
+          placeholder = "Add a reply";
+      $content.focus(function() {
+        if(!edited) {
+          $content.empty()
+                  .css("color", "black");
+        }
+      }).blur(function() {
+        if(!$content.text()) {
+          $content.text(placeholder)
+                  .css("color", "#999");
+        }
+      }).keyup(function() {
+        edited = true;
+      }).blur();
+
+      this.editableView.on("cancel", function() {
+        that.remove();
+        that.commentView.newReplyView = null;
+      });
+
+      // Create a new reply
+      var that = this;
+      this.editableView.on("ok", function() {
+        if(!edited) return;
+
+        var content = $content.getPreText(),
+            hash    = that.reply.toJSON();
+        hash.content= content;
+        hash.date   = new Date().toString();
+        that.comment.replies.create(hash);
+
+        that.remove();
+        that.commentView.newReplyView = null;
+      })
+
+      return this;
+    }
+  });
+
+  var Comment = PaperClub.Comment = Backbone.Model.extend({
     parse: function(response) {
-      this.replies = new Replies(response.replies, {commentId: response.id});
+      var replies = this.getReplies();
+
+      replies.reset(response.replies)
+             .commentId = response.id;
       delete response.replies;
       return response;
     },
     getReplies: function() {
+      if(!this.replies)
+        this.replies = new Replies(null, {commentId: this.id});
       return this.replies;
     } 
   });
 
-  var Comments = Backbone.Collection.extend({
+  var Comments = PaperClub.Comments = Backbone.Collection.extend({
     model: Comment,
     url: function() { 
       return "/api/papers/" + this.paperId + "/notes";
@@ -2438,9 +2648,9 @@ console.debug("given name=" + name);
     }
   });
 
-  var Reply = Backbone.Model.extend({
+  var Reply = PaperClub.Reply = Backbone.Model.extend({
   });
-  var Replies = Backbone.Collection.extend({
+  var Replies = PaperClub.Replies = Backbone.Collection.extend({
     model: Reply,
     url: function() {
       return "/api/notes/" + this.commentId + "/replies"; 
@@ -2554,7 +2764,19 @@ console.debug("given name=" + name);
   $.fn.slideFadeToggle  = function(speed, easing, callback) {
     return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
   };
-  
+
+  $.fn.getPreText = function () {
+    var ce = $("<pre />").html(this.html());
+    if ($.browser.webkit || $.browser.chrome)
+      ce.find("div").replaceWith(function() { return "\n" + this.innerHTML; });
+    if ($.browser.msie)
+      ce.find("p").replaceWith(function() { return this.innerHTML + "<br>"; });
+    if ($.browser.mozilla || $.browser.opera || $.browser.msie)
+      ce.find("br").replaceWith("\n");
+
+    return ce.text();
+  };
+
   $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");
     e.preventDefault();

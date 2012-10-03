@@ -333,25 +333,37 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 .r-notes-topic > li {
   position: relative;
 }
-.r-notes-topic .content{color:#afafaf;}
+/*.r-notes-topic .content{color:#afafaf;}*/
 /*.r-notes-topic :first-child .content{color:#000;}*/
 .r-notes-topic .img-header{width:36px;height:36px;}
 /*.r-notes-topic :first-child .img-header{width:33px;height:33px;}*/
 .r-notes-topic .r-notes-name{color:#afafaf; font-size:14px; font-weight:normal; margin-top:18px;}
 /*.r-notes-topic :first-child .r-notes-name{color:#000; margin-top:25px;}*/
-.r-notes-btns {display:none;}
+.r-notes-btns {visibility:hidden;}
 .r-notes-btns a:hover{color:#2ea1dd;}
-.r-notes-topic > li:hover .r-notes-btns{display:block;}
+.r-btn-edit, .r-btn-del {display: none;}
+.r-notes-topic > li:hover .r-notes-btns{visibility:visible;}
+.r-notes-topic.new > li .footer{display:none;}
+.r-notes-topic.new > li .content{border-bottom:1px dotted #999;}
+.r-notes-topic.new { border-bottom: none; }
 .r-notes-topic li .header{height:27px;}
+
+
+.r-note-reply{margin-left:60px;margin-bottom:10px;position: relative;}
+.r-note-reply.new .footer{display:none;}
+.r-note-reply.new .content{border-bottom:1px dotted #999;}
+.r-note-reply.new { border-bottom: none; }
+
 .btn-active{box-shadow:4px 8px 7px rgba(0,0,0,0.15),-4px 8px 7px rgba(0,0,0,0.15);color:#2ea1dd;background-color:#fff; padding-top:-5px;}
 .r-sidebar{ 
   position:fixed; 
-  padding:24px 24px 48px;; 
+  padding:24px 24px 64px;; 
   bottom:40px; 
   box-sizing:border-box; -moz-box-sizing:border-box;   
   top:24px; left:24px; 
   z-index:20; 
-  overflow:auto; 
+  overflow-y:auto; 
+  overflow-x: hidden;
   display: none;
 }	
 .r-cover{
@@ -447,13 +459,18 @@ color: #2ea1dd;
 .pa00l{position:absolute; left:0px;top:0px;}
 .pa00r{position:absolute; right:0px;top:0px;}
 .ml50{margin-left:50px;}
-.note-reply{margin-left:60px;margin-bottom:10px;position: relative;}
 .img36{width:36px; height:36px;}
 .del-btn { display: none; }
 a.del-btn:hover { color: #ff9fb3; }
 .r-details-tag:hover .del-btn,.r-details-tag:focus .del-btn{
   display:block;
 }
+
+.content {
+  white-space:pre-wrap;
+  overflow: hidden;
+}
+
 /* CSS animation */
 .transit-o {
   transition: opacity 0.8s;

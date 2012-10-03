@@ -343,15 +343,15 @@
   </div>
   <div class="fs16 font-c  ml50 pl10">
     <span href="#" class="fs18 mr5  fw-bold font-c lh28px"><%%= user.fullname %></span><br />
-    <p class="font-c fs16 lh20px"><%%= content %></p>
-    <p class="color-grey2 lh20px mt3" style="height:25px;">
+    <div class="content editable font-c fs16 lh20px"><%%= content %></div>
+    <p class="footer color-grey2 lh20px mt3" style="height:25px;">
       <%% if(date) { %>
         <span class="fl fs14 font-c fw-bold fs-ita"><%%= PaperClub.formatDate(date) %></span>
       <%% } %>
       <span class="r-notes-btns fr">
-        <a href="#" class="r-btn-reply  fs24 ml10 font-icon">o</a>
-        <a href="#" class="r-btn-edit  fs24 ml10 font-icon">r</a>
-        <a href="#" class="r-btn-del  fs24 ml10 font-icon">X</a>
+        <a href="#" title="reply" class="r-btn-reply  fs24 ml10 font-icon">o</a>
+        <a href="#" title="edit"  class="r-btn-edit  fs24 ml10 font-icon">r</a>
+        <a href="#" title="delete" class="r-btn-del  fs24 ml10 font-icon">X</a>
       </span>
     </p>
   </div>
@@ -364,15 +364,15 @@
 </div>
 <div class="fs16 font-c ml50">
   <span class="mr5 fw-bold font-c"><%%= user.fullname %></span><br />
-  <p class="font-c fs16 mt3 lh20px"><%%= content %></p>
-  <p class="color-grey2 mt3 lh20px" style="height:25px;">
+  <p class="content editable font-c fs16 mt3 lh20px"><%%= content %></p>
+  <p class="footer color-grey2 mt3 lh20px" style="height:25px;">
     <%% if(date) { %>
       <span class="fl fs14 font-c fw-bold fs-ita"><%%= PaperClub.formatDate(date) %></span>
     <%% } %>
     <span class="r-notes-btns fr" >
-      <a href="#" class="r-btn-reply  fs24 ml10 font-icon">o</a>
-      <a href="#" class="r-btn-edit  fs24 ml10 font-icon">r</a>
-      <a href="#" class="r-btn-del  fs24 ml10 font-icon">X</a>
+      <a href="#" title="reply"  class="r-btn-reply fs24 ml10 font-icon">o</a>
+      <a href="#" title="edit"   class="r-btn-edit  fs24 ml10 font-icon">r</a>
+      <a href="#" title="delete" class="r-btn-del   fs24 ml10 font-icon">X</a>
     </span>
   </p>
 </div>
@@ -383,21 +383,6 @@
 <ul class="mb20">
   <!-- insert comments and replies here -->
 </ul>
-<div class="new-comment">
-  <div class="pr mb10">
-    <div class="img48 circle1 pa00l">
-      <img class="circle0 img48" src="/avatars/m/A1.png" />
-    </div>
-    <div class="fs16 font-c ml50 pl10">
-      <p class="fs18 w-bold font-c lh28px">用户名</p>
-      <p class="input-b-dotted fs16  w100 lh20px" contenteditable>Add comments, share notes or start discussions</p>
-    </div>
-  </div>
-  <dd class="cf mb10 ">
-    <a href="#" class="fs16 color-black font-d fr hover-f-blue">Save tag chages</a>
-    <a href="#" class="fs16 color-grey2 font-d fr mr15 hover-f-blue">Cancle</a>
-  </dd>
-</div>
 </script>
 
 <script type="text/template" id="ps-details-panel-template">
