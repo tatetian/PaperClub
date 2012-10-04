@@ -332,18 +332,49 @@ $(function() {
   }
 
   _.extend(EditableView.prototype, Backbone.View.prototype, {
+    _disabled: false,
     _editting: false,
     _template: _.template($("#edit-mode-buttons").html()),
     initialize: function() {
+      this.alwaysEditing = this.options.alwaysEditing;
     },
-    initEvents: function() {
-      var ok      = this.options.ok     || "Save change",
-          cancel  = this.options.cancel || "Cancel";
+    disable: function() {
+      this._disabled = true;
 
-      // Elements
+      this.$(".editable").removeAttr('contenteditable')
+                         .removeClass('hover-border');
+
+      this.$el.removeClass("editting");
+      this.$(".edit-btns").hide();
+      this._editting = false;
+    },
+    enable: function() {
+      this._disabled = false;
+
       this.$(".editable").attr('contenteditable', true)
                          .addClass('hover-border');
+
+      if(this.alwaysEditing) {
+        this.$el.addClass("editting");
+        this.$(".edit-btns").show();
+        this._editting = true;
+      }
+    },
+    initEvents: function() {
+      var ok      = this.options.okBtn || 
+                    this.okBtn         || "Save change",
+          cancel  = this.options.cancelBtn  || 
+                    this.cancelBtn     || "Cancel";
+
+      // Elements
+      this.enable();
       this.$el.append(this._template({ok: ok, cancel: cancel}));
+
+      if(this.alwaysEditing) {
+        this.$el.addClass("editting");
+        this.$(".edit-btns").show();
+        this._editting = true;
+      }
 
       // Events
       var that = this;
@@ -354,27 +385,31 @@ $(function() {
         e.preventDefault();
         that._finishEdit(true);
       });
-
       this.$(".cancel-btn").click(function(e) {
         e.preventDefault();
         that._finishEdit(false);
       });
 
+      return this;
     },
     _startEdit: function() {
-      if(this._editting) return;
+      if(this._editting || this._disabled) return;
 
-      this._editting = true; 
-      this.$el.addClass('editting'); 
-      this.$(".edit-btns").slideFadeToggle(300);
+      if(!this.alwaysEditing) {
+        this._editting = true; 
+        this.$el.addClass('editting'); 
+        this.$(".edit-btns").slideFadeToggle(300);
+      }
+      this.trigger("editing");
     },
     _finishEdit: function(saveChanges) {
-      if(!this._editting) return;
+      if(!this._editting || this._disabled) return;
 
-      this._editting = false;
-      this.$el.removeClass('editting');
-      this.$(".edit-btns").slideFadeToggle(300);
-
+      if(!this.alwaysEditing) {
+        this._editting = false;
+        this.$el.removeClass('editting');
+        this.$(".edit-btns").slideFadeToggle(300);
+      }
       if(saveChanges) this.trigger("ok");
       else this.trigger("cancel");
     }
@@ -528,6 +563,32 @@ $(function() {
           emails.push(email);
       });
       return emails;
+    }
+  });
+
+  var ConfirmDelDialoge = Dialoge.extend({
+    template: _.template($("#confirm-del-template").html()),
+    width: 550,
+    height: 80,
+    initialize: function() {
+      var item    = this.options.item,
+          content = this.options.content || 
+                    "Are you sure to delete the " + item + "?";
+
+      this.okBtn = "Delete " + item;
+
+      Dialoge.prototype.initialize.apply(this);
+
+      this.$(".m-m-content").empty().prepend(this.template({content: content}));
+    },
+    onOK: function(e) {
+      this.trigger("destroy");
+      this.onCancel(e);
+    },
+    onCancel: function(e) {
+      this.hide(); 
+      e.preventDefault();
+      e.stopPropagation();
     }
   });
 
@@ -829,12 +890,19 @@ $(function() {
 
       this.club.on("change", this.render, this)
                .fetch();
+      this.disable();
     },
     render: function() {
       this.$el.empty()
               .append(this.template(this.club.toJSON()));
 
       this.initEvents();
+
+      var admins = this.club.get('admins');
+      if(admins && admins.indexOf(USER_ID) >= 0)
+        this.enable();
+      else
+        this.disable();
 
       this.on('ok',      this.onOk,          this)
           .on('cancel',  this.onCancel,      this);
@@ -1211,22 +1279,22 @@ $(function() {
       // Animation
       var pl = this.paperListView,
           that = this,
-          run = false;
-      pl.$(".p-paper-list .fl.column-38").fadeOut(300,function(){
-        if(run) return; run = true;
+          run = false,
+          $col38 = pl.$(".p-paper-list .fl.column-38");
+      if($col38.length > 0) {
+        $col38.fadeOut(300,function(){
+          if(run) return; run = true;
 
-        pl.$(".p-paper-list").animate({marginLeft:"255px"},300)
-          .find(".fl.column-62").animate({width:"100%"},300);
+          pl.$(".p-paper-list").animate({marginLeft:"255px"},300)
+            .find(".fl.column-62").animate({width:"100%"},300);
+          that.$el.fadeIn(300);
+          pl.$(".p-paper-list").addClass("hide-right-column");
+        });
+      }
+      else {  // If the paper list is empty
+        pl.$(".p-paper-list").animate({marginLeft:"255px"},300);
         that.$el.fadeIn(300);
-        pl.$(".p-paper-list").addClass("hide-right-column");
-
-      /*  if(filterName == 'by-person')
-          pl.search(null, null, USER_ID);
-        else if(filterName == 'by-tag' && 
-                (pl.lastFetchParams.tag_id || 
-                 pl.lastFetchParams.user_id  ))
-          pl.search()*/
-      });
+      }
     },
     hide: function(disableAnimation) {
       if(!this.visible) return;
@@ -1467,7 +1535,14 @@ window.upload_btn = this.$el;
   });
 
   var Paper = PaperClub.Paper = Backbone.Model.extend({
-    urlRoot: "/api/papers"
+    urlRoot: "/api/papers",
+    parse: function(response) {
+      this.tags = new Tags(response.tags, {paperId: response.id});
+      return response;
+    },
+    getTags: function() {
+      return this.tags;
+    }
   });
 
   var Papers = PaperClub.Papers = Backbone.Collection.extend({
@@ -1514,10 +1589,12 @@ window.upload_btn = this.$el;
   var Tags = Backbone.Collection.extend({
     model: Tag,
     url: function() {
-      return "/api/clubs/" + this.clubId + "/tags";
+      if(this.clubId)  return "/api/clubs/"  + this.clubId  + "/tags";
+      if(this.paperId) return "/api/papers/" + this.paperId + "/tags";
     },
     initialize: function(models, options) {
-      this.clubId = options.clubId;
+      if(options.clubId)  this.clubId  = options.clubId;
+      if(options.paperId) this.paperId = options.paperId;
     }
   });
 
@@ -1571,7 +1648,7 @@ window.upload_btn = this.$el;
           h     = parseInt(paper.get("height")),
           numPages = this.numPages = paper.get("num_pages"),
           pages = this.pages = new Array(numPages),
-          W     = this.viewportWidth = 0.65 * $(window).width(),
+          W     = this.viewportWidth = 0.75 * $(window).width(),
           H     = W*h/w,
           z     = this.zoomFactor = 1; 
   
@@ -1975,7 +2052,7 @@ window.upload_btn = this.$el;
   });
 
   var PsToolbar = Backbone.View.extend({
-    className: "r-footer active bgwhite shadow0210 tc",
+    className: "r-footer active bgwhite shadow0210 tac",
     template: _.template($("#ps-toolbar-template").html()),
     events: {
       "click a.zoomIn": "clickZoomIn",
@@ -2007,7 +2084,9 @@ window.upload_btn = this.$el;
       //onShow();
 
       //that.initMouseEvents();
-      //
+     
+      // Stop trigger window.click 
+      this.$el.click(function(e) { e.stopPropagation(); });
     },
     initMouseEvents: function() {          
       var that = this;
@@ -2068,33 +2147,33 @@ window.upload_btn = this.$el;
     clickZoomOut: function() {
       this.screen.viewport.zoomOut();
     },
-    clickComments: function(e) {
-      this._togglePanel('comments', e);
+    clickComments: function() {
+      this._togglePanel('comments');
     },
-    clickDetails: function(e) {
-      this._togglePanel('details', e);
+    clickDetails: function() {
+      this._togglePanel('details');
     },
-    _togglePanel: function(name, e) {
+    _togglePanel: function(name) {
       var panels = {
-        details: this.screen.detailsPanel, 
-        comments: this.screen.commentsPanel
+            details: this.screen.detailsPanel, 
+            comments: this.screen.commentsPanel
           },  
-          that = this,
-          $btn = $(e.target).closest("a").find(".btn");
+          that = this;
+          $btn = this.$("a." + name + " div.btn");
 
       this.$(".clicked.btn").removeClass('clicked');
 
       // Show/hide panels
       _.each(panels, function(p, n) {
         if (n == name) {
-          if ( that.currentPanel != p ) {
+          if ( this.currentPanel != p ) {
             p.show();
             $btn.addClass('clicked');
-            that.currentPanel = p;
+            this.currentPanel = p;
           }
           else {
             p.hide();
-            that.currentPanel = null;
+            this.currentPanel = null;
           }
         }
         else {
@@ -2107,7 +2186,7 @@ window.upload_btn = this.$el;
   var PsPageNumber = Backbone.View.extend({
     numPages: 0,
     pageNum: 1,
-    className: "r-pagination bgwhite shadow024 tc fs20 fw-bold color-blue font-c",
+    className: "r-pagination bgwhite shadow024 tac fs20 fw-bold color-blue font-c",
     initialize: function() {
       this.screen = this.options.screen;
 
@@ -2139,42 +2218,88 @@ window.upload_btn = this.$el;
   }
 
   _.extend(PsFloatPanel.prototype, Backbone.View.prototype, {
-    className: "r-sidebar column-38 bgwhite shadow024 cf",
+    className: "r-sidebar column-38 bgwhite shadow024 cf transit-o4",
     baseTemplate: _.template($("#ps-float-panel-template").html()),
+    _shown: false,
     initialize: function() {
+      this.screen   = this.options.screen;
+
+      this._loseFocusHide();
     },
     render: function() {
       this.$el.append(this.baseTemplate());
+
+      this._autoFade()
       return this;
     },
     show: function() {
-      this.$el.show();
+      if(this._shown) return;
+      this._shown = true;
+
+      this.$el.css('opacity', 1.0)
+              .show()
+              .focus();
     },
     hide: function() {
+      if(!this._shown) return;
+      this._shown = false;
+
       this.$el.hide();
+      $(window).focus();
+    },
+    _loseFocusHide: function() {
+      // Won't trigger window.click
+      this.$el.click(function(e) {
+        e.stopPropagation();
+      });
+
+      var that = this;
+      function hide() { 
+        if(that._shown) 
+          that.screen.toolbar._togglePanel(that.panelName);
+      }
+      $(window).click(hide);
+      this.screen.on('hide', hide); 
+    },
+    _autoFade: function() {
+      var that = this,
+          $el  = this.$el,
+          $viewport = this.screen.viewport.$el;
+      $el.mouseover(function() {
+        $el.css("opacity", 1.0);
+      });
+      $viewport.mouseover(function() {
+        if(that._shown) $el.css("opacity", .25);
+      });
     }
   });
 
   PsFloatPanel.extend = Backbone.View.extend;
 
   var PsDetailsPanel = PsFloatPanel.extend({
+    panelName: "details",
     template: _.template($("#ps-details-panel-template").html()),
     initialize: function() {
       PsFloatPanel.prototype.initialize.apply(this);
 
-      this.screen = this.options.screen;
       this.paper  = this.screen.paper;
     },
     render: function() {
       PsFloatPanel.prototype.render.apply(this);  
 
-      this.$el.append(this.template(this.paper.toJSON()));
+      this.$(".r-sidebar-main").append(this.template());
 
       this.titleView = new PsPaperTitleView({
                               el:    this.$(".r-d-title"),
                               paper: this.paper
                            });
       this.titleView.render();
+
+      this.tagsView = new PsPaperTagsView({
+                              el:   this.$(".r-d-tag"),
+                              paper: this.paper
+                          });
+      this.tagsView.render();
       return this;
     }
   });
@@ -2200,31 +2325,104 @@ window.upload_btn = this.$el;
     }
   });
   
+  var PsPaperTagsView = Backbone.View.extend({
+    template: _.template($("#ps-tags-view-template").html()),
+    initialize: function() {
+      var paper = this.paper = this.options.paper;
+          tags  = this.tags  = paper.tags;
+
+      tags.on('add',   this._onAddOne, this)
+          .on('reset', this._onAddAll, this);
+    },
+    render: function() {
+      this.$el.empty()
+              .append(this.template({}));
+      
+      this._initEvents();
+
+      this._onAddAll();  
+    },
+    _initEvents: function() {
+      var that = this;
+      this.$("input").on("keypress", function(e) {
+        if(e.keyCode == 13) { // Enter
+          that._addTag($(this).val());
+          $(this).val("");
+        }
+      });
+    },
+    _addTag: function(tagName) {
+      this.tags.create({name: tagName, paper_id:this.paper.id});
+    },
+    _onAddOne: function(tag) {
+      var tagView = new PsPaperTagView({tag: tag, tagsView: this});
+      this.$("ul").append(tagView.render().$el)
+    },
+    _onAddAll: function() {
+      this.$("ul").empty();
+      this.tags.each(this._onAddOne, this);      
+    }
+  });
+
+  var PsPaperTagView = Backbone.View.extend({
+    tagName: "li" ,
+    className: "r-details-tag mb10 pr",
+    template: _.template($("#ps-tag-view-template").html()) ,
+    okBtn: "Rename tag",
+    initialize: function() {
+      this.tag = this.options.tag;
+      this.tagsView = this.options.tagsView;
+    },
+    render: function() {
+      this.$el.append(this.template(this.tag.toJSON()));
+
+      this.initEvents();
+      return this;
+    },
+    initEvents: function() {
+      // Delete btn
+      var that = this;
+      this.$(".del-btn").click(function(e) {
+        e.preventDefault();
+
+        that.tag.destroy();
+        that.remove();  
+      });
+    }
+  }); 
 
   var PsCommentsPanel = PsFloatPanel.extend({
+    panelName: "comments", 
     template: _.template($("#ps-comments-panel-template").html()),
     initialize: function() {
       PsFloatPanel.prototype.initialize.apply(this);
 
-      var screen    = this.screen   = this.options.screen,
-          paper     = this.paper    = screen.paper,
+      var paper     = this.paper    = this.screen.paper,
           comments  = this.comments = new Comments(null, {paperId: paper.id});
 
       comments.on('add',   this._onAddOne, this)
               .on('reset', this._onAddAll, this);
-      window.comments = comments;
     },
     render: function() {
       PsFloatPanel.prototype.render.apply(this);
       
-      this.$el.append(this.template());
+      this.$(".r-sidebar-main").append(this.template());
+
+      this._addNewComment();
 
       return this;
     },
     show: function() {
       PsFloatPanel.prototype.show.apply(this);
 
-      this.comments.fetch(); 
+      // TODO: New mechanism for updating data
+      //
+      // we can't fetch every time showing the float panel
+      // 1) Not necessary
+      // 2) Lost unsaved reply
+      //
+      if(this.comments.size() == 0)
+        this.comments.fetch(); 
     },
     _onAddOne: function(comment) {
       var commentView = new PsCommentView({comment: comment});
@@ -2233,11 +2431,15 @@ window.upload_btn = this.$el;
     _onAddAll: function() {
       this.$("ul").empty();
       this.comments.each(this._onAddOne, this);      
+    },
+    _addNewComment: function() {
+      var newCommentView = new PsNewCommentView({commentsPanel: this});
+      this.$(".r-sidebar-main").append(newCommentView.render().$el);
     }   
   });
 
   var PsCommentView = Backbone.View.extend({
-    className: "r-notes-topic cf",
+    className: "r-notes-topic",
     template: _.template($("#ps-comment-template").html()),
     initialize: function() {
       var comment = this.comment = this.options.comment,
@@ -2247,42 +2449,320 @@ window.upload_btn = this.$el;
              .on('add',   this._onAddOneReply, this);
     },
     render: function() {
+      var that = this;
+    
       this.$el.empty()
           .append(this.template(this.comment.toJSON()));
-      this.replies.each(this._onAddReply, this);
+
+      // Reply btn
+      this.$(".r-btn-reply").click(function(e) {
+        e.preventDefault();
+        
+        if(!that.newReplyView) {
+          that.newReplyView = new PsNewReplyView({
+                                commentView: that
+                              });
+          that.$el.append(that.newReplyView.render().$el);
+        }
+      });
+
+      // Edit btn and Del btn (enabled only when you are the author)
+      var author_id = this.comment.get("user").id;
+      if(author_id == USER_ID) {
+        this.$(".r-btn-edit").css("display", "inline").click(function(e) {
+          e.preventDefault();
+        
+          that._editComment();
+        });
+        this.$(".r-btn-del").css("display", "inline").click(function(e) {
+          e.preventDefault();
+
+          var confirmDelete = new ConfirmDelDialoge({item: "comment"});
+          confirmDelete.on("destroy", function() {
+            that.comment.destroy();
+            that.remove();  
+          }).show();
+        });
+      }
+     
+      // Add replies
+      if(this.replies)
+        this.replies.each(this._onAddOneReply, this);
+
       return this;
     },
-    _onAddReply: function(reply) {
-      var replyView = new PsReplyView({reply: reply});
+    _onAddOneReply: function(reply) {
+      var replyView = new PsReplyView({
+                        reply: reply,
+                        commentView: this
+                      });
       this.$el.append(replyView.render().$el)
-    } 
+    },
+    _editComment: function() {
+      if(!this._editableView) {
+        var ev = this._editableView
+               = new EditableView({
+                       el: this.$("li")[0],
+                       okBtn: "Save changes",
+                       alwaysEditing: true
+                     }),
+            that = this;
+
+        function _finish() {
+          ev.disable();
+          that.$el.removeClass("new");
+        }
+
+        ev
+        .initEvents()
+        .on("ok", function() {
+          _finish();
+
+          that.comment.set({
+                        content: that.$(".content").getPreText(),
+                        date: new Date().toString()
+                       })
+                      .save();
+        })
+        .on("cancel", function() {
+          _finish();
+        });
+
+      }
+
+      this.$el.addClass("new");
+      this._editableView.enable();
+    }
   });
 
-  var PsReplyView = Backbone.View.extend({
-    tagName: "li",
-    className: "mb20",
-    template: _.template($("#ps-reply-template").html()),
+  var PsNewCommentView = PsCommentView.extend({
+    id: "new-comment",
+    className: "r-notes-topic new",
     initialize: function() {
-      var reply = this.reply = this.options.reply;
+      var panel   = this.panel   = this.options.commentsPanel,
+          paper   = this.paper   = panel.paper,
+          comment = this.comment = new Comment({
+        content:  "",
+        paper_id: paper.id,
+        date: null,
+        user: Member.me.toJSON()
+      });
     },
     render: function() {
-      this.$el.empty().append(this.template(this.reply.toJSON()));
+      PsCommentView.prototype.render.apply(this);
+
+      // Content is editable
+      var editableView = this.editableView 
+                       = new EditableView({
+                          el: this.$("li"),
+                          okBtn: "New comment",
+                          cancelBtn: "Reset",
+                          alwaysEditing: true
+                         });
+      this.editableView.initEvents();
+
+      // Placeholder
+      var $content    = this.$(".content"),
+          edited      = false,
+          placeholder = "Add a comment, share a note or start a discussion";
+      $content.focus(function() {
+        if(!edited) {
+          $content.empty()
+                  .css("color", "black");
+        }
+      }).blur(function() {
+        if(!$content.text()) {
+          $content.text(placeholder)
+                  .css("color", "#999");
+        }
+      }).keyup(function() {
+        edited = true;
+      }).blur();
+
+      // Create a new comment
+      var that = this;
+      this.editableView.on("ok", function() {
+        if(!edited) return;
+
+        var content = $content.getPreText(),
+            hash    = that.comment.toJSON();
+        hash.content= content;
+        hash.date   = new Date().toString();
+        that.panel.comments.create(hash);
+
+        $content.empty().blur();
+        edited = false;
+      }).on("cancel", function() {
+        edited = false;
+        $content.empty().blur();
+      });
+
       return this;
     }
   });
 
-  var Comment = Backbone.Model.extend({
+  var PsReplyView = Backbone.View.extend({
+    tagName: "li",
+    className: "r-note-reply mt10",
+    template: _.template($("#ps-reply-template").html()),
+    initialize: function() {
+      this.reply = this.options.reply;
+      this.commentView = this.options.commentView;
+    },
+    render: function() {
+      this.$el.empty().append(this.template(this.reply.toJSON()));
+
+      // Reply btn
+      // TODO: Reply cannot be replied?
+      this.$(".r-btn-reply").hide();
+
+      // Edit btn and Del btn (enabled only when you are the author)
+      var author_id = this.reply.get("user").id, 
+          that = this;
+      if(author_id == USER_ID) {
+        this.$(".r-btn-edit").css("display", "inline").click(function(e) {
+          e.preventDefault();
+        
+          that._editComment();
+        });
+        this.$(".r-btn-del").css("display", "inline").click(function(e) {
+          e.preventDefault();
+
+          var confirmDelete = new ConfirmDelDialoge({item: "reply"});
+          confirmDelete.on("destroy", function() {
+            that.reply.destroy();
+            that.remove();  
+          }).show();
+        });
+      }
+
+      return this;
+    },
+    _editComment: function() {
+      if(!this._editableView) {
+        var ev = this._editableView
+               = new EditableView({
+                       el: this.$el,
+                       okBtn: "Save changes",
+                       alwaysEditing: true
+                     }),
+            that = this;
+
+        function _finish() {
+          ev.disable();
+          that.$el.removeClass("new");
+        }
+
+        ev
+        .initEvents()
+        .on("ok", function() {
+          _finish();
+
+          that.reply.set({
+                      content: that.$(".content").getPreText(),
+                      date:    new Date().toString()
+                     })
+                    .save();
+        })
+        .on("cancel", function() {
+          _finish();
+        });
+      }
+
+      this.$el.addClass("new");
+      this._editableView.enable();
+    }
+
+  });
+
+  var PsNewReplyView = PsReplyView.extend({
+    className: "r-note-reply mt10 new",
+    initialize: function() {
+      var commentView = this.commentView = this.options.commentView,
+          comment = this.comment = commentView.comment,
+          reply   = this.reply   = new Reply({
+                                     content:  "",
+                                     comment_id: comment.id,
+                                     date: null,
+                                     user: Member.me.toJSON()
+                                   });
+    },
+    render: function() {
+      PsReplyView.prototype.render.apply(this);
+
+      // Content is editable
+      var editableView = this.editableView 
+                       = new EditableView({
+                          alwaysEditing: true,
+                          el: this.$el,
+                          okBtn: "New reply"
+                         });
+      this.editableView.initEvents()._startEdit();
+
+      // Placeholder
+      var $content    = this.$(".content"),
+          edited      = false,
+          placeholder = "Add a reply";
+      $content.focus(function() {
+        if(!edited) {
+          $content.empty()
+                  .css("color", "black");
+        }
+      }).blur(function() {
+        if(!$content.text()) {
+          $content.text(placeholder)
+                  .css("color", "#999");
+        }
+      }).keyup(function() {
+        edited = true;
+      }).blur();
+
+      this.editableView.on("cancel", function() {
+        that.remove();
+        that.commentView.newReplyView = null;
+      });
+
+      // Create a new reply
+      var that = this;
+      this.editableView.on("ok", function() {
+        if(!edited) return;
+
+        var content = $content.getPreText(),
+            hash    = that.reply.toJSON();
+        hash.content= content;
+        hash.date   = new Date().toString();
+        that.comment.replies.create(hash);
+
+        that.remove();
+        that.commentView.newReplyView = null;
+      })
+
+      return this;
+    }
+  });
+
+  var Comment = PaperClub.Comment = Backbone.Model.extend({
     parse: function(response) {
-      this.replies = new Replies(response.replies, {commentId: response.id});
+      var replies = this.getReplies();
+
+      replies.reset(response.replies)
+             .commentId = response.id;
       delete response.replies;
       return response;
     },
+    sync: function(method, model, options) {
+      if(method == "delete" || method == "update") 
+        options.url = "/api/notes/" + this.id;
+      return Backbone.sync.call(this, method, model, options);
+    },
     getReplies: function() {
+      if(!this.replies)
+        this.replies = new Replies(null, {commentId: this.id});
       return this.replies;
     } 
   });
 
-  var Comments = Backbone.Collection.extend({
+  var Comments = PaperClub.Comments = Backbone.Collection.extend({
     model: Comment,
     url: function() { 
       return "/api/papers/" + this.paperId + "/notes";
@@ -2292,9 +2772,14 @@ window.upload_btn = this.$el;
     }
   });
 
-  var Reply = Backbone.Model.extend({
+  var Reply = PaperClub.Reply = Backbone.Model.extend({
+    sync: function(method, model, options) {
+      if(method == "delete" || method == "update") 
+        options.url = "/api/replies/" + this.id;
+      return Backbone.sync.call(this, method, model, options);
+    }
   });
-  var Replies = Backbone.Collection.extend({
+  var Replies = PaperClub.Replies = Backbone.Collection.extend({
     model: Reply,
     url: function() {
       return "/api/notes/" + this.commentId + "/replies"; 
@@ -2392,7 +2877,7 @@ window.upload_btn = this.$el;
           n = new Date(),   // now
           l = n - d;
 
-      if( l <= min10 ) return "Just now";
+      if( l <= min10 ) return "just now";
       else if( l <= hr1 ) return Math.round(l/min1) + " mins ago";
       else if( l <= hr24 ) return Math.round(l/hr1) + " hours ago";
 
@@ -2408,7 +2893,19 @@ window.upload_btn = this.$el;
   $.fn.slideFadeToggle  = function(speed, easing, callback) {
     return this.animate({opacity: 'toggle', height: 'toggle'}, speed, easing, callback);
   };
-  
+
+  $.fn.getPreText = function () {
+    var ce = $("<pre />").html(this.html());
+    if ($.browser.webkit || $.browser.chrome)
+      ce.find("div").replaceWith(function() { return "\n" + this.innerHTML; });
+    if ($.browser.msie)
+      ce.find("p").replaceWith(function() { return this.innerHTML + "<br>"; });
+    if ($.browser.mozilla || $.browser.opera || $.browser.msie)
+      ce.find("br").replaceWith("\n");
+
+    return ce.text();
+  };
+
   $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");
     e.preventDefault();

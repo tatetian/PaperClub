@@ -39,6 +39,27 @@ class Api::RepliesController < ApplicationController
     end
   end
 
+  # Update a note
+  #
+  # URL     PUT /api/replies/<id>
+  # PARAMS  id
+  #         note[content]
+  #         note[position]
+  def update
+    begin
+      # Find note
+      reply = Reply.find(params[:id]) 
+      # Authenticate
+      if reply.user_id == current_user.id and reply.update_attributes(params[:reply])
+        render :json => reply
+      else
+        error "Failed to update the note" 
+      end
+    rescue ActiveRecord::RecordNotFound
+      error "Can't access the club or the paper"
+    end
+  end
+
   # Destroy a reply
   #
   # URL     DELETE /reply/

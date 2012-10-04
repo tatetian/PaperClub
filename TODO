@@ -1,13 +1,26 @@
+
 ===Design===
   Features
-*   New comments and details design
+    Business card
     Browser requirements
+    Team page
+    
+    New homepage
+    pdf2htmlEX site
   Bugs
     Button tip of toolbar of reader has no shadow in IE9
     Use better icons
   Small improvement
     Add title to all tags; title is tip that explains the link
-    Placeholder should be white in IE
+    Placeholder should be grey in IE
+    Remove yellow border of edittable element in Chrome
+    Double click for delete btn of tags in details float panel
+    Button
+      Btn unselectable
+      "Upload PDFs" button
+      All buttons look same
+      Press-down state of button
+      Delete btn ==> RED
 
 ===Implementation===
 Before launch todo
@@ -15,11 +28,11 @@ Before launch todo
 * Delete club
 
 * Edit title of paper
-  Tags
+* Tags
     List, add, delete
 * Delete paper
 
-  Notes(me)
+* Notes(me)
     Add, delete, edit and list
   News
 
@@ -29,7 +42,8 @@ Before launch todo
 
   Bugs:
     Uploading in IE
-    Filter not working for newly created club
+  * Filter not working for newly created club
+    Consistency between tags in papers & tags in reading
 
   Slogan refinement
 
@@ -39,6 +53,8 @@ Before launch todo
   Two-level structure for uploads folder
   Apache/Nynx deployment
   Email server
+
+  Test $.getPreText() more!
 
 After launch todos
   Hide loading bar after all.css is loaded
