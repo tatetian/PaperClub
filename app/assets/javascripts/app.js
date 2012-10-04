@@ -2251,7 +2251,7 @@ window.upload_btn = this.$el;
     render: function() {
       PsFloatPanel.prototype.render.apply(this);  
 
-      this.$el.append(this.template());
+      this.$(".r-sidebar-main").append(this.template());
 
       this.titleView = new PsPaperTitleView({
                               el:    this.$(".r-d-title"),
@@ -2370,7 +2370,7 @@ window.upload_btn = this.$el;
     render: function() {
       PsFloatPanel.prototype.render.apply(this);
       
-      this.$el.append(this.template());
+      this.$(".r-sidebar-main").append(this.template());
 
       this._addNewComment();
 
@@ -2398,7 +2398,7 @@ window.upload_btn = this.$el;
     },
     _addNewComment: function() {
       var newCommentView = new PsNewCommentView({commentsPanel: this});
-      this.$el.append(newCommentView.render().$el);
+      this.$(".r-sidebar-main").append(newCommentView.render().$el);
     }   
   });
 
