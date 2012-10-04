@@ -556,6 +556,32 @@ $(function() {
     }
   });
 
+  var ConfirmDelDialoge = Dialoge.extend({
+    template: _.template($("#confirm-del-template").html()),
+    width: 550,
+    height: 80,
+    initialize: function() {
+      var item    = this.options.item,
+          content = this.options.content || 
+                    "Are you sure to delete the " + item + "?";
+
+      this.okBtn = "Delete " + item;
+
+      Dialoge.prototype.initialize.apply(this);
+
+      this.$(".m-m-content").empty().prepend(this.template({content: content}));
+    },
+    onOK: function(e) {
+      this.trigger("destroy");
+      this.onCancel(e);
+    },
+    onCancel: function(e) {
+      this.hide(); 
+      e.preventDefault();
+      e.stopPropagation();
+    }
+  });
+
   var ConfirmDelClubDialoge = Dialoge.extend({
     template: _.template($("#confirm-del-club-template").html()),
     okBtn: "Quit the club",
@@ -2439,7 +2465,12 @@ window.upload_btn = this.$el;
         });
         this.$(".r-btn-del").css("display", "inline").click(function(e) {
           e.preventDefault();
-          alert("delete");
+
+          var confirmDelete = new ConfirmDelDialoge({item: "comment"});
+          confirmDelete.on("destroy", function() {
+            that.comment.destroy();
+            that.remove();  
+          }).show();
         });
       }
      
@@ -2540,7 +2571,8 @@ window.upload_btn = this.$el;
       this.$(".r-btn-reply").hide();
 
       // Edit btn and Del btn (enabled only when you are the author)
-      var author_id = this.reply.get("user").id;
+      var author_id = this.reply.get("user").id, 
+          that = this;
       if(author_id == USER_ID) {
         this.$(".r-btn-edit").css("display", "inline").click(function(e) {
           e.preventDefault();
@@ -2548,7 +2580,12 @@ window.upload_btn = this.$el;
         });
         this.$(".r-btn-del").css("display", "inline").click(function(e) {
           e.preventDefault();
-          alert("delete");
+
+          var confirmDelete = new ConfirmDelDialoge({item: "reply"});
+          confirmDelete.on("destroy", function() {
+            that.reply.destroy();
+            that.remove();  
+          }).show();
         });
       }
 
@@ -2631,6 +2668,11 @@ window.upload_btn = this.$el;
       delete response.replies;
       return response;
     },
+    sync: function(method, model, options) {
+      if(method == "delete" || method == "put") 
+        options.url = "/api/notes/" + this.id;
+      return Backbone.sync.call(this, method, model, options);
+    },
     getReplies: function() {
       if(!this.replies)
         this.replies = new Replies(null, {commentId: this.id});
@@ -2649,6 +2691,11 @@ window.upload_btn = this.$el;
   });
 
   var Reply = PaperClub.Reply = Backbone.Model.extend({
+    sync: function(method, model, options) {
+      if(method == "delete" || method == "put") 
+        options.url = "/api/replies/" + this.id;
+      return Backbone.sync.call(this, method, model, options);
+    }
   });
   var Replies = PaperClub.Replies = Backbone.Collection.extend({
     model: Reply,

@@ -66,7 +66,7 @@ class Api::NotesController < ApplicationController
 
   # Destroy a note
   #
-  # URL     DELETE /note/
+  # URL     DELETE /api/notes/<id>
   # PARAMS  id
   def destroy
     begin

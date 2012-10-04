@@ -142,6 +142,12 @@
 <p class="font-c fs24 lh15">Are you sure to delete this paper from the club?</p>
 </script>
 
+<script type="text/template" id="confirm-del-template">
+<p class="font-c fs24 lh15"><%%= content %></p>
+</script>
+
+
+
 <!------------------- OneClubScreen's templates --------------->
 
 <script type="text/template" id="club-screen-template">
@@ -351,9 +357,9 @@
         <span class="fl fs14 font-c fw-bold fs-ita"><%%= PaperClub.formatDate(date) %></span>
       <%% } %>
       <span class="r-notes-btns fr">
-        <a href="#" title="reply" class="r-btn-reply  fs24 ml10 font-icon">o</a>
-        <a href="#" title="edit"  class="r-btn-edit  fs24 ml10 font-icon">r</a>
-        <a href="#" title="delete" class="r-btn-del  fs24 ml10 font-icon">X</a>
+        <a href="#" title="reply" class="r-btn-reply  fs24 ml5 font-icon">o</a>
+        <a href="#" title="edit"  class="r-btn-edit  fs24 ml5 font-icon">r</a>
+        <a href="#" title="delete" class="r-btn-del  fs24 ml5 font-icon">X</a>
       </span>
     </p>
   </div>
@@ -372,9 +378,9 @@
       <span class="fl fs14 font-c fw-bold fs-ita"><%%= PaperClub.formatDate(date) %></span>
     <%% } %>
     <span class="r-notes-btns fr" >
-      <a href="#" title="reply"  class="r-btn-reply fs24 ml10 font-icon">o</a>
-      <a href="#" title="edit"   class="r-btn-edit  fs24 ml10 font-icon">r</a>
-      <a href="#" title="delete" class="r-btn-del   fs24 ml10 font-icon">X</a>
+      <a href="#" title="reply"  class="r-btn-reply fs24 ml5 font-icon">o</a>
+      <a href="#" title="edit"   class="r-btn-edit  fs24 ml5 font-icon">r</a>
+      <a href="#" title="delete" class="r-btn-del   fs24 ml5 font-icon">X</a>
     </span>
   </p>
 </div>
