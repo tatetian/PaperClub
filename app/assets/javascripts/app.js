@@ -343,12 +343,22 @@ $(function() {
 
       this.$(".editable").removeAttr('contenteditable')
                          .removeClass('hover-border');
+
+      this.$el.removeClass("editting");
+      this.$(".edit-btns").hide();
+      this._editting = false;
     },
     enable: function() {
       this._disabled = false;
 
       this.$(".editable").attr('contenteditable', true)
                          .addClass('hover-border');
+
+      if(this.alwaysEditing) {
+        this.$el.addClass("editting");
+        this.$(".edit-btns").show();
+        this._editting = true;
+      }
     },
     initEvents: function() {
       var ok      = this.options.okBtn || 
@@ -2461,7 +2471,8 @@ window.upload_btn = this.$el;
       if(author_id == USER_ID) {
         this.$(".r-btn-edit").css("display", "inline").click(function(e) {
           e.preventDefault();
-          alert("edit");
+        
+          that._editComment();
         });
         this.$(".r-btn-del").css("display", "inline").click(function(e) {
           e.preventDefault();
@@ -2486,6 +2497,41 @@ window.upload_btn = this.$el;
                         commentView: this
                       });
       this.$el.append(replyView.render().$el)
+    },
+    _editComment: function() {
+      if(!this._editableView) {
+        var ev = this._editableView
+               = new EditableView({
+                       el: this.$("li")[0],
+                       okBtn: "Save changes",
+                       alwaysEditing: true
+                     }),
+            that = this;
+
+        function _finish() {
+          ev.disable();
+          that.$el.removeClass("new");
+        }
+
+        ev
+        .initEvents()
+        .on("ok", function() {
+          _finish();
+
+          that.comment.set({
+                        content: that.$(".content").getPreText(),
+                        date: new Date().toString()
+                       })
+                      .save();
+        })
+        .on("cancel", function() {
+          _finish();
+        });
+
+      }
+
+      this.$el.addClass("new");
+      this._editableView.enable();
     }
   });
 
@@ -2576,7 +2622,8 @@ window.upload_btn = this.$el;
       if(author_id == USER_ID) {
         this.$(".r-btn-edit").css("display", "inline").click(function(e) {
           e.preventDefault();
-          alert("edit");
+        
+          that._editComment();
         });
         this.$(".r-btn-del").css("display", "inline").click(function(e) {
           e.preventDefault();
@@ -2590,7 +2637,42 @@ window.upload_btn = this.$el;
       }
 
       return this;
+    },
+    _editComment: function() {
+      if(!this._editableView) {
+        var ev = this._editableView
+               = new EditableView({
+                       el: this.$el,
+                       okBtn: "Save changes",
+                       alwaysEditing: true
+                     }),
+            that = this;
+
+        function _finish() {
+          ev.disable();
+          that.$el.removeClass("new");
+        }
+
+        ev
+        .initEvents()
+        .on("ok", function() {
+          _finish();
+
+          that.reply.set({
+                      content: that.$(".content").getPreText(),
+                      date:    new Date().toString()
+                     })
+                    .save();
+        })
+        .on("cancel", function() {
+          _finish();
+        });
+      }
+
+      this.$el.addClass("new");
+      this._editableView.enable();
     }
+
   });
 
   var PsNewReplyView = PsReplyView.extend({
@@ -2669,7 +2751,7 @@ window.upload_btn = this.$el;
       return response;
     },
     sync: function(method, model, options) {
-      if(method == "delete" || method == "put") 
+      if(method == "delete" || method == "update") 
         options.url = "/api/notes/" + this.id;
       return Backbone.sync.call(this, method, model, options);
     },
@@ -2692,7 +2774,7 @@ window.upload_btn = this.$el;
 
   var Reply = PaperClub.Reply = Backbone.Model.extend({
     sync: function(method, model, options) {
-      if(method == "delete" || method == "put") 
+      if(method == "delete" || method == "update") 
         options.url = "/api/replies/" + this.id;
       return Backbone.sync.call(this, method, model, options);
     }
@@ -2795,7 +2877,7 @@ window.upload_btn = this.$el;
           n = new Date(),   // now
           l = n - d;
 
-      if( l <= min10 ) return "Just now";
+      if( l <= min10 ) return "just now";
       else if( l <= hr1 ) return Math.round(l/min1) + " mins ago";
       else if( l <= hr24 ) return Math.round(l/hr1) + " hours ago";
 

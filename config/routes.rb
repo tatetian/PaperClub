@@ -76,7 +76,7 @@ PaperClub::Application.routes.draw do
 
     # Show a reply
     # Destroy a reply
-    resources :replies, only: [:destroy]
+    resources :replies, only: [:update, :destroy]
   end
   
   match "/api/fulltext/:paper_id/all.css" => "api/fulltext#css", :via => :get

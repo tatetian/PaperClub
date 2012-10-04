@@ -1,8 +1,10 @@
 
 ===Design===
   Features
+    Business card
     Browser requirements
     Team page
+    
     New homepage
     pdf2htmlEX site
   Bugs
@@ -26,11 +28,11 @@ Before launch todo
 * Delete club
 
 * Edit title of paper
-  Tags
+* Tags
     List, add, delete
 * Delete paper
 
-  Notes(me)
+* Notes(me)
     Add, delete, edit and list
   News
 
@@ -40,7 +42,7 @@ Before launch todo
 
   Bugs:
     Uploading in IE
-    Filter not working for newly created club
+  * Filter not working for newly created club
     Consistency between tags in papers & tags in reading
 
   Slogan refinement
