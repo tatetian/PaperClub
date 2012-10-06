@@ -27,4 +27,36 @@ $(function( ){
   });
 
   $('input, textarea').placeholder();
+  
+  var validate = {
+    email: function(email){
+      var testEmail = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/;
+      return testEmail.test(email);
+    },
+    password: function (pwd){
+      var testPWD = /^(?![a-z]+$)(?!\d+$)[a-z0-9]{8,20}$/i;
+      return testPWD.test(pwd);
+    },
+    fullname: function() {
+      return true;
+    } 
+  };
+  
+  $("input").keyup(function(){
+    $(this).data("edited",true);
+  }).focus(function() {
+    $(this).css("border-bottom","1px solid #51f037");
+  }).blur(function(){
+    var $t = $(this),
+         edited = $t.data("edited"),
+         name = $t.attr("id").slice(5),
+         value = $t.val();
+  
+    if(edited && !validate[name](value)) {
+      $(this).css("border-bottom","1px solid #f03737");
+    }
+    else if(!edited){
+      $(this).css("border-bottom","1px solid rgb(204, 204, 204)");
+    }
+  });
 });
