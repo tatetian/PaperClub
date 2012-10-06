@@ -79,10 +79,12 @@ PaperClub::Application.routes.draw do
     resources :replies, only: [:update, :destroy]
   end
   
-  match "/api/fulltext/:paper_id/all.css" => "api/fulltext#css", :via => :get
-  match "/api/fulltext/:paper_id/pages/:page_num" => "api/fulltext#pages", :via => :get
-  match "/api/fulltext/:paper_id/download" => "api/fulltext#download", :via => :get
-  match "/api/fulltext/:paper_id/ready" => "api/fulltext#ready?", :via => :get
+  match "/api/fulltext/:paper_id/all.css"   => "api/fulltext#css",        :via => :get
+  match "/api/fulltext/:paper_id/pages/:page_num"  => "api/fulltext#pages",      :via => :get
+  match "/api/fulltext/:paper_id/download"  => "api/fulltext#download",   :via => :get
+  match "/api/fulltext/:paper_id/ready"     => "api/fulltext#ready?",     :via => :get
+  match "/api/fulltext/:paper_id/counter"   => "api/fulltext#counter",    :via => :post
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

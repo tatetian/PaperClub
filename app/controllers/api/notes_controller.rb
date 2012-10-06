@@ -27,10 +27,11 @@ class Api::NotesController < ApplicationController
       # Authenticate
       can_access_club?(paper.club_id)
       # New note
-      new_note = Note.create(content: params[:content],
-                             position: params[:position],
-                             user_id: current_user.id,
-                             paper_id: paper.id)
+      new_note = Note.create(content:   params[:content],
+                             position:  params[:position],
+                             user_id:   current_user.id,
+                             club_id:   paper.club_id,
+                             paper_id:  paper.id)
       if new_note
         render :json => new_note
       else

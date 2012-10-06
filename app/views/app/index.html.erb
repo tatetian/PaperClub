@@ -228,7 +228,7 @@
     <a href="#/papers/<%%= id %>"><%%= title %></a>
   </div>
   <div class="footer color-grey2 fs13 font-c" style="line-height:32px;height:32px;">
-    <a><em class="font-icon color-grey1 p-btn-fav" style="font-size:32px;line-height:32px;">*</em><%%= num_favs %></a>
+    <a><em class="font-icon color-grey1 p-btn-fav <%% if(starred) { %> starred <%% } %>" style="font-size:32px;line-height:32px;">*</em><%%= num_favs %></a>
     <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:32px;line-height:32px;">E</em><%%= num_reads %></span>
     <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:32px;line-height:32px;">b</em><%%= num_notes %></span>
     <em class="fs36 font-icon color-grey1" style="margin-left:10px;font-size:32px;">J</em>

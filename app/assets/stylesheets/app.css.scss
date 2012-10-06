@@ -259,8 +259,7 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 	box-sizing:border-box; -moz-box-sizing:border-box; 
 	padding:0px 36px 0px 18px;
 }
-.p-paper-list a:hover{color:#2ea1dd;}
-.p-paper-list a:hover em{color:#2ea1dd;}
+.p-paper-list .title:hover {color:#2ea1dd;}
 .p-nav-menu dt:hover ,.p-nav-menu dd:hover{color:#2ea1dd;}
 .p-btn-back{ 
   position: fixed; 
@@ -269,6 +268,7 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 .p-btn-back a:hover span{color:#2ea1dd;}
 .p-paper-list .fav {margin-top:4px;}
 .p-btn-fav:hover,.r-btn-fav:hover{color:#ffcc00;}
+.p-btn-fav.starred, .r-btn-fav.starred{color:#ffcc00;}
 .c-club-lists>li:hover .del-btn{display:block;}
 /*page-reading --css*/	
 .r-paper-container{ width:920px; min-height:500px; position:absolute;  margin:0 auto; left:0px; right:0px; z-index:1px;}

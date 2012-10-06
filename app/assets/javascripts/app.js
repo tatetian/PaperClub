@@ -194,7 +194,8 @@ $(function() {
       if( T > threshold ) {
         $sidebarMain.css({
           position: 'fixed',
-          top: margin
+          top: margin,
+          left: 60 - L
         });
       }
       else {
@@ -1167,7 +1168,8 @@ $(function() {
     className: "mb30 clearfloat",
     template: _.template($("#club-screen-paper-item").html()), 
     events: {
-      'click a.del-btn': '_delete'
+      'click a.del-btn': '_delete',
+      'click .p-btn-fav': '_toggleStar'
     },
     initialize: function() {
       this.paper = this.options.paper;
@@ -1179,21 +1181,17 @@ $(function() {
       if(news) news.time = formatDate(news.time);
 
       this.$el.empty()
-              .append(this.template({
-                        //this.paper.toJSON()
-                        id:  this.paper.get('id'),
-                        title: this.paper.get('title'),
-                        num_favs: 0,
-                        num_reads: 0,
-                        num_notes: 0,
-                        tags: this.paper.get('tags'),
-                        news: news
-                      }));
+              .append(this.template(this.paper.toJSON()));
       return this;       
     },
     _delete: function(e) {
       e.preventDefault();
       ConfirmDelPaperDialoge.getInstance().show(this);
+    },
+    _toggleStar: function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      alert('star');
     }
   });
 
@@ -1537,13 +1535,69 @@ window.upload_btn = this.$el;
   var Paper = PaperClub.Paper = Backbone.Model.extend({
     urlRoot: "/api/papers",
     parse: function(response) {
-      this.tags = new Tags(response.tags, {paperId: response.id});
+      this.tags     = new Tags(response.tags, {paperId: response.id});
+      
+      this.starred  = !! this.getFavTag();
       return response;
+    },
+    toJSON: function(options) {
+      var attrs     = this.attributes,
+          tags      = this.get('tags'),
+          num_favs  = _.count(tags, function(tag) {
+                        return tag.name.indexOf('__fav_') == 0;
+                      });
+
+      return {
+        id:         attrs.id,
+        title:      attrs.title,
+        starred:    this.starred,
+        num_favs:   num_favs,
+        num_reads:  attrs.num_views,
+        num_notes:  attrs.num_comments,
+        tags:       tags,
+        news:       attrs.news
+      }
+    },
+    getFavTag: function() {
+      return _.find(this.tags, 
+                    function(tag) {
+                      return tag.get('name') == ("__fav_" + USER_ID);
+                    });
     },
     getTags: function() {
       return this.tags;
+    },
+    // Increment the view count of this paper
+    incrementViewCounter: function() {
+      var id = this.id;
+
+      if(!id || Paper.history[id]) return;
+
+      Paper.history[id] = true;
+      this.set('num_views', this.get('num_views') + 1);
+      $.post("/api/fulltext/" + id + "/counter");
+    },
+    isStarred: function() {
+      return this.starred;
+    },
+    star: function() {
+      if(this.starred) return;
+
+      this.tags.create({name: "__fav_" + USER_ID, paper_id: this.id});
+      this.change();
+
+      this.starred = true; 
+    },
+    unstar: function() {
+      if(!this.starred) return;
+
+      this.getFavTag().destroy();
+      this.change();
+
+      this.starred = false;
     }
   });
+  Paper.history = {};
 
   var Papers = PaperClub.Papers = Backbone.Collection.extend({
     model: Paper,
@@ -1611,6 +1665,8 @@ window.upload_btn = this.$el;
  
       this.paper.fetch({
         success: function() {
+          that.paper.incrementViewCounter();
+
           that.viewport = new PsViewport({screen: that});
 
           that.pageNumber = new PsPageNumber({screen: that});
@@ -2905,6 +2961,16 @@ window.upload_btn = this.$el;
 
     return ce.text();
   };
+
+  _.count = function(obj, iterator, context) {
+    var count = 0;
+
+    _.each(obj, function(value, index, list) {
+      if(iterator.call(context, value, index, list)) ++count;
+    });
+
+    return count;
+  }
 
   $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");

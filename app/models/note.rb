@@ -1,12 +1,13 @@
 class Note < ActiveRecord::Base
-  attr_accessible :content, :paper_id, :position, :user_id
+  attr_accessible :content, :position, :paper_id, :user_id, :club_id
 
   validate :content, presence: true
   validate :paper_id, presence: true
   validate :position, presence: true
   validate :user_id, presence: true
 
-  belongs_to  :paper
+  belongs_to  :paper, :counter_cache => :num_comments
+  belongs_to  :club,  :counter_cache => :num_comments
   has_many    :replies, :dependent => :destroy
 
   default_scope :order => 'notes.created_at ASC'

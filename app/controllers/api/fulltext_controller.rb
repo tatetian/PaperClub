@@ -1,4 +1,21 @@
 class Api::FulltextController < ApplicationController
+  # Increment num_views counter
+  #
+  # URL     GET /api/fulltext/<paper_id>/counter
+  # PARAM   paper_id
+  # ROLE    member
+  def counter
+    # Find the paper
+    paper = Paper.find(params[:paper_id])
+    # Authenticate
+    can_access_club?(paper.club_id)
+
+    # Update counter
+    Paper.increment_counter :num_views, paper.id
+
+    render :nothing => true
+  end
+
   # Check whether PDF to HTML processing is done
   #
   # URL     GET /api/fulltext/<paper_id>/ready?
