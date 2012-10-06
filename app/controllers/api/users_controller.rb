@@ -25,7 +25,12 @@ class Api::UsersController < ApplicationController
       sign_in user
       redirect_to "/app"
     else
-      flash[:error] = "Invalid user information"
+      flash[:fn_val] = user.fullname
+      flash[:email_val] = user.email
+      
+      flash[:fn_error] = !!user.errors.messages[:fullname]
+      flash[:pwd_error] = !!user.errors.messages[:password]
+      flash[:email_error] = !!user.errors.messages[:email]
       redirect_to "/signup"
     end
   end
