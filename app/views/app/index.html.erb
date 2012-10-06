@@ -28,10 +28,10 @@
 <div class="section cf ">
   <div class="section-left fl column-50">
     <div class=" fs24 color-grey3 pl40 mb20"><%%= description %></div>
-    <div class="left-footer pl40">
-      <span class="fs-16 color-grey2 mr10"><em class=" fs42 color-grey1 font-icon">K</em><%%= num_papers %></span>
-      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">f</em><%%= num_members %></span>
-      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
+    <div class="left-footer pl40 unselectable">
+      <span class="fs-16 color-grey2 mr10" ><em class=" fs42 color-grey1 font-icon" title="Papers">K</em><%%= num_papers %></span>
+      <span class="fs-16 color-grey2 mr10" ><em class="fs42 color-grey1 font-icon" title="Members">f</em><%%= num_members %></span>
+      <span class="fs-16 color-grey2 mr10" ><em class="fs42 color-grey1 font-icon" title="Notes">b</em><%%= num_notes %></span>
     </div>
   </div>
   <div class="section-right case-invited fl column-50 mt-15">
@@ -50,10 +50,10 @@
 <div class="section cf lh15">
   <div class="section-left fl column-62">
     <div class=" fs22 color-grey2 pl40"><%%= description %></div>
-    <div class="left-footer pl40 lh12">
-      <span class="fs-16 color-grey2 mr10"><em class=" fs42 color-grey1 font-icon">K</em><%%= num_papers %></span>
-      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">f</em><%%= num_members %></span>
-      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon">b</em><%%= num_notes %></span>
+    <div class="left-footer pl40 lh12 unselectable">
+      <span class="fs-16 color-grey2 mr10"><em class=" fs42 color-grey1 font-icon" title="Papers">K</em><%%= num_papers %></span>
+      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon" title="Members">f</em><%%= num_members %></span>
+      <span class="fs-16 color-grey2 mr10"><em class="fs42 color-grey1 font-icon" title="Notes">b</em><%%= num_notes %></span>
     </div>
   </div>
   <div class="section-right fl column-38  c-case-img bs pl15 bs cf">
@@ -192,7 +192,7 @@
 </script>
 
 <script type="text/templatye" id="edit-mode-buttons">
-<div class="edit-btns color-grey3 font-d cf mt10 pb5 pt5 lh15">
+<div class="edit-btns color-grey3 font-d cf mt10 pb5 pt5 lh15 unselectable">
   <a style="background-color:rgba(46,161,221,0.3);" href="#" class="ok-btn fs16 fr asblock btn-pri mr5"><%%= ok %></a>
   <a href="#" class="cancel-btn fs16 fr asblock mr15" style="line-height:26px;"><%%= cancel %></a>
 </div>
@@ -227,11 +227,11 @@
   <div class="title fs26 font-c color-black fs-ita" style="line-height:32px;">
     <a href="#/papers/<%%= id %>"><%%= title %></a>
   </div>
-  <div class="footer color-grey2 fs13 font-c" style="line-height:32px;height:32px;">
-    <a><em class="font-icon color-grey1 p-btn-fav <%% if(starred) { %> starred <%% } %>" style="font-size:32px;line-height:32px;">*</em><%%= num_favs %></a>
-    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:32px;line-height:32px;">E</em><%%= num_reads %></span>
-    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:32px;line-height:32px;">b</em><%%= num_notes %></span>
-    <em class="fs36 font-icon color-grey1" style="margin-left:10px;font-size:32px;">J</em>
+  <div class="footer color-grey2 fs13 font-c unselectable" style="line-height:32px;height:32px;">
+    <a><em class="font-icon color-grey1 p-btn-fav <%% if(starred) { %> starred <%% } %>" title="Favors" style="font-size:32px;line-height:32px;">*</em><%%= num_favs %></a>
+    <span class="ml10"><em class="fs36 font-icon color-grey1" style="font-size:32px;line-height:32px;" title="Viewed">E</em><%%= num_reads %></span>
+    <span class="ml10"><em class="fs36 font-icon color-grey1"title="Notes" style="font-size:32px;line-height:32px;">b</em><%%= num_notes %></span>
+    <em class="fs36 font-icon color-grey1" title="Tags" style="margin-left:10px;font-size:32px;">J</em>
     <span class="fs14">
     <%% if(tags.length > 0) { _.each(tags, function(tag, index) { %>
       <i class="mr5">
@@ -324,12 +324,12 @@
 <p class="r-paper-title fs24 font-c color-black fs-ita lh44">
   <%%= title %>
 </p>
-<div class="r-footer-left pa fl color-grey2" style="height: 44px; width: 200px;"> 
+<div class="r-footer-left pa fl color-grey2 unselectable" style="height: 44px; width: 200px;"> 
   <a class="back" href="#/clubs/<%%= club_id %>"><div class="btn"><</div></a>
   <a class="comments"><div class="btn pr">b<span class="btn-tip" data-text="-">-</span></div></a>
   <a class="details"><div class="btn pr">Z<span class="btn-tip">-</span></div></a>
 </div>
-<div class="r-footer-right fr pa h100 color-grey2">
+<div class="r-footer-right fr pa h100 color-grey2 unselectable">
   <a class="zoomIn"><div class="btn">y</div></a>
   <a class="zoomOut"><div class="btn">z</div></a>
   <a class="download" href="<%%= download_url %>"><div class="btn">D</div></a>
@@ -352,14 +352,14 @@
   <div class="fs16 font-c  ml50 pl10">
     <span href="#" class="fs18 mr5  fw-bold font-c lh28px"><%%= user.fullname %></span><br />
     <div class="content editable font-c fs16 lh20px"><%%= content %></div>
-    <p class="footer color-grey2 lh20px mt3" style="height:25px;">
+    <p class="footer color-grey2 lh20px mt3 unselectable" style="height:25px;">
       <%% if(date) { %>
         <span class="fl fs14 font-c fw-bold fs-ita"><%%= PaperClub.formatDate(date) %></span>
       <%% } %>
       <span class="r-notes-btns fr">
         <a href="#" title="reply" class="r-btn-reply  fs24 ml5 font-icon">o</a>
         <a href="#" title="edit"  class="r-btn-edit  fs24 ml5 font-icon">r</a>
-        <a href="#" title="delete" class="r-btn-del  fs24 ml5 font-icon">X</a>
+        <a href="#" title="delete" class="r-btn-del del-btn  fs24 ml5 font-icon">I</a>
       </span>
     </p>
   </div>
