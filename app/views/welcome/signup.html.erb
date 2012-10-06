@@ -9,21 +9,56 @@
     </div>
     <div class="m-m-content font-d fr column-50" style="margin-top: 18px;">
       <p class="font-d fs24 fs-ita color-grey3">Create an acount</p>
- 
+     
       <%= form_for(:user, 
                    :url => "/api/users", 
                    :html => { :class => "font-d  fs16 color-grey2 mt20" } ) do |f| %>
         <%= f.text_field :fullname, :class => "m-f-input mb20 column-62", 
-                         :placeholder => "Fullname", :size => nil  %>
-        <span class="inblock fs13 ml30 "></span>
+                         :placeholder => "Fullname", :size => nil, :value => flash[:fn_val] %>
+        
+        <span class="inblock fs13 ml30 " style="color:#f03737">
+        <% if flash[:fn_error] %>
+          Invalid Fullname
+          <script type="text/javascript">
+              $("#user_fullname").css("border-bottom","1px solid #f03737");
+              $("#user_fullname").data("edited",true);
+          </script>
+        <% elsif flash[:fn_val]!=nil %>
+          <script type="text/javascript">
+              $("#user_fullname").css("border-bottom","1px solid #51f037");
+              $("#user_fullname").data("edited",true);
+          </script>
+        <% end %>
+        </span>
 
         <%= f.email_field :email, :class => "m-f-input mb20 column-62", 
-                                  :placeholder => "Email" %>
-        <span class="inblock fs13 ml30"></span>
+                                  :placeholder => "Email", :value => flash[:email_val] %>
+        <span class="inblock fs13 ml30" style="color:#f03737">
+        <% if flash[:email_error] %>
+          Already taken
+          <script type="text/javascript">
+              $("#user_email").css("border-bottom","1px solid #f03737");
+              $("#user_email").data("edited",true);
+          </script>
+        <% elsif flash[:email_val]!=nil %>
+          <script type="text/javascript">
+              $("#user_email").css("border-bottom","1px solid #51f037");
+              $("#user_email").data("edited",true);
+          </script>
+        <% end %>
+        </span>
 
         <%= f.password_field :password, :class => "m-f-input column-62",
                                         :placeholder => "Password" %>
-        <span class="inbliock fs13 ml30"></span>
+        <span class="inbliock fs13 ml30" style="color:#f03737">
+        <% if flash[:pwd_error] %>
+          Invalid Password
+          <script type="text/javascript">
+              $("#user_password").css("border-bottom","1px solid #f03737");
+              $("#user_password").data("edited",true);
+          </script>
+        <% end %>
+        </span>
         <p class="column-62">
           <%= f.submit :submit, 
             :class => " font-d asblock fr color-grey3 fw-bold inblock mt30 fs18 blue-hover",
@@ -40,3 +75,61 @@
     </div>
   </div>
 </div>
+<script type="text/javascript">
+$(function(){
+    var validate = {
+    email: function(email){
+      var testEmail = /^.+\@(\[?)[a-zA-Z0-9\-\.]+\.([a-zA-Z]{2,3}|[0-9]{1,3})(\]?)$/;
+      return testEmail.test(email.trim());
+    },
+    password: function (pwd){
+      var testPWD = /^(?![a-z]+$)(?!\d+$)[a-z0-9]{8,20}$/i;
+      return testPWD.test(pwd);
+    },
+    fullname: function(val) {
+      return (val.trim()!="");
+    } 
+  };
+  
+  
+  
+  function validateAll(){
+    var invalid = null;
+    ["fullname", "email", "password"].forEach(function(name) {
+      if(!validate[name]($("#user_"+name).val())) {
+          if(!invalid) invalid=name;
+          $("#user_"+name).css("border-bottom","1px solid #f03737");
+      }
+      else
+          $("#user_"+name).css("border-bottom","1px solid #51f037");
+      $("#user_"+name).data("edited",true);
+    })
+    if(invalid){
+        $("#user_"+invalid).focus();
+        return false;
+    }
+  }
+  
+  $("input").change(function(){
+    $(this).data("edited",true);
+  }).focus(function() {
+    $(this).css("border-bottom","1px solid #51f037");
+    $(this).next().empty();
+  }).blur(function(){
+    var $t = $(this),
+         edited = $t.data("edited"),
+         name = $t.attr("id").slice(5),
+         value = $t.val();
+  
+    if(edited && !validate[name](value)) {
+      $(this).css("border-bottom","1px solid #f03737");
+    }
+    else if(!edited){
+      $(this).css("border-bottom","1px solid rgb(204, 204, 204)");
+    }
+  });
+  
+  $("form").submit(validateAll);
+  
+});
+</script>
