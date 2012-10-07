@@ -84,7 +84,12 @@ $(function(){
     },
     password: function (pwd){
       //var testPWD = /^(?![a-z]+$)(?!\d+$)[a-z0-9]{8,20}$/i;
+<<<<<<< HEAD
       return (pwd != "");
+=======
+      //return testPWD.test(pwd);
+      return (pwd.trim()!="");
+>>>>>>> b27e8b507a79a866234b8522b355bb42ba841374
     },
     fullname: function(val) {
       return (val.trim()!="");
