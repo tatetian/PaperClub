@@ -110,7 +110,20 @@
 <dl>
   <dt class="font-c fw-bold fs24">Edit your account</dt>
   <dd class="cf mt20 mb5">
-    <span class="asblock fl img96 circle ml50"><img class=" img96 circle0 " src="/avatars/l/<%%= avatar_url %>.png" /></span>
+    <div class="asblock fl img96 circle ml50 pr">
+        <img class=" img96 circle0 " src="/avatars/l/<%%= avatar_url %>.png" />
+        <input id="fileSel" type="file" accept="image/*" style="
+        display: block;
+        position:absolute;    
+        top: 0;   
+        left: 0;   
+        width: 96px;   
+        height: 96px;   
+        cursor: pointer;   
+        opacity: 0;   
+        filter:alpha(opacity: 0);">  
+    </div>
+    
     <div class="fl cf ml10">
       <p class="mt5">
          <span class="inblock w120 tr font-d fs16 color-grey2">Full name:</span>  

@@ -528,6 +528,8 @@ $(function() {
     },
     render: function() {
       this.$(".m-m-content").empty().append(this.template(this.me.toJSON()));
+      this.$("#fileSel").change($.proxy(this.handleFiles, this));
+      
       return this;
     },
     show: function() {
@@ -558,7 +560,30 @@ $(function() {
     },
     validate: function() {
     
-    }
+    },
+    handleFiles: function(){   
+      
+        var files = this.$("#fileSel")[0].files;
+        var that = this;
+        for (var i = 0; i < files.length; i++) {    
+            var file = files[i];    
+            var imageType = /image.*/;     
+          
+            if (!file.type.match(imageType)) {    
+              continue;    
+            }     
+          
+            var reader = new FileReader();    
+            reader.onload = function(e){   
+          
+                    var imgData = this.result;   
+                    that.$(".circle0").attr("src",imgData);   
+          
+            }   
+            reader.readAsDataURL(file);
+        }     
+      
+    }         
   });
 
   var InvitedClubView = Backbone.View.extend({
