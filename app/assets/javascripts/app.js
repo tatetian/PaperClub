@@ -194,7 +194,8 @@ $(function() {
       if( T > threshold ) {
         $sidebarMain.css({
           position: 'fixed',
-          top: margin
+          top: margin,
+          left: 60 - L
         });
       }
       else {
@@ -499,7 +500,7 @@ $(function() {
     retrieveValues: function() {
       var emails = [];
       _.forEach([0,1,2], function(i) { 
-        var email = $.trim( this.$("#new-club-email-"+i).text() );
+        var email = this.$("#new-club-email-"+i).text().trim();
         if(email.length > 0)
           emails.push(email);
       });
@@ -558,7 +559,7 @@ $(function() {
     retrieveValues: function() {
       var emails = [], that = this;
       _.forEach([0,1,2], function(i) { 
-        var email = $.trim( that.$("#invitation-email-"+i).text() );
+        var email = that.$("#invitation-email-"+i).text().trim() ;
         if(email.length > 0)
           emails.push(email);
       });
@@ -673,6 +674,8 @@ $(function() {
     },
     render: function() {
       this.$(".m-m-content").empty().append(this.template(this.me.toJSON()));
+      this.$(".fileSel").change($.proxy(this.handleFiles, this));
+      
       return this;
     },
     show: function() {
@@ -684,9 +687,25 @@ $(function() {
     onOK: function(e) {
       e.preventDefault();
 
-      var values = this.retrieveValues();
-      this.me.set(values);
-      this.me.save();
+      //var values = this.retrieveValues();
+      //this.me.set(values);
+      //this.me.save();
+      var files = this.$("#fileSel")[0].files;
+      if(files.length>0){
+        var fileObj = files[0]; 
+        var FileController = "../api/avatar"; 
+       
+        var form = new FormData();
+        form.append("file", fileObj);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", FileController, true);
+        xhr.onload = function () {
+            //alert("Done!");
+        };
+        xhr.send(form);
+     }
+      
       this.hide();
     },
     onCancel: function(e) {
@@ -695,7 +714,7 @@ $(function() {
     },
     retrieveValues: function() {
       var values = {
-        fullname: this.$("#account-fullname").val(),
+        fullname: this.$("#account-fullname").val().trim(),
         password: this.$("#account-password").val(),
         password_confirmation: this.$("#account-confirmation").val()
       };
@@ -703,7 +722,30 @@ $(function() {
     },
     validate: function() {
     
-    }
+    },
+    handleFiles: function(){   
+      
+        var files = this.$(".fileSel")[0].files;
+        var that = this;
+        for (var i = 0; i < files.length; i++) {    
+            var file = files[i];    
+            var imageType = /image.*/;     
+          
+            if (!file.type.match(imageType)) {    
+              continue;    
+            }     
+          
+            var reader = new FileReader();    
+            reader.onload = function(e){   
+          
+                    var imgData = this.result;   
+                    that.$(".circle0").attr("src",imgData);   
+          
+            }   
+            reader.readAsDataURL(file);
+        }     
+      
+    }         
   });
 
   var InvitedClubView = Backbone.View.extend({
@@ -916,8 +958,8 @@ $(function() {
     },
     retrieveValues: function() {
       var values = {
-        name: this.$(".header").text(),
-        description: this.$(".content").text()  
+        name: this.$(".header").text().trim(),
+        description: this.$(".content").text().trim()  
       }
       return values;
     },
@@ -984,8 +1026,6 @@ $(function() {
     },
     render: function() {
       var data = this.model.toJSON();
-      //data.num_papers = 0;
-      data.num_comments = 0;
       data.avatar_url = '/avatars/l/' + data.avatar_url + ".png"
       this.$el.append(this.template(data));
       return this;
@@ -1167,7 +1207,8 @@ $(function() {
     className: "mb30 clearfloat",
     template: _.template($("#club-screen-paper-item").html()), 
     events: {
-      'click a.del-btn': '_delete'
+      'click a.del-btn': '_delete',
+      'click .p-btn-fav': '_toggleStar'
     },
     initialize: function() {
       this.paper = this.options.paper;
@@ -1179,21 +1220,17 @@ $(function() {
       if(news) news.time = formatDate(news.time);
 
       this.$el.empty()
-              .append(this.template({
-                        //this.paper.toJSON()
-                        id:  this.paper.get('id'),
-                        title: this.paper.get('title'),
-                        num_favs: 0,
-                        num_reads: 0,
-                        num_notes: 0,
-                        tags: this.paper.get('tags'),
-                        news: news
-                      }));
+              .append(this.template(this.paper.toJSON()));
       return this;       
     },
     _delete: function(e) {
       e.preventDefault();
       ConfirmDelPaperDialoge.getInstance().show(this);
+    },
+    _toggleStar: function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      alert('star');
     }
   });
 
@@ -1537,13 +1574,69 @@ window.upload_btn = this.$el;
   var Paper = PaperClub.Paper = Backbone.Model.extend({
     urlRoot: "/api/papers",
     parse: function(response) {
-      this.tags = new Tags(response.tags, {paperId: response.id});
+      this.tags     = new Tags(response.tags, {paperId: response.id});
+      
+      this.starred  = !! this.getFavTag();
       return response;
+    },
+    toJSON: function(options) {
+      var attrs     = this.attributes,
+          tags      = this.get('tags'),
+          num_favs  = _.count(tags, function(tag) {
+                        return tag.name.indexOf('__fav_') == 0;
+                      });
+
+      return {
+        id:         attrs.id,
+        title:      attrs.title,
+        starred:    this.starred,
+        num_favs:   num_favs,
+        num_reads:  attrs.num_views,
+        num_notes:  attrs.num_comments,
+        tags:       tags,
+        news:       attrs.news
+      }
+    },
+    getFavTag: function() {
+      return _.find(this.tags, 
+                    function(tag) {
+                      return tag.get('name') == ("__fav_" + USER_ID);
+                    });
     },
     getTags: function() {
       return this.tags;
+    },
+    // Increment the view count of this paper
+    incrementViewCounter: function() {
+      var id = this.id;
+
+      if(!id || Paper.history[id]) return;
+
+      Paper.history[id] = true;
+      this.set('num_views', this.get('num_views') + 1);
+      $.post("/api/fulltext/" + id + "/counter");
+    },
+    isStarred: function() {
+      return this.starred;
+    },
+    star: function() {
+      if(this.starred) return;
+
+      this.tags.create({name: "__fav_" + USER_ID, paper_id: this.id});
+      this.change();
+
+      this.starred = true; 
+    },
+    unstar: function() {
+      if(!this.starred) return;
+
+      this.getFavTag().destroy();
+      this.change();
+
+      this.starred = false;
     }
   });
+  Paper.history = {};
 
   var Papers = PaperClub.Papers = Backbone.Collection.extend({
     model: Paper,
@@ -1611,6 +1704,8 @@ window.upload_btn = this.$el;
  
       this.paper.fetch({
         success: function() {
+          that.paper.incrementViewCounter();
+
           that.viewport = new PsViewport({screen: that});
 
           that.pageNumber = new PsPageNumber({screen: that});
@@ -2905,6 +3000,16 @@ window.upload_btn = this.$el;
 
     return ce.text();
   };
+
+  _.count = function(obj, iterator, context) {
+    var count = 0;
+
+    _.each(obj, function(value, index, list) {
+      if(iterator.call(context, value, index, list)) ++count;
+    });
+
+    return count;
+  }
 
   $("body").delegate("a.notYetImplemented", "click", function (e) {
     alert("Thank you for trying out PaperClub. This feature is coming soon.");

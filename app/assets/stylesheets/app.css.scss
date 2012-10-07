@@ -3,7 +3,7 @@
 .inblock{display:inline-block;display:-moz-inline-stack;*display:inline;zoom:1;}
 .disnone{display:none;}
 .clearfloat{overflow:hidden; zoom:1;}
-.cb{clear:both;}
+.cb{clear:both;}							
 .fl{float:left;}
 .fr{float:right;}
 .cf:before, .cf:after { content: " ";  display: table; } 
@@ -14,6 +14,19 @@
 .pf{position:fixed;}
 .of{overflow:hidden;}
 .bs{box-sizing:border-box;-moz-box-sizing:border-box;}
+/*hzb 10.05 fix*/
+.editable:focus{outline:0;border-left:3px solid #2ea1dd;}
+.unselectable{
+-webkit-user-select: none;
+-khtml-user-select: none;
+-moz-user-select: none;
+-o-user-select: none;
+user-select: none;
+cursor:default;
+}
+.placeholder{color:#999;}
+
+input:-webkit-autofill{color:#fff !important; backgroud-color:#fff !important;}
 
 /*font-css*/
 .font-c{font-family:chaparral-pro,sans-serif;}
@@ -53,11 +66,12 @@
 /*hover--css*/
 .hover-bg-blue:hover{background-color:rgba(46,161,221,0.05);}
 .hover-f-blue:hover{color:#2EA1DD;}
-.hover-border:hover{border-bottom:1px dotted #999;}
 
-.hover-border{border-bottom: 1px dotted transparent}
-div.editting > .hover-border{border-color:#999;}
-div:hover > .hover-border{border-color:#999;}
+.hover-border{border-bottom: 1px dotted transparent; border-left:3px solid transparent;margin-left:-8px;padding-left:5px;}
+div:hover >.hover-border{border-bottom:1px dotted #999; }
+div.editting > .hover-border{border-bottom:1px dotted #999; border-left:3px solid #2EA1DD;}
+.hover-border:hover{border-bottom:1px dotted #999;}
+.hover-border:focus{border-left:3px solid #2EA1DD; }
 .edit-btns{overflow: hidden; display:none;}
 /*paragraph--css*/
 .textin2{text-indent:2em;}
@@ -69,7 +83,7 @@ div:hover > .hover-border{border-color:#999;}
 
 .btn-pri{border:1px solid #ddd; border-radius:4px; box-shadow:1px 1px 1px rgba(0,0,0,0.12);padding:0px 5px; background-color:#fff;}
 .btn-pri:hover{ color:#2ea1dd;}
-
+.btn-pri:active{color:#005580; box-shadow:inset 1px 1px 1px rgba(0,0,0,0.2);}
 /*width&height--size&grid css*/
 .h100{height:100%;}
 .w100{width:100%;}
@@ -259,8 +273,7 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 	box-sizing:border-box; -moz-box-sizing:border-box; 
 	padding:0px 36px 0px 18px;
 }
-.p-paper-list a:hover{color:#2ea1dd;}
-.p-paper-list a:hover em{color:#2ea1dd;}
+.p-paper-list .title:hover {color:#2ea1dd;}
 .p-nav-menu dt:hover ,.p-nav-menu dd:hover{color:#2ea1dd;}
 .p-btn-back{ 
   position: fixed; 
@@ -269,6 +282,7 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 .p-btn-back a:hover span{color:#2ea1dd;}
 .p-paper-list .fav {margin-top:4px;}
 .p-btn-fav:hover,.r-btn-fav:hover{color:#ffcc00;}
+.p-btn-fav.starred, .r-btn-fav.starred{color:#ffcc00;}
 .c-club-lists>li:hover .del-btn{display:block;}
 /*page-reading --css*/	
 .r-paper-container{ width:920px; min-height:500px; position:absolute;  margin:0 auto; left:0px; right:0px; z-index:1px;}
@@ -422,6 +436,8 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 /*clubs--css*/
 .c-btn-join:hover,.c-btn-deny:hover{color:#2ea1dd;}
 .c-btn-ok:hover, .c-btn-cancel:hover{color:#2ea1dd;}
+.c-btn-join:active{color:#005580;  box-shadow:inset 1px 1px 1px rgba(0,0,0,0.2);}
+.c-btn-ok:active{color:#005580; box-shadow:inset 1px 1px 1px rgba(0,0,0,0.2);}
 .section-right.case-invited{margin-top:0px;}
 .c-case-img{height:100%; overflow:hidden; max-height:120px;}
 

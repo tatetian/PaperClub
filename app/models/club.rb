@@ -6,6 +6,7 @@ class Club < ActiveRecord::Base
 
   has_many :papers, :dependent => :destroy
   has_many :tags,   :dependent => :destroy
+  has_many :notes
 
   validate :name, presence: true
 
@@ -15,8 +16,8 @@ class Club < ActiveRecord::Base
       :id           => self.id, 
       :name         => self.name,
       :description  => self.description,
-      :num_papers   => self.papers.size,
-      :num_notes    => 0,
+      :num_papers   => self.num_papers,
+      :num_notes    => self.num_comments,
       :num_members  => self.users.count,
       :users        => self.users.map { |u|
                           if u.memberships.find_by_club_id(self.id).role == 'admin'

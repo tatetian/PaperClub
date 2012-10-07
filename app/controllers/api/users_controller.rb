@@ -25,7 +25,12 @@ class Api::UsersController < ApplicationController
       sign_in user
       redirect_to "/app"
     else
-      flash.now[:error] = "Invalid user information"
+      flash[:fn_val] = user.fullname
+      flash[:email_val] = user.email
+      
+      flash[:fn_error] = !!user.errors.messages[:fullname]
+      flash[:pwd_error] = !!user.errors.messages[:password]
+      flash[:email_error] = !!user.errors.messages[:email]
       redirect_to "/signup"
     end
   end
@@ -79,6 +84,20 @@ class Api::UsersController < ApplicationController
   # DESTROY http://www.paperclub.com/club/<club_id>/user/<user_id>
   # ROLE    admin
   def destroy
+  end
+  
+  def uploadAvatar
+    avatar = Tempfile.new('uploaded-avatar-')
+    avatar.binmode
+    avatar.write(params[:file].read)
+    avatar.flush
+    avatar.close
+    
+    filename = params[:file].original_filename
+    tmp_path = File.absolute_path(avatar.path)
+    dest_pdf_path = Rails.root.join("public","avatars",filename)
+    FileUtils.mv(tmp_path, dest_pdf_path)
+    render :json=> ""
   end
 
 private

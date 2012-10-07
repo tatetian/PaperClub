@@ -11,9 +11,13 @@ PaperClub::Application.routes.draw do
   match '/signin', to: 'welcome#signin', via: :get
   match '/signup', to: 'welcome#signup', via: :get
 
+  match '/browsers', to: 'browser#index', via: :get
+
   # Invitation
   match '/invitations/:token', to: 'invitations#accept', via: :get
   match '/api/clubs/:id/invitation', to: 'api/clubs#invite', via: :post
+  
+  match '/api/avatar', to: 'api/users#uploadAvatar', via: :post
   
   # All debug purpose only pages are prefixed "debug"
   # and the following line should be commented in deployment
@@ -79,10 +83,12 @@ PaperClub::Application.routes.draw do
     resources :replies, only: [:update, :destroy]
   end
   
-  match "/api/fulltext/:paper_id/all.css" => "api/fulltext#css", :via => :get
-  match "/api/fulltext/:paper_id/pages/:page_num" => "api/fulltext#pages", :via => :get
-  match "/api/fulltext/:paper_id/download" => "api/fulltext#download", :via => :get
-  match "/api/fulltext/:paper_id/ready" => "api/fulltext#ready?", :via => :get
+  match "/api/fulltext/:paper_id/all.css"   => "api/fulltext#css",        :via => :get
+  match "/api/fulltext/:paper_id/pages/:page_num"  => "api/fulltext#pages",      :via => :get
+  match "/api/fulltext/:paper_id/download"  => "api/fulltext#download",   :via => :get
+  match "/api/fulltext/:paper_id/ready"     => "api/fulltext#ready?",     :via => :get
+  match "/api/fulltext/:paper_id/counter"   => "api/fulltext#counter",    :via => :post
+
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

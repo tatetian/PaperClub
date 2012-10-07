@@ -1,9 +1,10 @@
 class Paper < ActiveRecord::Base
   attr_accessible :uuid, :pub_date, :title, :num_pages,
                   :width, :height,
-                  :club_id, :uploader_id
+                  :club_id, :uploader_id,
+                  :num_comments,  :num_views
 
-  belongs_to :club
+  belongs_to :club, :counter_cache => :num_papers
 
   has_many :collections, foreign_key: "paper_id", :dependent => :destroy
   has_many :tags, through: :collections
@@ -17,6 +18,11 @@ class Paper < ActiveRecord::Base
   validate :club_id, presence: true
 
   default_scope :order => 'papers.updated_at DESC'
+
+  before_create {
+    self.num_comments = 0
+    self.num_views    = 0
+  }
 
   after_create {
     News.create_paper(self)
@@ -70,19 +76,21 @@ class Paper < ActiveRecord::Base
 
   def as_json(options)
     {
-      id:       self.id,
-      title:    self.title, 
-      pub_date: self.pub_date,
-      num_pages: self.num_pages,
-      width:    self.width,
-      height:   self.height,
-      tags:     self.tags.map { |t|
-                  t.as_json(options)
-                },
-      club_id:  self.club_id,
-      news:     self.news.as_json(options),
-      created_at: self.created_at,
-      updated_at: self.updated_at
+      id:           self.id,
+      title:        self.title, 
+      pub_date:     self.pub_date,
+      num_pages:    self.num_pages,
+      width:        self.width,
+      height:       self.height,
+      tags:         self.tags.map { |t|
+                      t.as_json(options)
+                    },
+      club_id:      self.club_id,
+      num_comments: self.num_comments,
+      num_views:    self.num_views,
+      news:         self.news.as_json(options),
+      created_at:   self.created_at,
+      updated_at:   self.updated_at
     }
   end
 
