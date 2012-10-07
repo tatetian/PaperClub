@@ -1189,7 +1189,11 @@ $(function() {
     _toggleStar: function(e) {
       e.preventDefault();
       e.stopPropagation();
-      alert('star');
+      
+      if(this.paper.isStarred())
+        this.paper.unstar();
+      else 
+        this.paper.star();
     }
   });
 
@@ -1336,7 +1340,10 @@ $(function() {
     },
     _onAddOne: function(tag, that, options) {
       var data = tag.toJSON();
-      if(data.name == '__all__') data.name='all';
+      if(data.name == '__all__') 
+        data.name='all';
+      else if(tag.isHidden()) 
+        return;
 
       var $dd = $(this.template(data));
       if(data.id == this.clickedTagId) $dd.addClass('clicked');
@@ -1533,14 +1540,25 @@ window.upload_btn = this.$el;
   var Paper = PaperClub.Paper = Backbone.Model.extend({
     urlRoot: "/api/papers",
     parse: function(response) {
-      this.tags     = new Tags(response.tags, {paperId: response.id});
+      if(this.tags) {
+        this.tags.reset(response.tags).paperId = response.id;
+      }
+      else {
+        this.tags = new Tags(response.tags, {paperId: response.id});
+
+        function _change() {
+          this.trigger("change");
+        }
+        this.tags.on("add",     _change, this)
+                 .on("remove",  _change, this);
+      }
       
       this.starred  = !! this.getFavTag();
       return response;
     },
     toJSON: function(options) {
       var attrs     = this.attributes,
-          tags      = this.get('tags'),
+          tags      = this.tags.toJSON(options),
           num_favs  = _.count(tags, function(tag) {
                         return tag.name.indexOf('__fav_') == 0;
                       });
@@ -1557,7 +1575,7 @@ window.upload_btn = this.$el;
       }
     },
     getFavTag: function() {
-      return _.find(this.tags, 
+      return _.find(this.tags.models, 
                     function(tag) {
                       return tag.get('name') == ("__fav_" + USER_ID);
                     });
@@ -1581,18 +1599,17 @@ window.upload_btn = this.$el;
     star: function() {
       if(this.starred) return;
 
-      this.tags.create({name: "__fav_" + USER_ID, paper_id: this.id});
-      this.change();
-
       this.starred = true; 
+
+      this.tags.create({name: "__fav_" + USER_ID, paper_id: this.id});
     },
     unstar: function() {
       if(!this.starred) return;
 
-      this.getFavTag().destroy();
-      this.change();
-
       this.starred = false;
+
+      var favTag = this.getFavTag();
+      favTag.destroy();
     }
   });
   Paper.history = {};
@@ -1637,7 +1654,13 @@ window.upload_btn = this.$el;
     }
   });
 
-  var Tag = Backbone.Model.extend({});
+  var Tag = Backbone.Model.extend({
+    // Tags like __fav_XXXX is hidden
+    isHidden: function() {
+      var name = this.get("name");
+      return name && name.indexOf("__") == 0;
+    }
+  });
   var Tags = Backbone.Collection.extend({
     model: Tag,
     url: function() {
@@ -1647,6 +1670,14 @@ window.upload_btn = this.$el;
     initialize: function(models, options) {
       if(options.clubId)  this.clubId  = options.clubId;
       if(options.paperId) this.paperId = options.paperId;
+    },
+    toJSON: function(options) {
+      var json = [], options = options || {};
+      _.each(this.models, function(model) {
+        if(options.includeHiddenTag || !model.isHidden())
+          json.push(model.toJSON(options));
+      });
+      return json;
     }
   });
 
