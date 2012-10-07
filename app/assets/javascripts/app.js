@@ -528,7 +528,7 @@ $(function() {
     },
     render: function() {
       this.$(".m-m-content").empty().append(this.template(this.me.toJSON()));
-      this.$("#fileSel").change($.proxy(this.handleFiles, this));
+      this.$(".fileSel").change($.proxy(this.handleFiles, this));
       
       return this;
     },
@@ -541,9 +541,25 @@ $(function() {
     onOK: function(e) {
       e.preventDefault();
 
-      var values = this.retrieveValues();
-      this.me.set(values);
-      this.me.save();
+      //var values = this.retrieveValues();
+      //this.me.set(values);
+      //this.me.save();
+      var files = this.$("#fileSel")[0].files;
+      if(files.length>0){
+        var fileObj = files[0]; 
+        var FileController = "../api/avatar"; 
+       
+        var form = new FormData();
+        form.append("file", fileObj);
+
+        var xhr = new XMLHttpRequest();
+        xhr.open("post", FileController, true);
+        xhr.onload = function () {
+            //alert("Done!");
+        };
+        xhr.send(form);
+     }
+      
       this.hide();
     },
     onCancel: function(e) {
@@ -563,7 +579,7 @@ $(function() {
     },
     handleFiles: function(){   
       
-        var files = this.$("#fileSel")[0].files;
+        var files = this.$(".fileSel")[0].files;
         var that = this;
         for (var i = 0; i < files.length; i++) {    
             var file = files[i];    
