@@ -85,6 +85,20 @@ class Api::UsersController < ApplicationController
   # ROLE    admin
   def destroy
   end
+  
+  def uploadAvatar
+    avatar = Tempfile.new('uploaded-avatar-')
+    avatar.binmode
+    avatar.write(params[:file].read)
+    avatar.flush
+    avatar.close
+    
+    filename = params[:file].original_filename
+    tmp_path = File.absolute_path(avatar.path)
+    dest_pdf_path = Rails.root.join("public","avatars",filename)
+    FileUtils.mv(tmp_path, dest_pdf_path)
+    render :json=> ""
+  end
 
 private
   def fint_user
