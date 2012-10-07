@@ -11,6 +11,8 @@ PaperClub::Application.routes.draw do
   match '/signin', to: 'welcome#signin', via: :get
   match '/signup', to: 'welcome#signup', via: :get
 
+  match '/browsers', to: 'browser#index', via: :get
+
   # Invitation
   match '/invitations/:token', to: 'invitations#accept', via: :get
   match '/api/clubs/:id/invitation', to: 'api/clubs#invite', via: :post

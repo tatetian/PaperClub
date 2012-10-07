@@ -1,0 +1,62 @@
+// Place all the styles related to the browser controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+.center-hv-ab{position:absolute;left:0px;right:0px;top:0px;bottom:0px;margin:auto;}
+.inblock{display:inline-block;display:-moz-inline-stack;*display:inline;zoom:1;}
+.bg-white{background-color:#fff;}
+.boder{border:1px solid #000;}
+.font-c{font-family:chaparral-pro,sans-serif;}
+.font-d{font-family:dejarip,sans-serif;}
+.tc{text-align:center;}
+.fw-bold{font-weight:bold;}
+.fs-ita{font-style:italic;}
+$grey1: #e6e7e7;
+$grey2: #afafaf;
+$grey3: #616265;
+$blue:  #2ea1dd;
+$black: #000;
+.shadow024{box-shadow:0 -2px 4px rgba(0,0,0,0.15),2px 0px 4px rgba(0,0,0,0.15),-2px 0px 4px rgba(0,0,0,0.15);}
+.shadow028{box-shadow:0 -2px 8px rgba(0,0,0,0.15),2px 0px 8px rgba(0,0,0,0.15),-2px 0px 8px rgba(0,0,0,0.15);}
+.shadow0210{box-shadow:0 -2px 6px rgba(0,0,0,0.10),6px 0px 8px rgba(0,0,0,0.15),-6px 0px 8px rgba(0,0,0,0.15);}
+.border-box{-webkit-box-sizing:border-box;-moz-box-sizing:border-box;-o-box-sizing:border-box;-ms-box-sizing:border-box;box-sizing:border-box;}
+@mixin size($w,$h){width:$w;height:$h;}
+@mixin boxshadow($x,$y,$blur,$color){box-shdow:$x,$y,$blur,$color;}
+@mixin fs($fs){font-size:$fs;}
+@mixin mt($mt){margin-top:$mt;}
+@mixin textin($textin){text-indent:$textin;}
+
+body{
+  @include size(100%,100%);
+  background:#afafaf url(grey_bg.jpg) repeat fixed;
+}
+
+.b-wrapper{
+  @include size(800px,400px);
+  @extend .shadow024, .bg-white, .center-hv-ab,.border-box;
+  padding:32px;
+}	
+.b-header{
+  @extend .font-d, .tc, .fs-ita;
+  @include fs(24px);
+}
+.b-des{
+  @extend .font-c;
+  @include mt(15px);
+  @include fs(16px);
+  @include textin(2em);
+}
+.b-browsers{
+  ul{padding-top:30px; margin:0 auto;width:620px;}
+  li{@extend .tc ,.inblock, .font-d; width:150px;}
+  li .img{height: 99px; width: 120px; display:block;text-align:center;}
+  li .img-ie{background:url(browsers.jpg) no-repeat 0px 0px;}
+  li .img-moz{background:url(browsers.jpg) no-repeat -150px 0px;}
+  li .img-chrome{background:url(browsers.jpg) no-repeat -300px 0px;}
+  li .img-safari{background:url(browsers.jpg) no-repeat -450px 0px;}
+
+  li .name{display:block;font-size:18px;color:$blue;}
+  li .version{font-size:16px;color:$grey2;margin-top:10px;}
+}
+
+
+

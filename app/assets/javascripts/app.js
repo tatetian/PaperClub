@@ -500,7 +500,7 @@ $(function() {
     retrieveValues: function() {
       var emails = [];
       _.forEach([0,1,2], function(i) { 
-        var email = $.trim( this.$("#new-club-email-"+i).text() );
+        var email = this.$("#new-club-email-"+i).text().trim();
         if(email.length > 0)
           emails.push(email);
       });
@@ -559,7 +559,7 @@ $(function() {
     retrieveValues: function() {
       var emails = [], that = this;
       _.forEach([0,1,2], function(i) { 
-        var email = $.trim( that.$("#invitation-email-"+i).text() );
+        var email = that.$("#invitation-email-"+i).text().trim() ;
         if(email.length > 0)
           emails.push(email);
       });
@@ -714,7 +714,7 @@ $(function() {
     },
     retrieveValues: function() {
       var values = {
-        fullname: this.$("#account-fullname").val(),
+        fullname: this.$("#account-fullname").val().trim(),
         password: this.$("#account-password").val(),
         password_confirmation: this.$("#account-confirmation").val()
       };
@@ -958,8 +958,8 @@ $(function() {
     },
     retrieveValues: function() {
       var values = {
-        name: this.$(".header").text(),
-        description: this.$(".content").text()  
+        name: this.$(".header").text().trim(),
+        description: this.$(".content").text().trim()  
       }
       return values;
     },
@@ -1026,8 +1026,6 @@ $(function() {
     },
     render: function() {
       var data = this.model.toJSON();
-      //data.num_papers = 0;
-      data.num_comments = 0;
       data.avatar_url = '/avatars/l/' + data.avatar_url + ".png"
       this.$el.append(this.template(data));
       return this;

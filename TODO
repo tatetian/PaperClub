@@ -3,7 +3,7 @@ Fav, Read, Note
 ===Design===
   Features
   * Business card
-    Browser requirements
+  * Browser requirements
     Team page
     
     New homepage
@@ -12,15 +12,15 @@ Fav, Read, Note
     Button tip of toolbar of reader has no shadow in IE9
     Use better icons
   Small improvement
-    Add title to all tags; title is tip that explains the link
-    Placeholder should be grey in IE
-    Remove yellow border of edittable element in Chrome
+   *Add title to all tags; title is tip that explains the link
+   *Placeholder should be grey in IE
+   *Remove yellow border of edittable element in Chrome
     Button
-      Btn unselectable
+    *  Btn unselectable
       "Upload PDFs" button
     * All buttons look same
-      Press-down state of button
-      Delete btn ==> RED
+    * Press-down state of button
+    * 	Delete btn ==> RED
 
 ===Implementation===
 Before launch todo
@@ -41,6 +41,8 @@ Before launch todo
   Note count
 
   Google analytics
+
+  Handle text selection(formateed => unformatted)
 
   Bugs:
     Uploading in IE
