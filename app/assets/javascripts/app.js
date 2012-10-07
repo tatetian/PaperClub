@@ -1437,25 +1437,25 @@ $(function() {
       this.screen = this.options.screen;
       this.papers = SharedData.getPapers();
 window.upload_btn = this.$el;
-      var uploader = this.uploader = new plupload.Uploader({
-        runtimes : 'html5, flash, html4',
-        browse_button : 'paper-upload-btn',
-        max_file_size : '10mb',
-        url : '/api/clubs/' + clubId + '/papers',
-        container: 'uploaders-container',
-        flash_swf_url: '/assets/javascripts/plupload.flash.swf',
-        multipart_params: {
-        },
-        filters : [
-            {title : "PDF files", extensions : "pdf"}
-        ]
-      });   
+       
     
       // Init events after the required DOM element is ready  
       var firstTime = true;
       this.screen.on("show", function() {
         if(!firstTime)
           return;
+
+      var uploader = that.uploader = new plupload.Uploader({
+        runtimes : 'html5, flash, html4',
+        browse_button : 'paper-upload-btn',
+        max_file_size : '10mb',
+        url : '/api/clubs/' + clubId + '/papers',
+        flash_swf_url: '/assets/plupload.flash.swf',
+        filters : [
+            {title : "PDF files", extensions : "pdf"}
+        ]
+      });  
+
 
         firstTime = false;
         that._initEvents();
@@ -1559,8 +1559,8 @@ window.upload_btn = this.$el;
     toJSON: function(options) {
       var attrs     = this.attributes,
           tags      = this.tags.toJSON(options),
-          num_favs  = _.count(tags, function(tag) {
-                        return tag.name.indexOf('__fav_') == 0;
+          num_favs  = _.count(this.tags.models, function(tag) {
+                        return tag.get('name').indexOf('__fav_') == 0;
                       });
 
       return {
