@@ -13,7 +13,7 @@ Fav, Read, Note
     Use better icons
   Small improvement
    *Add title to all tags; title is tip that explains the link
-   *Placeholder should be grey in IE
+    Placeholder should be grey in IE
    *Remove yellow border of edittable element in Chrome
     Button
     *  Btn unselectable
@@ -36,18 +36,18 @@ Before launch todo
     Add, delete, edit and list
   News
 
-  Fav count
-  Read count
-  Note count
+* Fav count
+* Read count
+* Note count
 
   Google analytics
 
   Handle text selection(formateed => unformatted)
 
   Bugs:
-    Uploading in IE
+  * Uploading in IE
   * Filter not working for newly created club
-    Consistency between tags in papers & tags in reading
+  * Consistency between tags in papers & tags in reading
     Smart float bug of tags
 
   Slogan refinement

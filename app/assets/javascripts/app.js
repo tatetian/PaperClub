@@ -674,7 +674,7 @@ $(function() {
     },
     render: function() {
       this.$(".m-m-content").empty().append(this.template(this.me.toJSON()));
-      this.$(".fileSel").change($.proxy(this.handleFiles, this));
+      //this.$(".fileSel").change($.proxy(this.handleFiles, this));
       
       return this;
     },
@@ -690,6 +690,7 @@ $(function() {
       //var values = this.retrieveValues();
       //this.me.set(values);
       //this.me.save();
+      /*
       var files = this.$("#fileSel")[0].files;
       if(files.length>0){
         var fileObj = files[0]; 
@@ -705,7 +706,7 @@ $(function() {
         };
         xhr.send(form);
      }
-      
+      */
       this.hide();
     },
     onCancel: function(e) {
@@ -1217,7 +1218,7 @@ $(function() {
     },
     render: function() {
       var news = this.paper.get('news');
-      if(news) news.time = formatDate(news.time);
+      news.format_time = formatDate(news.time);
 
       this.$el.empty()
               .append(this.template(this.paper.toJSON()));
@@ -1230,7 +1231,11 @@ $(function() {
     _toggleStar: function(e) {
       e.preventDefault();
       e.stopPropagation();
-      alert('star');
+      
+      if(this.paper.isStarred())
+        this.paper.unstar();
+      else 
+        this.paper.star();
     }
   });
 
@@ -1377,7 +1382,10 @@ $(function() {
     },
     _onAddOne: function(tag, that, options) {
       var data = tag.toJSON();
-      if(data.name == '__all__') data.name='all';
+      if(data.name == '__all__') 
+        data.name='all';
+      else if(tag.isHidden()) 
+        return;
 
       var $dd = $(this.template(data));
       if(data.id == this.clickedTagId) $dd.addClass('clicked');
@@ -1470,26 +1478,24 @@ $(function() {
       
       this.screen = this.options.screen;
       this.papers = SharedData.getPapers();
-window.upload_btn = this.$el;
-      var uploader = this.uploader = new plupload.Uploader({
-        runtimes : 'html5, flash, html4',
-        browse_button : 'paper-upload-btn',
-        max_file_size : '10mb',
-        url : '/api/clubs/' + clubId + '/papers',
-        container: 'uploaders-container',
-        flash_swf_url: '/assets/javascripts/plupload.flash.swf',
-        multipart_params: {
-        },
-        filters : [
-            {title : "PDF files", extensions : "pdf"}
-        ]
-      });   
     
       // Init events after the required DOM element is ready  
       var firstTime = true;
       this.screen.on("show", function() {
         if(!firstTime)
           return;
+
+        var uploader = that.uploader = new plupload.Uploader({
+          runtimes : 'html5, flash, html4',
+          browse_button : 'paper-upload-btn',
+          max_file_size : '10mb',
+          url : '/api/clubs/' + clubId + '/papers',
+          flash_swf_url: '/assets/plupload.flash.swf',
+          filters : [
+              {title : "PDF files", extensions : "pdf"}
+          ]
+        });  
+
 
         firstTime = false;
         that._initEvents();
@@ -1574,16 +1580,27 @@ window.upload_btn = this.$el;
   var Paper = PaperClub.Paper = Backbone.Model.extend({
     urlRoot: "/api/papers",
     parse: function(response) {
-      this.tags     = new Tags(response.tags, {paperId: response.id});
+      if(this.tags) {
+        this.tags.reset(response.tags).paperId = response.id;
+      }
+      else {
+        this.tags = new Tags(response.tags, {paperId: response.id});
+
+        function _change() {
+          this.trigger("change");
+        }
+        this.tags.on("add",     _change, this)
+                 .on("remove",  _change, this);
+      }
       
       this.starred  = !! this.getFavTag();
       return response;
     },
     toJSON: function(options) {
       var attrs     = this.attributes,
-          tags      = this.get('tags'),
-          num_favs  = _.count(tags, function(tag) {
-                        return tag.name.indexOf('__fav_') == 0;
+          tags      = this.tags.toJSON(options),
+          num_favs  = _.count(this.tags.models, function(tag) {
+                        return tag.get('name').indexOf('__fav_') == 0;
                       });
 
       return {
@@ -1598,7 +1615,7 @@ window.upload_btn = this.$el;
       }
     },
     getFavTag: function() {
-      return _.find(this.tags, 
+      return _.find(this.tags.models, 
                     function(tag) {
                       return tag.get('name') == ("__fav_" + USER_ID);
                     });
@@ -1622,18 +1639,17 @@ window.upload_btn = this.$el;
     star: function() {
       if(this.starred) return;
 
-      this.tags.create({name: "__fav_" + USER_ID, paper_id: this.id});
-      this.change();
-
       this.starred = true; 
+
+      this.tags.create({name: "__fav_" + USER_ID, paper_id: this.id});
     },
     unstar: function() {
       if(!this.starred) return;
 
-      this.getFavTag().destroy();
-      this.change();
-
       this.starred = false;
+
+      var favTag = this.getFavTag();
+      favTag.destroy();
     }
   });
   Paper.history = {};
@@ -1678,7 +1694,13 @@ window.upload_btn = this.$el;
     }
   });
 
-  var Tag = Backbone.Model.extend({});
+  var Tag = Backbone.Model.extend({
+    // Tags like __fav_XXXX is hidden
+    isHidden: function() {
+      var name = this.get("name");
+      return name && name.indexOf("__") == 0;
+    }
+  });
   var Tags = Backbone.Collection.extend({
     model: Tag,
     url: function() {
@@ -1688,6 +1710,14 @@ window.upload_btn = this.$el;
     initialize: function(models, options) {
       if(options.clubId)  this.clubId  = options.clubId;
       if(options.paperId) this.paperId = options.paperId;
+    },
+    toJSON: function(options) {
+      var json = [], options = options || {};
+      _.each(this.models, function(model) {
+        if(options.includeHiddenTag || !model.isHidden())
+          json.push(model.toJSON(options));
+      });
+      return json;
     }
   });
 
@@ -2450,6 +2480,8 @@ window.upload_btn = this.$el;
       this.tags.create({name: tagName, paper_id:this.paper.id});
     },
     _onAddOne: function(tag) {
+      if(tag.isHidden()) return;
+
       var tagView = new PsPaperTagView({tag: tag, tagsView: this});
       this.$("ul").append(tagView.render().$el)
     },
@@ -2659,7 +2691,7 @@ window.upload_btn = this.$el;
       // Placeholder
       var $content    = this.$(".content"),
           edited      = false,
-          placeholder = "Add a comment, share a note or start a discussion";
+          placeholder = "Add your comment to share with other";
       $content.focus(function() {
         if(!edited) {
           $content.empty()

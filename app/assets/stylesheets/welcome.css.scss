@@ -12,7 +12,7 @@
 .pa{position:absolute;}
 .pf{position:fixed;}
 .of{overflow:hidden;}
-
+.placeholder{color:#999;}
 /*font-css*/
 .font-c{font-family:chaparral-pro,sans-serif;}
 .font-d{font-family:dejarip,sans-serif;}
@@ -242,7 +242,8 @@ html , body { width:100%; background: #afafaf url(grey_bg.jpg) repeat fixed; col
 	width: 100%;
 }
 .pagination{
-	
+	position:relative;
+  top:-85px;
 	margin-bottom:15px;
 }
 .pagination li {
