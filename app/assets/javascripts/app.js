@@ -1176,7 +1176,7 @@ $(function() {
     },
     render: function() {
       var news = this.paper.get('news');
-      if(news) news.time = formatDate(news.time);
+      news.format_time = formatDate(news.time);
 
       this.$el.empty()
               .append(this.template(this.paper.toJSON()));
