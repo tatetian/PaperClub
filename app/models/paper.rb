@@ -12,7 +12,7 @@ class Paper < ActiveRecord::Base
   has_many :notes, :dependent => :destroy
   has_one  :news,  :dependent => :destroy
 
-  belongs_to :user, :counter_cache => :num_papers, :foreign_key => "uploader_id"
+  belongs_to :user, :foreign_key => "uploader_id"
 
   validate :title,   presence: true
   validate :club_id, presence: true

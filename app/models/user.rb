@@ -38,7 +38,7 @@ class User < ActiveRecord::Base
 
     if options[:club_id]
       json[:num_papers] = Paper.where("uploader_id=#{self.id} AND club_id=#{options[:club_id]}").count
-      json[:num_comments] = Note.where("user_id=#{self.id}").count
+      json[:num_comments] = Note.where("user_id=#{self.id} AND club_id=#{options[:club_id]}").count
     end
     
     json

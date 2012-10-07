@@ -3,10 +3,10 @@ Fav, Read, Note
 ===Design===
   Features
   * Business card
-    Browser requirements
+  * Browser requirements
     Team page
     
-    New homepageext unselectext unselect
+    New homepage
   * pdf2htmlEX site
   Bugs
     Button tip of toolbar of reader has no shadow in IE9
@@ -41,6 +41,8 @@ Before launch todo
   Note count
 
   Google analytics
+
+  Handle text selection(formateed => unformatted)
 
   Bugs:
     Uploading in IE
