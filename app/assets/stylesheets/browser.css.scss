@@ -31,31 +31,34 @@ body{
 }
 
 .b-wrapper{
-  @include size(800px,400px);
   @extend .shadow024, .bg-white, .center-hv-ab,.border-box;
   padding:32px;
+  height:440px;
+  width:80%;
+  min-width:800px;
 }	
 .b-header{
   @extend .font-d, .tc, .fs-ita;
   @include fs(24px);
+  @include mt(20px);
+  img{width:130px; margin-left:20px; position:relative;top:10px;}
 }
 .b-des{
   @extend .font-c;
-  @include mt(15px);
-  @include fs(16px);
+  @include mt(30px);
+  @include fs(18px);
   @include textin(2em);
 }
 .b-browsers{
-  ul{padding-top:30px; margin:0 auto;width:620px;}
+  ul{padding-top:50px; margin:0 auto;width:630px;}
   li{@extend .tc ,.inblock, .font-d; width:150px;}
-  li .img{height: 99px; width: 120px; display:block;text-align:center;}
+  li .img{height: 83px; width: 75px; display:block;margin:0 auto;}
   li .img-ie{background:url(browsers.jpg) no-repeat 0px 0px;}
-  li .img-moz{background:url(browsers.jpg) no-repeat -150px 0px;}
-  li .img-chrome{background:url(browsers.jpg) no-repeat -300px 0px;}
-  li .img-safari{background:url(browsers.jpg) no-repeat -450px 0px;}
-
-  li .name{display:block;font-size:18px;color:$blue;}
-  li .version{font-size:16px;color:$grey2;margin-top:10px;}
+  li .img-moz{background:url(browsers.jpg) no-repeat -75px 0px;}
+  li .img-chrome{background:url(browsers.jpg) no-repeat -150px 0px;}
+  li .img-safari{background:url(browsers.jpg) no-repeat -225px 0px;}
+  li .name{display:block;font-size:18px;color:$blue;cursor:default;}
+  li .version{font-size:16px;color:$grey2;margin-top:6px;}
 }
 
 

@@ -76,6 +76,34 @@ class Club < ActiveRecord::Base
     "WmhmHRCENwbMtlz8+Ga6mQ" => "Spintronics: Fundamentals and applications"
   }
 
+  @@demo_papers = {
+    "fX+MBHVGPVl1SFL0odGFjQ" => {
+      :title => "Reconstruction of the Genomes",
+      :tags  => ["Science magazine", "biology", "genome"]
+    },
+    "0I9c9cA2fT1m6B71lxevMg" => {
+      :tags  => []
+    },
+    "R4faRsm5HLaffzRJ4gshDw" => {
+      :title => "How To Choose a Good Scientific Problem",
+      :tags  => ["Molecular Cell"]
+    },
+    "NWAsJp_iYfniFGAJEwhedw" => {
+      :tags  => []
+    },
+    "8wULVYbd_sXaDXGTOKavqA" => {
+    
+    },
+    "kJ_7YNQt7p8AGzsM_bFzfw" => {
+      :title => "An Introduction To Compressive Sampling",
+      :tags  => []
+    },
+    "WmhmHRCENwbMtlz8+Ga6mQ" => {
+      :title => "Spintronics: Fundamentals and applications",
+      :tags  => []
+    }
+  }
+
   def self.demo_papers_uuid
     @@demo_papers_uuid
   end

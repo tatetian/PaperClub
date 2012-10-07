@@ -278,7 +278,7 @@
 
 <script type="text/template" id="paper-filter-tag-item">
 <dd class="mb5" data-id=<%%= id %>>
-<a href="#" class="font-c fs18 color-black"><em class="font-icon fs30 color-grey1 pr5">J</em><%%= name %><span class="circle0 cube20 inblock tac fs12 ml5 mt-15 pr" style="background-color:#e2e9f8; line-height:20px;top:-2px"><%%= num_papers %></span></a>
+<a href="#" class="font-c fs18 color-black asblock cf"><em class="font-icon fs30 color-grey1 pr5">J</em><%%= name %><span class="circle0 cube20 inblock tac fs12 ml5 pr" style="background-color:#e2e9f8; line-height:20px;top:-3px; "><%%= num_papers %></span></a>
 </dd>
 </script>
 
@@ -287,7 +287,7 @@
 <a href="#" class="asblcok fl img48 circle"><img class="img48 circle0" src="<%%= avatar_url %>" /></a>
 <div class="fl ml15">
   <a href="#" class="font-c fw-bold hover-f-blue"><%%= fullname %><em class="fs24 font-icon color-grey1 inblock mt-15" >></em></a><br />
-  <span  class="inblock mt-10">
+  <span  class="inblock ">
     <em class="fs36 font-icon color-grey1 ">K</em><%%= num_papers %>
     <%% if(num_favs>0) { %>
       <em class="fs36 font-icon color-grey1 p-btn-fav">*</em><%%= num_favs %>
@@ -314,7 +314,7 @@
   <span class="font-d color-grey2 inblock mt10 mb10"><%%= email %></span><br />
   <span  class="inblock mt-10" >
     <span class="color-grey2 font-d"><em class="fs36 font-icon color-grey1 ">K</em><%%= num_papers %></span>
-    <span class="color-grey2 font-d" ><em class="fs36 font-icon color-grey1 ">b</em><%%= num_comments %></span> 
+    <span class="color-grey2 font-d ml5" ><em class="fs36 font-icon color-grey1 ">b</em><%%= num_comments %></span> 
   </span>
 </div>
 </script>
@@ -326,8 +326,8 @@
 </p>
 <div class="r-footer-left pa fl color-grey2 unselectable" style="height: 44px; width: 200px;"> 
   <a class="back" href="#/clubs/<%%= club_id %>"><div class="btn"><</div></a>
-  <a class="comments"><div class="btn pr">b<span class="btn-tip" data-text="-">-</span></div></a>
-  <a class="details"><div class="btn pr">Z<span class="btn-tip">-</span></div></a>
+  <a class="comments"><div class="btn pr">b<span class="btn-tip" ></span></div></a>
+  <a class="details"><div class="btn pr">Z<span class="btn-tip"></span></div></a>
 </div>
 <div class="r-footer-right fr pa h100 color-grey2 unselectable">
   <a class="zoomIn"><div class="btn">y</div></a>
@@ -351,8 +351,8 @@
   </div>
   <div class="fs16 font-c  ml50 pl10">
     <span href="#" class="fs18 mr5  fw-bold font-c lh28px"><%%= user.fullname %></span><br />
-    <div class="content editable font-c fs16 lh20px"><%%= content %></div>
-    <p class="footer color-grey2 lh20px mt3 unselectable" style="height:25px;">
+    <div class="content editable font-c fs16 lh20px " style="margin-left:0px;"><%%= content %></div>
+    <p class="footer color-grey2 lh20 mt3 unselectable" style="height:25px;">
       <%% if(date) { %>
         <span class="fl fs14 font-c fw-bold fs-ita"><%%= PaperClub.formatDate(date) %></span>
       <%% } %>
@@ -372,8 +372,8 @@
 </div>
 <div class="fs16 font-c ml50">
   <span class="mr5 fw-bold font-c"><%%= user.fullname %></span><br />
-  <p class="content editable font-c fs16 mt3 lh20px"><%%= content %></p>
-  <p class="footer color-grey2 mt3 lh20px" style="height:25px;">
+  <p class="content editable font-c fs16 mt3 lh20" style="min-height:20px;"><%%= content %></p>
+  <p class="footer color-grey2 mt3 lh20" style="height:25px;">
     <%% if(date) { %>
       <span class="fl fs14 font-c fw-bold fs-ita"><%%= PaperClub.formatDate(date) %></span>
     <%% } %>
@@ -424,8 +424,4 @@
   var USER_FULLNAME = "<%= current_user.fullname %>";
   var USER_AVATAR_URL = "<%= current_user.avatar_url %>";
 </script>
-
-<div id="uploaders-container">
-</div>
-
 <!-------------------------- Content --------------------------------->

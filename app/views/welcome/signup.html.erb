@@ -83,15 +83,13 @@ $(function(){
       return testEmail.test(email.trim());
     },
     password: function (pwd){
-      var testPWD = /^(?![a-z]+$)(?!\d+$)[a-z0-9]{8,20}$/i;
-      return testPWD.test(pwd);
+      //var testPWD = /^(?![a-z]+$)(?!\d+$)[a-z0-9]{8,20}$/i;
+      return (pwd != "");
     },
     fullname: function(val) {
       return (val.trim()!="");
     } 
   };
-  
-  
   
   function validateAll(){
     var invalid = null;

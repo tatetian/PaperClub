@@ -9,9 +9,6 @@ class Tag < ActiveRecord::Base
   validate :club_id, presence: true
   validate :name, presence: true
 
-  # Tag name should be lowercase
-  before_save { |t| t.name = t.name.downcase }
-
   def as_json(options)
     if options[:include] and options[:include].include?(:num_papers)
       { id: self.id, name: self.name, club_id: self.club_id, num_papers: self.papers.count}

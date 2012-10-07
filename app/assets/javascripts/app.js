@@ -1436,8 +1436,6 @@ $(function() {
       
       this.screen = this.options.screen;
       this.papers = SharedData.getPapers();
-window.upload_btn = this.$el;
-       
     
       // Init events after the required DOM element is ready  
       var firstTime = true;
@@ -1445,16 +1443,16 @@ window.upload_btn = this.$el;
         if(!firstTime)
           return;
 
-      var uploader = that.uploader = new plupload.Uploader({
-        runtimes : 'html5, flash, html4',
-        browse_button : 'paper-upload-btn',
-        max_file_size : '10mb',
-        url : '/api/clubs/' + clubId + '/papers',
-        flash_swf_url: '/assets/plupload.flash.swf',
-        filters : [
-            {title : "PDF files", extensions : "pdf"}
-        ]
-      });  
+        var uploader = that.uploader = new plupload.Uploader({
+          runtimes : 'html5, flash, html4',
+          browse_button : 'paper-upload-btn',
+          max_file_size : '10mb',
+          url : '/api/clubs/' + clubId + '/papers',
+          flash_swf_url: '/assets/plupload.flash.swf',
+          filters : [
+              {title : "PDF files", extensions : "pdf"}
+          ]
+        });  
 
 
         firstTime = false;
@@ -2440,6 +2438,8 @@ window.upload_btn = this.$el;
       this.tags.create({name: tagName, paper_id:this.paper.id});
     },
     _onAddOne: function(tag) {
+      if(tag.isHidden()) return;
+
       var tagView = new PsPaperTagView({tag: tag, tagsView: this});
       this.$("ul").append(tagView.render().$el)
     },
@@ -2649,7 +2649,7 @@ window.upload_btn = this.$el;
       // Placeholder
       var $content    = this.$(".content"),
           edited      = false,
-          placeholder = "Add a comment, share a note or start a discussion";
+          placeholder = "Add your comment to share with other";
       $content.focus(function() {
         if(!edited) {
           $content.empty()
