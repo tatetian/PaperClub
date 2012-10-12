@@ -150,7 +150,7 @@ class Metadata < ActiveRecord::Base
 
   def self.pdf2htmlEX(pdf_path, dest_dir)
     # PDF -> HTML5
-    %x[pdf2htmlEX --split-pages 1 --css-filename "all.css" --dest-dir "#{dest_dir.to_s}" "#{pdf_path.to_s}"]
+    %x[pdf2htmlEX --split-pages 1 --css-filename "all.css" --external-hint-tool=ttfautohint --dest-dir "#{dest_dir.to_s}" "#{pdf_path.to_s}"]
   end
 
   require 'fileutils'
