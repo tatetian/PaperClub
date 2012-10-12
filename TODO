@@ -22,8 +22,14 @@ Fav, Read, Note
     * Press-down state of button
     * 	Delete btn ==> RED
 
+Bugs
+  Modify title
+
 ===Implementation===
 Before launch todo
+  Delete member
+
+
 * Edit club's name & description
 * Delete club
 
