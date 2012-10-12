@@ -253,16 +253,6 @@ $(function() {
         that.onNewClub();
         e.preventDefault();
       });
-      this.$("#signout-btn").click(function(e) {
-        $.ajax({
-          url:"/api/signout",
-          type: "delete",
-          success: function() {
-            location.href = "/";
-          }
-        });
-        e.preventDefault();
-      });
       this.on('show', function() {
         that.load();
       });
@@ -1793,6 +1783,7 @@ $(function() {
 
       $.each(pages, function(i) {
         pages[i] = new PsPage({
+          id: "p" + (i+1),
           pageNum:  i+1, 
           width: W,
           height: H,
@@ -2098,8 +2089,7 @@ $(function() {
       viewable: {
         transition: function(previousState) {
           if(!this.$pageContent) {
-            var $pc = this.$pageContent = $(this.pageContent),
-                $p  = $pc.find(".p"),
+            var $p  = this.$pageContent = $(this.pageContent),
                 ow  = $p.css('width'),
                 oh  = $p.css('height');
             this.orignalWidth   = parseInt(ow.slice(0, ow.length-2));
@@ -2166,7 +2156,7 @@ $(function() {
       this.$el.width(this.width * this.zoomFactor)
               .height(this.height * this.zoomFactor);
       if(this.$pageContent)
-        this.$pageContent.find(".p").css({scale: zoomFactor * this.width / this.orignalWidth});
+        this.$pageContent.css({scale: zoomFactor * this.width / this.orignalWidth});
     },
     render: function() {
       this.$el.empty()

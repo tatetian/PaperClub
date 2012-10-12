@@ -511,20 +511,23 @@ a.del-btn:hover { color: #ff9fb3; }
   -o-transition: opacity 0.4s; /* Opera */
 }
 
-.b {
-}
-
 // for pdf2htmlEX
-.p {
+.b {
+  position: absolute;
   visibility: hidden;
-  position:absolute;
-  overflow:hidden;
+  overflow: hidden;
+  background-color: white;
+  transform-origin:0% 0%;
+  -ms-transform-origin:0% 0%;
+  -moz-transform-origin:0% 0%;
+  -webkit-transform-origin:0% 0%;
+  -o-transform-origin:0% 0%;
 }
 .l {
   position:absolute;
   white-space:pre;
   font-size:1px;
-  transform-origin:0% 190%;
+  transform-origin:0% 100%;
   -ms-transform-origin:0% 100%;
   -moz-transform-origin:0% 100%;
   -webkit-transform-origin:0% 100%;
@@ -539,4 +542,17 @@ a.del-btn:hover { color: #ff9fb3; }
 }
 .i {
   position:absolute;
+}
+.j {
+  display:none;
+}
+.a {
+}
+.Cd {
+  position:absolute;
+  transform-origin:0% 100%;
+  -ms-transform-origin:0% 100%;
+  -moz-transform-origin:0% 100%;
+  -webkit-transform-origin:0% 100%;
+  -o-transform-origin:0% 100%;
 }

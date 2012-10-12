@@ -10,6 +10,7 @@ PaperClub::Application.routes.draw do
 
   match '/signin', to: 'welcome#signin', via: :get
   match '/signup', to: 'welcome#signup', via: :get
+  match '/signout', to: 'sessions#destroy'
 
   match '/browsers', to: 'browser#index', via: :get
 

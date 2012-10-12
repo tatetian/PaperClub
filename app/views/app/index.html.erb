@@ -1,3 +1,17 @@
+<!--------------------- Google Analytics ------------------------->
+
+<script type="text/javascript">
+var _gaq = _gaq || [];
+_gaq.push(['_setAccount', 'UA-32830815-4']);
+_gaq.push(['_trackPageview']);
+
+(function() {
+  var ga = document.createElement('script'); ga.type = 'text/javascript'; ga.async = true;
+  ga.src = ('https:' == document.location.protocol ? 'https://ssl' : 'http://www') + '.google-analytics.com/ga.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(ga, s);
+})();
+</script>
+
 <!------------------- AllClubsScreen's templates --------------->
 
 <script type="text/template" id="clubs-screen-template">
@@ -10,7 +24,7 @@
       </div>
     </div>
     <div class="section p-btn-back font-d">
-      <a href="#" id="signout-btn">
+      <a href="/signout" id="signout-btn">
         <span class="asblock fs13 color-grey2 ">Sign out</span>
         <span class="name asblock fs16 color-grey3 "><%= @user.fullname %></span>
       </a>
