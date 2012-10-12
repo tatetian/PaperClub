@@ -253,16 +253,6 @@ $(function() {
         that.onNewClub();
         e.preventDefault();
       });
-      this.$("#signout-btn").click(function(e) {
-        $.ajax({
-          url:"/api/signout",
-          type: "delete",
-          success: function() {
-            location.href = "/";
-          }
-        });
-        e.preventDefault();
-      });
       this.on('show', function() {
         that.load();
       });
