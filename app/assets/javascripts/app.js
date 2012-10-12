@@ -9,7 +9,6 @@ $(function() {
   var App = PaperClub.App = function() {
     this.initScreens();
     this.initRouter();
-    this.fontFixForWinChrome();
   };
 
   _.extend(App.prototype, Backbone.Events, {
@@ -95,18 +94,6 @@ $(function() {
                         });
         } 
         return paperScreen;
-      }
-    },
-    fontFixForWinChrome: function() {
-      // If Windows and Chrome
-      if(navigator.platform.toLowerCase().indexOf("win") >= 0 &&
-         $.browser.chrome) 
-      {
-        var stroke = '-webkit-text-stroke-width:';
-        $("body").append('<style text="text/css">' + 
-                         'html{' + stroke + '0.15px; }' + 
-                         '.p{' + stroke + '1.75px;}' +
-                         '</style>');
       }
     }
   });
