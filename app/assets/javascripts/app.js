@@ -2019,6 +2019,9 @@ $(function() {
     state: "blank",
     nowVisible: false,
     tries: 0,
+    events: {
+      'click a.a': 'clickLink'
+    },
     states: {
       blank: {
         transition: function() {
@@ -2150,6 +2153,14 @@ $(function() {
               .width(this.width+"px")
               .height(this.height+"px");
       return this;        
+    },
+    clickLink: function(e) {
+      e.preventDefault();
+
+      var $a = $(e.target).closest("a"),
+          href = $a.attr("href"),
+          pageNum = parseInt(href.slice(2), 16);
+      this.viewport.scrollToPage(pageNum);
     }
   });
 
