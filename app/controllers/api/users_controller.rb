@@ -93,11 +93,21 @@ class Api::UsersController < ApplicationController
     avatar.flush
     avatar.close
     
-    filename = params[:file].original_filename
+    filename = SecureRandom.urlsafe_base64(15)+File.extname(params[:file].original_filename)
     tmp_path = File.absolute_path(avatar.path)
-    dest_pdf_path = Rails.root.join("public","avatars",filename)
-    FileUtils.mv(tmp_path, dest_pdf_path)
-    render :json=> ""
+    dest_avatar_path = Rails.root.join("public","avatars","o",filename)
+    small_avatar_path = Rails.root.join("public","avatars","s",filename)
+    medium_avatar_path = Rails.root.join("public","avatars","m",filename)
+    large_avatar_path = Rails.root.join("public","avatars","l",filename)
+    
+    FileUtils.mv(tmp_path, dest_avatar_path)
+    
+    %x[convert "#{dest_avatar_path}" -resize 96x96^ -gravity center -extent 96x96 "#{large_avatar_path}"]
+    %x[convert "#{dest_avatar_path}" -resize 48x48^ -gravity center -extent 48x48 "#{medium_avatar_path}"]
+    %x[convert "#{dest_avatar_path}" -resize 32x32^ -gravity center -extent 32x32 "#{small_avatar_path}"]
+    
+    current_user.update_attribute(:avatar_url, filename)
+    
   end
 
 private
