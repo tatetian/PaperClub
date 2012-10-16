@@ -1025,7 +1025,8 @@ $(function() {
       this.$el.append(this.template());
       this.$(".paper-search").placeholder();
       this.filterView = new PaperFilterView({clubId: this.clubId, paperListView: this,
-                                             el: this.$(".p-paper-filter")});
+                                             el: this.$(".p-paper-filter"), 
+                                             paperListView: this});
 
 
       this.papers = SharedData.getPapers();
@@ -1093,11 +1094,14 @@ $(function() {
           that.more()
         }
       });
-      // 
+      // Adjust min-height when resize 
       this.screen.onWindowEvent('resize', function() {
-        var H = $(window).height() - 24*2 - 74;
+        var H   = $(window).height() - 24*2 - 74,
+            ft  = that.filterView.getCurrentFilter(),
+            h   = ft ? ft.$el.height() : 0;
 
-        that.$(".p-paper-list").css('min-height', H);
+        that.$(".p-paper-list").css('min-height', Math.max(H, h));
+        console.debug('resize(): h='+h+', H='+H);
       }, true);
     },
     search: function(keywords, tag_id, user_id) {
@@ -1241,20 +1245,21 @@ $(function() {
             b   = H - h - T,
             L   = $w.scrollLeft(),
             margin  = 24,
+            hh  = h - 2*margin - 8,
             threshold1 = 60 - margin,
-            threshold2 = H - h + margin,
+            threshold2 = H - h + 92,
             css = null;
-        if( H > h && T > threshold2 ) {
+        if( H > hh && T > threshold2 ) {
           css = {
             position: 'fixed',
-            bottom: margin,
+            top: 68 - threshold2,
             left: 315 - L
           };
         }
-        else if( H < h && T > threshold1 ) {
+        else if( H < hh && T > threshold1 ) {
           css = {
             position: 'fixed',
-            top: margin,
+            top: 68 - threshold1,
             left: 315 - L,
           };
         }
@@ -1278,6 +1283,13 @@ $(function() {
       if(user_id) filters.user_id = user_id;
       
       return filters;
+    },
+    getCurrentFilter: function() {
+      if(!this.visible) return null;
+      
+      var filters = {'by-person': this.byPersonView, 
+                     'by-tag':    this.byTagView };
+      return filters[this.visible];
     },
     reset: function() {
       this.$(".clicked").removeClass("clicked");
@@ -1308,11 +1320,15 @@ $(function() {
             .find(".fl.column-62").animate({width:"100%"},300);
           that.$el.fadeIn(300);
           pl.$(".p-paper-list").addClass("hide-right-column");
+
+          $(window).resize();
         });
       }
       else {  // If the paper list is empty
         pl.$(".p-paper-list").animate({marginLeft:"255px"},300);
         that.$el.fadeIn(300);
+
+        $(window).resize();
       }
     },
     hide: function(disableAnimation) {
@@ -1328,6 +1344,8 @@ $(function() {
         .find(".fl.column-62").animate({width:"62%"},300,function(){
           if(run) return; run = true;
           pl.$(".p-paper-list .fl.column-38").show(300);
+
+          $(window).resize();
       } );
     } 
   });
