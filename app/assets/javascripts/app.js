@@ -664,15 +664,15 @@ $(function() {
     onOK: function(e) {
       e.preventDefault();
 
-      //var values = this.retrieveValues();
-      //this.me.set(values);
-      //this.me.save();
+      var values = this.retrieveValues();
+      this.me.set(values);
+      this.me.save();
       
       PaperClub.avatarUploadSuccess= function(){
           SharedData.getClubs().fetch();
       };
       var files = this.$("#fileSel")[0].files;
-      if(files && files[0]){
+      if(files){
           if(files.length>0){
             var fileObj = files[0]; 
             var FileController = "../api/avatar"; 
@@ -719,7 +719,7 @@ $(function() {
         var files = this.$(".fileSel")[0].files;
         var that = this;
         var div = $("#preview")[0];
-        if(files && files[0]){
+        if(files){
             for (var i = 0; i < files.length; i++) {    
                 var file = files[i];    
                 var imageType = /image.*/;     

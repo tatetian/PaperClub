@@ -48,7 +48,11 @@ class Api::UsersController < ApplicationController
       [:fullname, :password, :password_confirmation].each{ |key|
         attrs[key] = params[key] if params[key]
       }
-      current_user.update_attributes(attrs)
+      if params[:password] and not params[:password].empty?
+          current_user.update_attributes(attrs)
+      else
+          current_user.update_attribute(:fullname, attrs[:fullname])
+      end
 
       render :json => current_user
     else
