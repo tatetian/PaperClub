@@ -664,9 +664,7 @@ $(function() {
     onOK: function(e) {
       e.preventDefault();
 
-      var values = this.retrieveValues();
-      this.me.set(values);
-      this.me.save();
+      
       
       PaperClub.avatarUploadSuccess= function(){
           SharedData.getClubs().fetch();
@@ -694,6 +692,10 @@ $(function() {
          $(".imgupform").submit();
      }
       
+      
+      var values = this.retrieveValues();
+      this.me.set(values);
+      this.me.save();
       
       this.hide();
     },
