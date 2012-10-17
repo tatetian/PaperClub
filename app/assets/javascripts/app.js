@@ -664,34 +664,31 @@ $(function() {
     onOK: function(e) {
       e.preventDefault();
 
-      
-      
       PaperClub.avatarUploadSuccess= function(){
           SharedData.getClubs().fetch();
       };
       var files = this.$("#fileSel")[0].files;
       if(files){
-          if(files.length>0){
-            var fileObj = files[0]; 
-            var FileController = "../api/avatar"; 
-           
-            var form = new FormData();
-            form.append("file", fileObj);
+        if(files.length>0){
+          var fileObj = files[0]; 
+          var FileController = "../api/avatar"; 
+         
+          var form = new FormData();
+          form.append("file", fileObj);
 
-            var xhr = new XMLHttpRequest();
-            xhr.open("post", FileController, true);
-            xhr.send(form);
-            xhr.onload = function (e) {
-                if (this.status == 200) {
-                   PaperClub.avatarUploadSuccess();
-                }
-            };
-         }
-     }
-     else{
-         $(".imgupform").submit();
-     }
-      
+          var xhr = new XMLHttpRequest();
+          xhr.open("post", FileController, true);
+          xhr.send(form);
+          xhr.onload = function (e) {
+              if (this.status == 200) {
+                 PaperClub.avatarUploadSuccess();
+              }
+          };
+        }
+      }
+      else{
+        $(".imgupform").submit();
+      }
       
       var values = this.retrieveValues();
       this.me.set(values);
