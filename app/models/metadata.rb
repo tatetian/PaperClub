@@ -104,16 +104,21 @@ class Metadata < ActiveRecord::Base
     json_meta = %x[pdf2htmlEX --only-metadata 1 "#{pdf_path}"] 
     parsed_meta = ActiveSupport::JSON.decode json_meta
 
-    title = parsed_meta["title"][0]
-    # Too short
-    if title.mb_chars.length < 5
-      #title = 
+    if parsed_meta["title"].length > 0
+      title = parsed_meta["title"][0]
+      # Too short
+      if title.mb_chars.length < 5
+        #title = 
+        title = options[:default_title]
+      end
+      # Too long
+      if title.mb_chars.length > 100
+        title = title.slice(0,100) + "..."
+      end
+    else
       title = options[:default_title]
     end
-    # Too long
-    if title.mb_chars.length > 100
-      title = title.slice(0,100) + "..."
-    end
+
     # Empty date
     pub_date = parsed_meta["modified_date"]
     if pub_date.empty?

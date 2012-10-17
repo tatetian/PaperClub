@@ -651,8 +651,8 @@ $(function() {
     },
     render: function() {
       this.$(".m-m-content").empty().append(this.template(this.me.toJSON()));
-      //this.$(".fileSel").change($.proxy(this.handleFiles, this));
-      
+      this.$(".fileSel").change($.proxy(this.handleFiles, this));
+            
       return this;
     },
     show: function() {
@@ -664,30 +664,40 @@ $(function() {
     onOK: function(e) {
       e.preventDefault();
 
-      //var values = this.retrieveValues();
-      //this.me.set(values);
-      //this.me.save();
-      /*
+      PaperClub.avatarUploadSuccess= function(){
+          SharedData.getClubs().fetch();
+      };
       var files = this.$("#fileSel")[0].files;
-      if(files.length>0){
-        var fileObj = files[0]; 
-        var FileController = "../api/avatar"; 
-       
-        var form = new FormData();
-        form.append("file", fileObj);
+      if(files){
+        if(files.length>0){
+          var fileObj = files[0]; 
+          var FileController = "../api/avatar"; 
+         
+          var form = new FormData();
+          form.append("file", fileObj);
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("post", FileController, true);
-        xhr.onload = function () {
-            //alert("Done!");
-        };
-        xhr.send(form);
-     }
-      */
+          var xhr = new XMLHttpRequest();
+          xhr.open("post", FileController, true);
+          xhr.send(form);
+          xhr.onload = function (e) {
+              if (this.status == 200) {
+                 PaperClub.avatarUploadSuccess();
+              }
+          };
+        }
+      }
+      else{
+        $(".imgupform").submit();
+      }
+      
+      var values = this.retrieveValues();
+      this.me.set(values);
+      this.me.save();
+      
       this.hide();
     },
     onCancel: function(e) {
-      e.preventDefault();      
+      e.preventDefault();    
       this.hide();
     },
     retrieveValues: function() {
@@ -703,27 +713,72 @@ $(function() {
     },
     handleFiles: function(){   
       
+        var MAXWIDTH  = 96;  
+        var MAXHEIGHT = 96; 
         var files = this.$(".fileSel")[0].files;
         var that = this;
-        for (var i = 0; i < files.length; i++) {    
-            var file = files[i];    
-            var imageType = /image.*/;     
-          
-            if (!file.type.match(imageType)) {    
-              continue;    
-            }     
-          
-            var reader = new FileReader();    
-            reader.onload = function(e){   
-          
-                    var imgData = this.result;   
-                    that.$(".circle0").attr("src",imgData);   
-          
-            }   
-            reader.readAsDataURL(file);
-        }     
+        var div = $("#preview")[0];
+        if(files){
+            for (var i = 0; i < files.length; i++) {    
+                var file = files[i];    
+                var imageType = /image.*/;     
+              
+                if (!file.type.match(imageType)) {    
+                  continue;    
+                }     
+              
+                var reader = new FileReader();  
+                reader.readAsDataURL(file);  
+                reader.onload = function(e){  
+                        var imgObj = new Image();
+                        imgObj.src = this.result;
+                        imgObj.onload = function(event) {
+                              var rect = that.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, this.width, this.height);
+                              this.width = rect.width
+                              this.height = rect.height
+                              that.$("#imgread").attr("src",imgObj.src).width(this.width).height(this.height).css("margin-left",-(this.width-96)/2+'px');
+                        }
+                }   
+            }
+        }
+        else{
+            var file = this.$(".fileSel");
+            //var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';  
+            file.select(); 
+            file.blur();
+            var src = document.selection.createRange().text;
+            this.$("#imgread").hide();
+            var img = this.$("#preview")[0];
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            document.selection.empty();
+            //var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);  
+            //status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);  
+            //div.innerHTML = "<div id=imgread style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;margin-left:"+rect.left+"px;"+sFilter+src+"\"'></div>";  
+       }     
       
-    }         
+    },
+    clacImgZoomParam: function( maxWidth, maxHeight, width, height ){  
+        var param = {top:0, left:0, width:width, height:height};  
+        if( width>maxWidth || height>maxHeight )  
+        {  
+            rateWidth = width / maxWidth;  
+            rateHeight = height / maxHeight;  
+              
+            if( rateWidth < rateHeight )  
+            {  
+                param.width =  maxWidth;  
+                param.height = Math.round(height / rateWidth);  
+            }else  
+            {  
+                param.width = Math.round(width / rateHeight);  
+                param.height = maxHeight;  
+            }  
+        }  
+          
+        param.left = Math.round((maxWidth - param.width) / 2);  
+        param.top = Math.round((maxHeight - param.height) / 2);  
+        return param;  
+    }           
   });
 
   var InvitedClubView = Backbone.View.extend({
@@ -758,7 +813,7 @@ $(function() {
       var json = this.club.toJSON();
       json.avatars = json.users.map(function(u) {
                             return {
-                              url: '/avatars/m/' + u.avatar_url + ".png",
+                              url: '/avatars/m/' + u.avatar_url,
                               name: u.fullname + ", " + u.email
                             };
                          });
@@ -1004,7 +1059,7 @@ $(function() {
     },
     render: function() {
       var data = this.model.toJSON();
-      data.avatar_url = '/avatars/l/' + data.avatar_url + ".png"
+      data.avatar_url = '/avatars/l/' + data.avatar_url
       this.$el.append(this.template(data));
       return this;
     }
@@ -1025,7 +1080,8 @@ $(function() {
       this.$el.append(this.template());
       this.$(".paper-search").placeholder();
       this.filterView = new PaperFilterView({clubId: this.clubId, paperListView: this,
-                                             el: this.$(".p-paper-filter")});
+                                             el: this.$(".p-paper-filter"), 
+                                             paperListView: this});
 
 
       this.papers = SharedData.getPapers();
@@ -1093,11 +1149,14 @@ $(function() {
           that.more()
         }
       });
-      // 
+      // Adjust min-height when resize 
       this.screen.onWindowEvent('resize', function() {
-        var H = $(window).height() - 24*2 - 74;
+        var H   = $(window).height() - 24*2 - 74,
+            ft  = that.filterView.getCurrentFilter(),
+            h   = ft ? ft.$el.height() : 0;
 
-        that.$(".p-paper-list").css('min-height', H);
+        that.$(".p-paper-list").css('min-height', Math.max(H, h));
+        console.debug('resize(): h='+h+', H='+H);
       }, true);
     },
     search: function(keywords, tag_id, user_id) {
@@ -1241,20 +1300,21 @@ $(function() {
             b   = H - h - T,
             L   = $w.scrollLeft(),
             margin  = 24,
+            hh  = h - 2*margin - 8,
             threshold1 = 60 - margin,
-            threshold2 = H - h + margin,
+            threshold2 = H - h + 92,
             css = null;
-        if( H > h && T > threshold2 ) {
+        if( H > hh && T > threshold2 ) {
           css = {
             position: 'fixed',
-            bottom: margin,
+            top: 68 - threshold2,
             left: 315 - L
           };
         }
-        else if( H < h && T > threshold1 ) {
+        else if( H < hh && T > threshold1 ) {
           css = {
             position: 'fixed',
-            top: margin,
+            top: 68 - threshold1,
             left: 315 - L,
           };
         }
@@ -1278,6 +1338,13 @@ $(function() {
       if(user_id) filters.user_id = user_id;
       
       return filters;
+    },
+    getCurrentFilter: function() {
+      if(!this.visible) return null;
+      
+      var filters = {'by-person': this.byPersonView, 
+                     'by-tag':    this.byTagView };
+      return filters[this.visible];
     },
     reset: function() {
       this.$(".clicked").removeClass("clicked");
@@ -1308,11 +1375,15 @@ $(function() {
             .find(".fl.column-62").animate({width:"100%"},300);
           that.$el.fadeIn(300);
           pl.$(".p-paper-list").addClass("hide-right-column");
+
+          $(window).resize();
         });
       }
       else {  // If the paper list is empty
         pl.$(".p-paper-list").animate({marginLeft:"255px"},300);
         that.$el.fadeIn(300);
+
+        $(window).resize();
       }
     },
     hide: function(disableAnimation) {
@@ -1328,6 +1399,8 @@ $(function() {
         .find(".fl.column-62").animate({width:"62%"},300,function(){
           if(run) return; run = true;
           pl.$(".p-paper-list .fl.column-38").show(300);
+
+          $(window).resize();
       } );
     } 
   });
@@ -1418,7 +1491,7 @@ $(function() {
     },
     _onAddOne: function(member, that, options) {
       var data = member.toJSON();
-      data.avatar_url = "/avatars/m/" + data.avatar_url + ".png";
+      data.avatar_url = "/avatars/m/" + data.avatar_url;
       data.num_favs = 0; 
 
       var $dd = $(this.template(data));

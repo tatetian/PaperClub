@@ -48,7 +48,11 @@ class Api::UsersController < ApplicationController
       [:fullname, :password, :password_confirmation].each{ |key|
         attrs[key] = params[key] if params[key]
       }
-      current_user.update_attributes(attrs)
+      if params[:password] and not params[:password].empty?
+          current_user.update_attributes(attrs)
+      else
+          current_user.update_attribute(:fullname, attrs[:fullname])
+      end
 
       render :json => current_user
     else
@@ -93,11 +97,30 @@ class Api::UsersController < ApplicationController
     avatar.flush
     avatar.close
     
-    filename = params[:file].original_filename
+    avatar_size={"l"=>"96","m"=>"48","s"=>"32"}
+    
+    filename = SecureRandom.urlsafe_base64(15)+File.extname(params[:file].original_filename)
     tmp_path = File.absolute_path(avatar.path)
-    dest_pdf_path = Rails.root.join("public","avatars",filename)
-    FileUtils.mv(tmp_path, dest_pdf_path)
-    render :json=> ""
+    
+    dest_avatar_path = Rails.root.join("public","avatars","o",filename)
+    FileUtils.mv(tmp_path, dest_avatar_path)
+    
+    avatar_size.each_pair{|k,v|
+        path = Rails.root.join("public","avatars",k,filename)
+        %x[convert "#{dest_avatar_path}" -resize #{v}x#{v}^ -gravity center -extent #{v}x#{v} "#{path}"]
+    }
+    
+    old_url = current_user.avatar_url
+    
+    current_user.update_attribute(:avatar_url, filename)
+    
+    if old_url and old_url.length > 6
+      avatar_size.each_pair{|k,v|
+          path = Rails.root.join("public","avatars",k,old_url)
+          File.delete(path);
+      }
+      File.delete(Rails.root.join("public","avatars","o",old_url));
+    end
   end
 
 private
