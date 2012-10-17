@@ -93,21 +93,30 @@ class Api::UsersController < ApplicationController
     avatar.flush
     avatar.close
     
+    avatar_size={"l"=>"96","m"=>"48","s"=>"32"}
+    
     filename = SecureRandom.urlsafe_base64(15)+File.extname(params[:file].original_filename)
     tmp_path = File.absolute_path(avatar.path)
-    dest_avatar_path = Rails.root.join("public","avatars","o",filename)
-    small_avatar_path = Rails.root.join("public","avatars","s",filename)
-    medium_avatar_path = Rails.root.join("public","avatars","m",filename)
-    large_avatar_path = Rails.root.join("public","avatars","l",filename)
     
+    dest_avatar_path = Rails.root.join("public","avatars","o",filename)
     FileUtils.mv(tmp_path, dest_avatar_path)
     
-    %x[convert "#{dest_avatar_path}" -resize 96x96^ -gravity center -extent 96x96 "#{large_avatar_path}"]
-    %x[convert "#{dest_avatar_path}" -resize 48x48^ -gravity center -extent 48x48 "#{medium_avatar_path}"]
-    %x[convert "#{dest_avatar_path}" -resize 32x32^ -gravity center -extent 32x32 "#{small_avatar_path}"]
+    avatar_size.each_pair{|k,v|
+        path = Rails.root.join("public","avatars",k,filename)
+        %x[convert "#{dest_avatar_path}" -resize #{v}x#{v}^ -gravity center -extent #{v}x#{v} "#{path}"]
+    }
+    
+    old_url = current_user.avatar_url
     
     current_user.update_attribute(:avatar_url, filename)
     
+    if old_url and old_url.length > 6
+      avatar_size.each_pair{|k,v|
+          path = Rails.root.join("public","avatars",k,old_url)
+          File.delete(path);
+      }
+      File.delete(Rails.root.join("public","avatars","o",old_url));
+    end
   end
 
 private
