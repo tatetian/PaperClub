@@ -126,13 +126,13 @@ _gaq.push(['_trackPageview']);
 <dl>
   <dt class="font-c fw-bold fs24">Edit your account</dt>
   <dd class="cf mt20 mb5">
-    <div class="asblock fl img96 circle ml50 pr">
+    <div class="asblock fl img96 circle ml50 pr" style="overflow:hidden;">
       <div id="preview" class=" img96 circle0 " style="width:96px;
       height:96px;
       overflow:hidden;
       filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale);
       ">
-        <img id="imgread" class=" img96 circle0 " src="/avatars/l/<%%= avatar_url %>" />
+        <img id="imgread" class=" img96" src="/avatars/l/<%%= avatar_url %>" />
       </div>  
       <form class="imgupform" action="/api/avatar" target="hidden_frame" enctype="multipart/form-data" encoding="multipart/form-data" method="post">
         <input id="fileSel" class="fileSel" name="file" type="file" accept="image/*" style="
