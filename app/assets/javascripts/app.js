@@ -682,24 +682,23 @@ $(function() {
 
             var xhr = new XMLHttpRequest();
             xhr.open("post", FileController, true);
-            xhr.onload = function () {
-            };
             xhr.send(form);
+            xhr.onload = function (e) {
+                if (this.status == 200) {
+                   PaperClub.avatarUploadSuccess();
+                }
+            };
          }
      }
      else{
          $(".imgupform").submit();
-         this.$("#imgread").show();
-         var img = this.$("#preview")[0];
-         img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = "";
-      
      }
       
       
       this.hide();
     },
     onCancel: function(e) {
-      e.preventDefault();      
+      e.preventDefault();    
       this.hide();
     },
     retrieveValues: function() {
@@ -740,7 +739,7 @@ $(function() {
             }
         }
         else{
-            var file = this.$(".fileSel")[0];
+            var file = this.$(".fileSel");
             //var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';  
             file.select(); 
             file.blur();
