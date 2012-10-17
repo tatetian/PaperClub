@@ -651,8 +651,8 @@ $(function() {
     },
     render: function() {
       this.$(".m-m-content").empty().append(this.template(this.me.toJSON()));
-      //this.$(".fileSel").change($.proxy(this.handleFiles, this));
-      
+      this.$(".fileSel").change($.proxy(this.handleFiles, this));
+            
       return this;
     },
     show: function() {
@@ -667,27 +667,38 @@ $(function() {
       //var values = this.retrieveValues();
       //this.me.set(values);
       //this.me.save();
-      /*
+      
+      PaperClub.avatarUploadSuccess= function(){
+          SharedData.getClubs().fetch();
+      };
       var files = this.$("#fileSel")[0].files;
-      if(files.length>0){
-        var fileObj = files[0]; 
-        var FileController = "../api/avatar"; 
-       
-        var form = new FormData();
-        form.append("file", fileObj);
+      if(files && files[0]){
+          if(files.length>0){
+            var fileObj = files[0]; 
+            var FileController = "../api/avatar"; 
+           
+            var form = new FormData();
+            form.append("file", fileObj);
 
-        var xhr = new XMLHttpRequest();
-        xhr.open("post", FileController, true);
-        xhr.onload = function () {
-            //alert("Done!");
-        };
-        xhr.send(form);
+            var xhr = new XMLHttpRequest();
+            xhr.open("post", FileController, true);
+            xhr.send(form);
+            xhr.onload = function (e) {
+                if (this.status == 200) {
+                   PaperClub.avatarUploadSuccess();
+                }
+            };
+         }
      }
-      */
+     else{
+         $(".imgupform").submit();
+     }
+      
+      
       this.hide();
     },
     onCancel: function(e) {
-      e.preventDefault();      
+      e.preventDefault();    
       this.hide();
     },
     retrieveValues: function() {
@@ -703,27 +714,67 @@ $(function() {
     },
     handleFiles: function(){   
       
+        var MAXWIDTH  = 96;  
+        var MAXHEIGHT = 96; 
         var files = this.$(".fileSel")[0].files;
         var that = this;
-        for (var i = 0; i < files.length; i++) {    
-            var file = files[i];    
-            var imageType = /image.*/;     
-          
-            if (!file.type.match(imageType)) {    
-              continue;    
-            }     
-          
-            var reader = new FileReader();    
-            reader.onload = function(e){   
-          
-                    var imgData = this.result;   
-                    that.$(".circle0").attr("src",imgData);   
-          
-            }   
-            reader.readAsDataURL(file);
-        }     
+        var div = $("#preview")[0];
+        if(files && files[0]){
+            for (var i = 0; i < files.length; i++) {    
+                var file = files[i];    
+                var imageType = /image.*/;     
+              
+                if (!file.type.match(imageType)) {    
+                  continue;    
+                }     
+              
+                var reader = new FileReader();    
+                reader.onload = function(e){   
+              
+                        var imgData = this.result;   
+                        that.$("#imgread").attr("src",imgData);   
+              
+                }   
+                reader.readAsDataURL(file);
+            }
+        }
+        else{
+            var file = this.$(".fileSel");
+            //var sFilter='filter:progid:DXImageTransform.Microsoft.AlphaImageLoader(sizingMethod=scale,src="';  
+            file.select(); 
+            file.blur();
+            var src = document.selection.createRange().text;
+            this.$("#imgread").hide();
+            var img = this.$("#preview")[0];
+            img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            //var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);  
+            //status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);  
+            //div.innerHTML = "<div id=imgread style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;margin-left:"+rect.left+"px;"+sFilter+src+"\"'></div>";  
+       }     
       
-    }         
+    },
+    clacImgZoomParam: function( maxWidth, maxHeight, width, height ){  
+        var param = {top:0, left:0, width:width, height:height};  
+        if( width>maxWidth || height>maxHeight )  
+        {  
+            rateWidth = width / maxWidth;  
+            rateHeight = height / maxHeight;  
+              
+            if( rateWidth > rateHeight )  
+            {  
+                param.width =  maxWidth;  
+                param.height = Math.round(height / rateWidth);  
+            }else  
+            {  
+                param.width = Math.round(width / rateHeight);  
+                param.height = maxHeight;  
+            }  
+        }  
+          
+        param.left = Math.round((maxWidth - param.width) / 2);  
+        param.top = Math.round((maxHeight - param.height) / 2);  
+        return param;  
+    }           
   });
 
   var InvitedClubView = Backbone.View.extend({
@@ -758,7 +809,7 @@ $(function() {
       var json = this.club.toJSON();
       json.avatars = json.users.map(function(u) {
                             return {
-                              url: '/avatars/m/' + u.avatar_url + ".png",
+                              url: '/avatars/m/' + u.avatar_url,
                               name: u.fullname + ", " + u.email
                             };
                          });
@@ -1004,7 +1055,7 @@ $(function() {
     },
     render: function() {
       var data = this.model.toJSON();
-      data.avatar_url = '/avatars/l/' + data.avatar_url + ".png"
+      data.avatar_url = '/avatars/l/' + data.avatar_url
       this.$el.append(this.template(data));
       return this;
     }
@@ -1436,7 +1487,7 @@ $(function() {
     },
     _onAddOne: function(member, that, options) {
       var data = member.toJSON();
-      data.avatar_url = "/avatars/m/" + data.avatar_url + ".png";
+      data.avatar_url = "/avatars/m/" + data.avatar_url;
       data.num_favs = 0; 
 
       var $dd = $(this.template(data));
