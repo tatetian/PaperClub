@@ -728,14 +728,18 @@ $(function() {
                   continue;    
                 }     
               
-                var reader = new FileReader();    
-                reader.onload = function(e){   
-              
-                        var imgData = this.result;   
-                        that.$("#imgread").attr("src",imgData);   
-              
+                var reader = new FileReader();  
+                reader.readAsDataURL(file);  
+                reader.onload = function(e){  
+                        var imgObj = new Image();
+                        imgObj.src = this.result;
+                        imgObj.onload = function(event) {
+                              var rect = that.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, this.width, this.height);
+                              this.width = rect.width
+                              this.height = rect.height
+                              that.$("#imgread").attr("src",imgObj.src).width(this.width).height(this.height).css("margin-left",-(this.width-96)/2+'px');
+                        }
                 }   
-                reader.readAsDataURL(file);
             }
         }
         else{
@@ -761,7 +765,7 @@ $(function() {
             rateWidth = width / maxWidth;  
             rateHeight = height / maxHeight;  
               
-            if( rateWidth > rateHeight )  
+            if( rateWidth < rateHeight )  
             {  
                 param.width =  maxWidth;  
                 param.height = Math.round(height / rateWidth);  
