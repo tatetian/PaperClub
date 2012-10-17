@@ -747,6 +747,7 @@ $(function() {
             this.$("#imgread").hide();
             var img = this.$("#preview")[0];
             img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            document.selection.empty();
             //var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);  
             //status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);  
             //div.innerHTML = "<div id=imgread style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;margin-left:"+rect.left+"px;"+sFilter+src+"\"'></div>";  
