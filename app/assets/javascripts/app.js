@@ -664,15 +664,13 @@ $(function() {
     onOK: function(e) {
       e.preventDefault();
 
-      //var values = this.retrieveValues();
-      //this.me.set(values);
-      //this.me.save();
+      
       
       PaperClub.avatarUploadSuccess= function(){
           SharedData.getClubs().fetch();
       };
       var files = this.$("#fileSel")[0].files;
-      if(files && files[0]){
+      if(files){
           if(files.length>0){
             var fileObj = files[0]; 
             var FileController = "../api/avatar"; 
@@ -694,6 +692,10 @@ $(function() {
          $(".imgupform").submit();
      }
       
+      
+      var values = this.retrieveValues();
+      this.me.set(values);
+      this.me.save();
       
       this.hide();
     },
@@ -719,7 +721,7 @@ $(function() {
         var files = this.$(".fileSel")[0].files;
         var that = this;
         var div = $("#preview")[0];
-        if(files && files[0]){
+        if(files){
             for (var i = 0; i < files.length; i++) {    
                 var file = files[i];    
                 var imageType = /image.*/;     
@@ -728,14 +730,18 @@ $(function() {
                   continue;    
                 }     
               
-                var reader = new FileReader();    
-                reader.onload = function(e){   
-              
-                        var imgData = this.result;   
-                        that.$("#imgread").attr("src",imgData);   
-              
+                var reader = new FileReader();  
+                reader.readAsDataURL(file);  
+                reader.onload = function(e){  
+                        var imgObj = new Image();
+                        imgObj.src = this.result;
+                        imgObj.onload = function(event) {
+                              var rect = that.clacImgZoomParam(MAXWIDTH, MAXHEIGHT, this.width, this.height);
+                              this.width = rect.width
+                              this.height = rect.height
+                              that.$("#imgread").attr("src",imgObj.src).width(this.width).height(this.height).css("margin-left",-(this.width-96)/2+'px');
+                        }
                 }   
-                reader.readAsDataURL(file);
             }
         }
         else{
@@ -747,6 +753,7 @@ $(function() {
             this.$("#imgread").hide();
             var img = this.$("#preview")[0];
             img.filters.item('DXImageTransform.Microsoft.AlphaImageLoader').src = src;
+            document.selection.empty();
             //var rect = clacImgZoomParam(MAXWIDTH, MAXHEIGHT, img.offsetWidth, img.offsetHeight);  
             //status =('rect:'+rect.top+','+rect.left+','+rect.width+','+rect.height);  
             //div.innerHTML = "<div id=imgread style='width:"+rect.width+"px;height:"+rect.height+"px;margin-top:"+rect.top+"px;margin-left:"+rect.left+"px;"+sFilter+src+"\"'></div>";  
@@ -760,7 +767,7 @@ $(function() {
             rateWidth = width / maxWidth;  
             rateHeight = height / maxHeight;  
               
-            if( rateWidth > rateHeight )  
+            if( rateWidth < rateHeight )  
             {  
                 param.width =  maxWidth;  
                 param.height = Math.round(height / rateWidth);  
