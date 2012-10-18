@@ -20,6 +20,9 @@ PaperClub::Application.routes.draw do
   
   match '/api/avatar', to: 'api/users#uploadAvatar', via: :post
   
+  # Admin feature
+  match 'stats(/:action)' => 'statistics#index', :as => :statistics
+
   # All debug purpose only pages are prefixed "debug"
   # and the following line should be commented in deployment
   namespace :debug do
