@@ -8,6 +8,8 @@ class Api::PapersController < ApplicationController
       # Authenticate
       club = can_access_club?(params[:club_id])
       # Construct query
+      params[:offset] = params[:offset].to_i  if params[:offset]
+      params[:limit]  = params[:limit].to_i   if params[:limit]
       render :json => Paper.search(club.id, params)
     rescue ActiveRecord::RecordNotFound
       error "Can't access the club"
