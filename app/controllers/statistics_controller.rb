@@ -18,9 +18,9 @@ class StatisticsController < ApplicationController
       end.reverse,
       :options => {
         :chartArea => { :width => '90%', :height => '75%' },
-        :hAxis => { :showTextEvery => 30 },
+        :hAxis => { :showTextEvery => 7 },
         :legend => 'bottom',
-        :title => 'Overview of PaperClub(in the last 30 days)'
+        :title => 'Overview of paperclub.com in the last 30 days'
       }
     }
 	end
